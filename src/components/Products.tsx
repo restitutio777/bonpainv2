@@ -1,6 +1,7 @@
 import { Plus, Calendar } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
+import { useCart } from '../context/CartContext'
 
 interface ProductsProps {
   onOpenModal: (id: string) => void
@@ -9,6 +10,7 @@ interface ProductsProps {
 export default function Products({ onOpenModal }: ProductsProps) {
   useScrollAnimation()
   const { products, content } = useSanity()
+  const { cart, addToCart } = useCart()
 
   const label = content?.productsLabel || 'Nos pains'
   const title = content?.productsTitle || 'Cuits au feu de bois,'
@@ -116,31 +118,38 @@ export default function Products({ onOpenModal }: ProductsProps) {
                   >
                     € {product.price.toFixed(2).replace('.', ',')}
                   </span>
-                  <a
-                    href="#order"
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200"
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      addToCart(product._id)
+                    }}
+                    className="relative w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200"
                     style={{
-                      background: '#FDF8F3',
-                      border: '1px solid #E8D9C8',
-                      color: '#A67C52',
+                      background: cart[product._id] ? '#A67C52' : '#FDF8F3',
+                      border: `1px solid ${cart[product._id] ? '#A67C52' : '#E8D9C8'}`,
+                      color: cart[product._id] ? 'white' : '#A67C52',
                     }}
                     onMouseEnter={(e) => {
                       e.stopPropagation()
-                      ;(e.currentTarget as HTMLElement).style.background = '#A67C52'
+                      ;(e.currentTarget as HTMLElement).style.background = '#8B6340'
                       ;(e.currentTarget as HTMLElement).style.color = 'white'
-                      ;(e.currentTarget as HTMLElement).style.borderColor = '#A67C52'
+                      ;(e.currentTarget as HTMLElement).style.borderColor = '#8B6340'
                     }}
                     onMouseLeave={(e) => {
                       e.stopPropagation()
-                      ;(e.currentTarget as HTMLElement).style.background = '#FDF8F3'
-                      ;(e.currentTarget as HTMLElement).style.color = '#A67C52'
-                      ;(e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8'
+                      ;(e.currentTarget as HTMLElement).style.background = cart[product._id] ? '#A67C52' : '#FDF8F3'
+                      ;(e.currentTarget as HTMLElement).style.color = cart[product._id] ? 'white' : '#A67C52'
+                      ;(e.currentTarget as HTMLElement).style.borderColor = cart[product._id] ? '#A67C52' : '#E8D9C8'
                     }}
-                    aria-label={`Commander ${product.name}`}
+                    aria-label={`Ajouter ${product.name} au panier`}
                   >
-                    <Plus size={18} />
-                  </a>
+                    {cart[product._id] ? (
+                      <span className="text-xs font-bold">{cart[product._id]}</span>
+                    ) : (
+                      <Plus size={18} />
+                    )}
+                  </button>
                 </div>
               </div>
             </div>

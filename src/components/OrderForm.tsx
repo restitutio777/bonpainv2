@@ -2,12 +2,12 @@ import { useState, FormEvent } from 'react'
 import { Info, ArrowRight, CheckCircle } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
-
-type Quantities = Record<string, number>
+import { useCart } from '../context/CartContext'
 
 export default function OrderForm() {
   useScrollAnimation()
   const { products, content, settings, vacation } = useSanity()
+  const { cart, setQuantity, clearCart, totalPrice } = useCart()
 
   const orderItems = products.filter((p) => p.orderInForm)
   const orderLeadDays = settings?.orderLeadDays || 2
@@ -19,20 +19,14 @@ export default function OrderForm() {
   const subtitle = content?.orderSubtitle || "Sélectionnez vos pains, indiquez vos coordonnées, et nous préparons tout pour le jour de retrait choisi."
   const orderNotice = content?.orderNotice || `Toute commande doit être passée au minimum ${orderLeadDays} jours à l'avance. Nous ne cuisons que ce qui a été commandé — merci de votre compréhension.`
 
-  const [quantities, setQuantities] = useState<Quantities>({})
   const [submitted, setSubmitted] = useState(false)
 
   const changeQty = (id: string, delta: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.min(20, Math.max(0, (prev[id] || 0) + delta)),
-    }))
+    const current = cart[id] || 0
+    setQuantity(id, Math.min(20, Math.max(0, current + delta)))
   }
 
-  const total = orderItems.reduce(
-    (acc, item) => acc + (quantities[item._id] || 0) * item.price,
-    0
-  )
+  const total = totalPrice(products)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -93,7 +87,7 @@ export default function OrderForm() {
                 type="button"
                 onClick={() => {
                   setSubmitted(false)
-                  setQuantities({})
+                  clearCart()
                 }}
                 className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300"
                 style={{ background: '#FDF8F3', color: '#A67C52', border: '1px solid #E8D9C8' }}
@@ -182,7 +176,7 @@ export default function OrderForm() {
                         <input
                           type="text"
                           className="qty-value"
-                          value={quantities[item._id] || 0}
+                          value={cart[item._id] || 0}
                           readOnly
                         />
                         <button

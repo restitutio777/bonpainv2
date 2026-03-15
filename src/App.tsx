@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { SanityProvider, useSanity } from './context/SanityContext'
+import { CartProvider } from './context/CartContext'
+import FloatingCart from './components/FloatingCart'
 import VacationBanner from './components/VacationBanner'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
@@ -79,6 +81,7 @@ function AppContent() {
       <OrderForm />
       <About />
       <Footer />
+      <FloatingCart />
 
       {modalContent && (
         <Modal
@@ -94,7 +97,9 @@ function AppContent() {
 export default function App() {
   return (
     <SanityProvider>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </SanityProvider>
   )
 }
