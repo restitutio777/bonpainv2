@@ -1,22 +1,26 @@
-import { useState, useEffect, CSSProperties } from 'react';
-import { ShoppingBag, Menu, X } from 'lucide-react';
-import WheatIcon from './WheatIcon';
+import { useState, useEffect, CSSProperties } from 'react'
+import { ShoppingBag, Menu, X } from 'lucide-react'
+import WheatIcon from './WheatIcon'
+import { useSanity } from '../context/SanityContext'
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const { settings } = useSanity()
+
+  const bakeryName = settings?.bakeryName || 'Bon Pain Fait Main'
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const onScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const links = [
     { href: '#products', label: 'Nos pains' },
     { href: '#info', label: 'Infos' },
     { href: '#about', label: 'Notre histoire' },
-  ];
+  ]
 
   return (
     <>
@@ -37,7 +41,7 @@ export default function Nav() {
               className="font-display text-xl font-medium tracking-tight"
               style={{ color: scrolled ? '#2D1F14' : 'white' }}
             >
-              Bon Pain Fait Main
+              {bakeryName}
             </span>
           </a>
 
@@ -114,5 +118,5 @@ export default function Nav() {
         ))}
       </div>
     </>
-  );
+  )
 }

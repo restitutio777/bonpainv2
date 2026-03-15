@@ -1,9 +1,20 @@
-import { Plus, Calendar } from 'lucide-react';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { products } from '../data/products';
+import { Plus, Calendar } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useSanity } from '../context/SanityContext'
 
-export default function Products() {
-  useScrollAnimation();
+interface ProductsProps {
+  onOpenModal: (id: string) => void
+}
+
+export default function Products({ onOpenModal }: ProductsProps) {
+  useScrollAnimation()
+  const { products, content } = useSanity()
+
+  const label = content?.productsLabel || 'Nos pains'
+  const title = content?.productsTitle || 'Cuits au feu de bois,'
+  const titleAccent = content?.productsTitleAccent || 'avec amour'
+  const subtitle = content?.productsSubtitle || "Chaque produit est réalisé à partir de levain naturel et de farines sélectionnées. Commande minimum 2 jours à l'avance."
+  const saturdayNotice = content?.saturdayNotice || 'Samedi uniquement : Croissants et pains au chocolat disponibles sur commande.'
 
   return (
     <section
@@ -21,51 +32,53 @@ export default function Products() {
             className="text-xs font-semibold uppercase tracking-[0.15em] mb-4"
             style={{ color: '#A67C52' }}
           >
-            Nos pains
+            {label}
           </div>
           <h2
             className="font-display font-normal leading-[1.15] mb-4"
             style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#2D1F14' }}
           >
-            Cuits au feu de bois,{' '}
+            {title}{' '}
             <em className="not-italic italic" style={{ color: '#A67C52' }}>
-              avec amour
+              {titleAccent}
             </em>
           </h2>
           <p className="text-base leading-[1.7]" style={{ color: '#8B7A6B' }}>
-            Chaque produit est réalisé à partir de levain naturel et de farines sélectionnées.
-            Commande minimum 2 jours à l'avance.
+            {subtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
           {products.map((product, i) => (
             <div
-              key={product.id}
+              key={product._id}
               className="animate-on-scroll bg-white rounded-xl overflow-hidden cursor-pointer group transition-all duration-400"
               style={{
                 transitionDelay: `${(i % 3) * 0.1}s`,
                 boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
               }}
+              onClick={() => {
+                if (product.hasModal) onOpenModal(product._id)
+              }}
               onMouseEnter={(e) => {
-                const card = e.currentTarget as HTMLElement;
-                card.style.transform = 'translateY(-6px)';
-                card.style.boxShadow = '0 8px 32px rgba(45,31,20,0.1)';
-                const img = card.querySelector('img');
-                if (img) img.style.transform = 'scale(1.05)';
+                const card = e.currentTarget as HTMLElement
+                card.style.transform = 'translateY(-6px)'
+                card.style.boxShadow = '0 8px 32px rgba(45,31,20,0.1)'
+                const img = card.querySelector('img')
+                if (img) img.style.transform = 'scale(1.05)'
               }}
               onMouseLeave={(e) => {
-                const card = e.currentTarget as HTMLElement;
-                card.style.transform = 'translateY(0)';
-                card.style.boxShadow = '0 1px 3px rgba(45,31,20,0.06)';
-                const img = card.querySelector('img');
-                if (img) img.style.transform = 'scale(1)';
+                const card = e.currentTarget as HTMLElement
+                card.style.transform = 'translateY(0)'
+                card.style.boxShadow = '0 1px 3px rgba(45,31,20,0.06)'
+                const img = card.querySelector('img')
+                if (img) img.style.transform = 'scale(1)'
               }}
             >
               <div className="overflow-hidden relative" style={{ aspectRatio: '4/3' }}>
                 <img
-                  src={product.image}
-                  alt={product.name}
+                  src={product.image || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80'}
+                  alt={product.imageAlt || product.name}
                   className="w-full h-full object-cover transition-transform duration-700"
                   style={{ transform: 'scale(1)' }}
                 />
@@ -105,6 +118,7 @@ export default function Products() {
                   </span>
                   <a
                     href="#order"
+                    onClick={(e) => e.stopPropagation()}
                     className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200"
                     style={{
                       background: '#FDF8F3',
@@ -112,14 +126,16 @@ export default function Products() {
                       color: '#A67C52',
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = '#A67C52';
-                      (e.currentTarget as HTMLElement).style.color = 'white';
-                      (e.currentTarget as HTMLElement).style.borderColor = '#A67C52';
+                      e.stopPropagation()
+                      ;(e.currentTarget as HTMLElement).style.background = '#A67C52'
+                      ;(e.currentTarget as HTMLElement).style.color = 'white'
+                      ;(e.currentTarget as HTMLElement).style.borderColor = '#A67C52'
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = '#FDF8F3';
-                      (e.currentTarget as HTMLElement).style.color = '#A67C52';
-                      (e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8';
+                      e.stopPropagation()
+                      ;(e.currentTarget as HTMLElement).style.background = '#FDF8F3'
+                      ;(e.currentTarget as HTMLElement).style.color = '#A67C52'
+                      ;(e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8'
                     }}
                     aria-label={`Commander ${product.name}`}
                   >
@@ -140,11 +156,10 @@ export default function Products() {
         >
           <Calendar size={16} style={{ color: '#A67C52' }} />
           <span className="text-sm" style={{ color: '#6E4D32' }}>
-            <strong>Samedi uniquement :</strong> Croissants et pains au chocolat disponibles sur
-            commande.
+            {saturdayNotice}
           </span>
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,25 +1,38 @@
-import WheatIcon from './WheatIcon';
+import WheatIcon from './WheatIcon'
+import { useSanity } from '../context/SanityContext'
 
 const navLinks = [
   { href: '#products', label: 'Nos pains' },
   { href: '#info', label: 'Infos pratiques' },
   { href: '#order', label: 'Commander' },
   { href: '#about', label: 'Notre histoire' },
-];
-
-const contactLinks = [
-  { href: 'mailto:bonpain.artisan@gmail.com', label: 'bonpain.artisan@gmail.com' },
-  { href: 'tel:+32493210925', label: '+32 493 21 09 25' },
-  { href: '#', label: 'Rue de la Roer 19, 4950 Waimes' },
-];
+]
 
 const legalLinks = [
   { href: '/mentions-legales', label: 'Mentions légales' },
   { href: '/confidentialite', label: 'Confidentialité' },
   { href: '/cgv', label: 'CGV' },
-];
+]
 
 export default function Footer() {
+  const { settings, content } = useSanity()
+
+  const bakeryName = settings?.bakeryName || 'Bon Pain Fait Main'
+  const footerDescription = content?.footerDescription || 'Boulangerie artisanale au levain, nichée au cœur des Ardennes belges. Chaque pain est façonné à la main, sur commande.'
+  const email = settings?.email || 'bonpain.artisan@gmail.com'
+  const phone = settings?.phone || null
+  const address = settings?.address
+  const facebookUrl = settings?.facebookUrl || '#'
+  const instagramUrl = settings?.instagramUrl || '#'
+
+  const contactLinks = [
+    { href: `mailto:${email}`, label: email },
+    ...(phone ? [{ href: `tel:${phone.replace(/\s/g, '')}`, label: phone }] : []),
+    ...(address
+      ? [{ href: '#', label: `${address.street}, ${address.postalCode} ${address.city}` }]
+      : [{ href: '#', label: 'Rue de la Roer 19, 4950 Waimes' }]),
+  ]
+
   return (
     <footer style={{ background: '#2D1F14', color: '#D4BFA5' }}>
       <div className="container mx-auto px-5 md:px-10 max-w-[1200px] pt-16 pb-8">
@@ -31,12 +44,11 @@ export default function Footer() {
                 className="font-display text-xl font-medium"
                 style={{ color: '#F5EDE3' }}
               >
-                Bon Pain Fait Main
+                {bakeryName}
               </span>
             </a>
             <p className="text-sm leading-[1.7]" style={{ color: '#BFA07E', maxWidth: '300px' }}>
-              Boulangerie artisanale au levain, nichée au cœur des Ardennes belges. Chaque pain est
-              façonné à la main, sur commande.
+              {footerDescription}
             </p>
           </div>
 
@@ -79,22 +91,25 @@ export default function Footer() {
           className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-xs"
           style={{ borderTop: '1px solid rgba(255,255,255,0.08)', color: '#A67C52' }}
         >
-          <span>&copy; 2026 Bon Pain Fait Main — Tous droits réservés</span>
+          <span>&copy; {new Date().getFullYear()} {bakeryName} — Tous droits réservés</span>
           <div className="flex gap-4">
             {[
               {
                 label: 'Facebook',
+                href: facebookUrl,
                 path: 'M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z',
+                isInstagram: false,
               },
               {
                 label: 'Instagram',
+                href: instagramUrl,
                 path: null,
                 isInstagram: true,
               },
             ].map((social) => (
               <a
                 key={social.label}
-                href="#"
+                href={social.href || '#'}
                 aria-label={social.label}
                 className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 hover:-translate-y-0.5"
                 style={{ background: 'rgba(255,255,255,0.05)', color: '#BFA07E' }}
@@ -134,5 +149,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }

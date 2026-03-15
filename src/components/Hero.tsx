@@ -1,7 +1,21 @@
-import { ShoppingBag } from 'lucide-react';
-import WheatIcon from './WheatIcon';
+import { ShoppingBag } from 'lucide-react'
+import WheatIcon from './WheatIcon'
+import { useSanity } from '../context/SanityContext'
 
 export default function Hero() {
+  const { content } = useSanity()
+
+  const badge = content?.heroBadge || 'Boulangerie Artisanale — Waimes'
+  const title = content?.heroTitle || 'Du pain'
+  const titleAccent = content?.heroTitleAccent || 'au levain,'
+  const subtitle = content?.heroSubtitle || 'Benjamin façonne chaque pain sur commande, avec des farines locales et un levain cultivé avec soin. Rien de plus, rien de moins.'
+  const ctaPrimary = content?.heroCtaPrimary || 'Commander maintenant'
+  const ctaSecondary = content?.heroCtaSecondary || 'Découvrir notre histoire'
+
+  const bgStyle = content?.heroImage
+    ? `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('${content.heroImage}') center/cover no-repeat`
+    : `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80') center/cover no-repeat`
+
   return (
     <section
       className="relative min-h-screen flex items-center justify-center overflow-hidden hero-grain"
@@ -10,7 +24,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 scale-105"
         style={{
-          background: `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80') center/cover no-repeat`,
+          background: bgStyle,
           animation: 'fadeIn 1.5s ease forwards',
         }}
       />
@@ -27,7 +41,7 @@ export default function Hero() {
           }}
         >
           <WheatIcon size={14} />
-          Boulangerie Artisanale — Waimes
+          {badge}
         </div>
 
         <h1
@@ -37,12 +51,10 @@ export default function Hero() {
             animation: 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both',
           }}
         >
-          Du pain{' '}
+          {title}{' '}
           <em className="not-italic font-normal italic" style={{ color: '#D4A373' }}>
-            au levain,
+            {titleAccent}
           </em>
-          <br />
-          fait à la main
         </h1>
 
         <p
@@ -54,8 +66,7 @@ export default function Hero() {
             animation: 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.7s both',
           }}
         >
-          Benjamin façonne chaque pain sur commande, avec des farines locales et un levain cultivé
-          avec soin. Rien de plus, rien de moins.
+          {subtitle}
         </p>
 
         <div
@@ -79,7 +90,7 @@ export default function Hero() {
             }}
           >
             <ShoppingBag size={18} />
-            Commander maintenant
+            {ctaPrimary}
           </a>
           <a
             href="#about"
@@ -90,7 +101,7 @@ export default function Hero() {
               backdropFilter: 'blur(10px)',
             }}
           >
-            Découvrir notre histoire
+            {ctaSecondary}
           </a>
         </div>
       </div>
@@ -115,5 +126,5 @@ export default function Hero() {
         />
       </div>
     </section>
-  );
+  )
 }

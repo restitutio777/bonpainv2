@@ -1,10 +1,16 @@
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import { useState } from 'react'
+import { X } from 'lucide-react'
+import { useSanity } from '../context/SanityContext'
 
 export default function VacationBanner() {
-  const [visible, setVisible] = useState(true);
+  const [dismissed, setDismissed] = useState(false)
+  const { vacation } = useSanity()
 
-  if (!visible) return null;
+  if (dismissed || !vacation?.isActive) return null
+
+  const message = vacation.messageFr
+  const messageDe = vacation.messageDe
+  const emoji = vacation.emoji || ''
 
   return (
     <div
@@ -16,10 +22,17 @@ export default function VacationBanner() {
       }}
     >
       <p className="leading-snug">
-        <strong>Vacances 22–30 mars</strong> · Aucune commande &nbsp;|&nbsp; <strong>Urlaub 22.–30. März</strong> · Keine Bestellungen
+        {emoji && <span className="mr-1">{emoji}</span>}
+        <strong>{message}</strong>
+        {messageDe && (
+          <>
+            {' '}&nbsp;|&nbsp;{' '}
+            <strong>{messageDe}</strong>
+          </>
+        )}
       </p>
       <button
-        onClick={() => setVisible(false)}
+        onClick={() => setDismissed(true)}
         className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-full transition-colors"
         style={{ color: '#D4BFA5' }}
         aria-label="Fermer"
@@ -27,5 +40,5 @@ export default function VacationBanner() {
         <X size={16} />
       </button>
     </div>
-  );
+  )
 }

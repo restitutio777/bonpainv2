@@ -1,8 +1,61 @@
-import { Clock, Shield, MapPin } from 'lucide-react';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { Clock, Shield, MapPin, Wheat, Heart, Leaf, Star } from 'lucide-react'
+import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useSanity } from '../context/SanityContext'
+
+const iconMap: Record<string, React.ElementType> = {
+  clock: Clock,
+  shield: Shield,
+  'map-pin': MapPin,
+  wheat: Wheat,
+  heart: Heart,
+  leaf: Leaf,
+  star: Star,
+}
+
+const defaultValues = [
+  {
+    icon: Clock,
+    title: 'Fermentation lente',
+    text: 'Minimum 24h de levée pour un pain riche en saveurs et facile à digérer.',
+  },
+  {
+    icon: Shield,
+    title: 'Zéro gaspillage',
+    text: 'On ne cuit que ce qui est commandé. Chaque pain trouve son destinataire.',
+  },
+  {
+    icon: MapPin,
+    title: 'Circuit court',
+    text: 'Farines locales, économie de proximité et distribution dans la région.',
+  },
+]
 
 export default function About() {
-  useScrollAnimation();
+  useScrollAnimation()
+  const { content } = useSanity()
+
+  const label = content?.aboutLabel || 'Notre histoire'
+  const title = content?.aboutTitle || 'Le goût du'
+  const titleAccent = content?.aboutTitleAccent || 'vrai pain'
+  const aboutText = content?.aboutText
+    ? content.aboutText
+        .filter((b: any) => b._type === 'block')
+        .map((b: any) => (b.children || []).map((c: any) => c.text || '').join(''))
+        .filter(Boolean)
+    : [
+        "Installé au cœur des Ardennes belges, Benjamin Ramakers a fondé Bon Pain Fait Main avec une conviction simple : le pain mérite du temps, des ingrédients honnêtes et un savoir-faire authentique. Chaque miche est pétrie à la main, levée lentement au levain naturel, et cuite uniquement sur commande — pas de gaspillage, pas de compromis.",
+      ]
+  const aboutImage = content?.aboutImage || 'https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=800&q=80'
+  const aboutImageAlt = content?.aboutImageAlt || 'Benjamin pétrissant le pain'
+
+  const values =
+    content?.values && content.values.length > 0
+      ? content.values.map((v) => ({
+          icon: iconMap[v.icon] || Clock,
+          title: v.title,
+          text: v.description,
+        }))
+      : defaultValues
 
   return (
     <section
@@ -18,8 +71,8 @@ export default function About() {
               style={{ aspectRatio: '4/5', maxWidth: '500px', boxShadow: '0 16px 48px rgba(45,31,20,0.12)' }}
             >
               <img
-                src="https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=800&q=80"
-                alt="Benjamin pétrissant le pain"
+                src={aboutImage}
+                alt={aboutImageAlt}
                 className="w-full h-full object-cover"
               />
               <div
@@ -34,46 +87,29 @@ export default function About() {
               className="text-xs font-semibold uppercase tracking-[0.15em] mb-4"
               style={{ color: '#A67C52' }}
             >
-              Notre histoire
+              {label}
             </div>
             <h2
               className="font-display font-normal leading-[1.15] tracking-tight mb-6"
               style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#2D1F14' }}
             >
-              Le goût du{' '}
+              {title}{' '}
               <em className="not-italic italic" style={{ color: '#A67C52' }}>
-                vrai pain
+                {titleAccent}
               </em>
             </h2>
-            <p
-              className="leading-[1.8] mb-10"
-              style={{ fontSize: '1rem', color: '#6E4D32' }}
-            >
-              Installé au cœur des Ardennes belges, Benjamin Ramakers a fondé Bon Pain Fait Main
-              avec une conviction simple : le pain mérite du temps, des ingrédients honnêtes et un
-              savoir-faire authentique. Chaque miche est pétrie à la main, levée lentement au
-              levain naturel, et cuite uniquement sur commande — pas de gaspillage, pas de
-              compromis.
-            </p>
+            {aboutText.map((paragraph, i) => (
+              <p
+                key={i}
+                className="leading-[1.8] mb-4"
+                style={{ fontSize: '1rem', color: '#6E4D32' }}
+              >
+                {paragraph}
+              </p>
+            ))}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {[
-                {
-                  icon: Clock,
-                  title: 'Fermentation lente',
-                  text: 'Minimum 24h de levée pour un pain riche en saveurs et facile à digérer.',
-                },
-                {
-                  icon: Shield,
-                  title: 'Zéro gaspillage',
-                  text: 'On ne cuit que ce qui est commandé. Chaque pain trouve son destinataire.',
-                },
-                {
-                  icon: MapPin,
-                  title: 'Circuit court',
-                  text: 'Farines locales, économie de proximité et distribution dans la région.',
-                },
-              ].map((v) => (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">
+              {values.map((v) => (
                 <div
                   key={v.title}
                   className="p-6 rounded-xl transition-all duration-300 hover:-translate-y-1"
@@ -109,5 +145,5 @@ export default function About() {
         </div>
       </div>
     </section>
-  );
+  )
 }
