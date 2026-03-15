@@ -20,6 +20,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <form name="order" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="order" />
+      <input name="bot-field" />
+      <input name="nom" />
+      <input name="prenom" />
+      <input name="email" />
+      <input name="tel" />
+      <input name="jour" />
+      <input name="date" />
+      <input name="remarques" />
+      <input name="commande" />
+      <input name="total" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

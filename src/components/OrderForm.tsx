@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react'
-import { Info, ArrowRight, CheckCircle } from 'lucide-react'
+import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
@@ -19,7 +19,17 @@ export default function OrderForm() {
   const subtitle = content?.orderSubtitle || "Sélectionnez vos pains, indiquez vos coordonnées, et nous préparons tout pour le jour de retrait choisi."
   const orderNotice = content?.orderNotice || `Toute commande doit être passée au minimum ${orderLeadDays} jours à l'avance. Nous ne cuisons que ce qui a été commandé — merci de votre compréhension.`
 
-  const [submitted, setSubmitted] = useState(false)
+  const [nom, setNom] = useState('')
+  const [prenom, setPrenom] = useState('')
+  const [email, setEmail] = useState('')
+  const [tel, setTel] = useState('')
+  const [jour, setJour] = useState('')
+  const [date, setDate] = useState('')
+  const [remarques, setRemarques] = useState('')
+
+  const [submitting, setSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const changeQty = (id: string, delta: number) => {
     const current = cart[id] || 0
@@ -28,9 +38,82 @@ export default function OrderForm() {
 
   const total = totalPrice(products)
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
+    setSubmitting(true)
+    setSubmitError(null)
+
+    const orderLines = products
+      .filter((p) => p.orderInForm && (cart[p._id] || 0) > 0)
+      .map((p) => `${cart[p._id]}x ${p.name} — €${(p.price * cart[p._id]).toFixed(2).replace('.', ',')}`)
+      .join('\n')
+
+    const totalVal = products
+      .filter((p) => p.orderInForm && (cart[p._id] || 0) > 0)
+      .reduce((sum, p) => sum + p.price * (cart[p._id] || 0), 0)
+
+    const formData = new URLSearchParams()
+    formData.append('form-name', 'order')
+    formData.append('nom', nom)
+    formData.append('prenom', prenom)
+    formData.append('email', email)
+    formData.append('tel', tel)
+    formData.append('jour', jour)
+    formData.append('date', date)
+    formData.append('remarques', remarques)
+    formData.append('commande', orderLines)
+    formData.append('total', `€${totalVal.toFixed(2).replace('.', ',')}`)
+
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+      })
+      if (res.ok) {
+        setSubmitSuccess(true)
+        clearCart()
+      } else {
+        setSubmitError('Une erreur est survenue. Veuillez réessayer.')
+      }
+    } catch {
+      setSubmitError('Erreur de connexion. Veuillez réessayer.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const resetForm = () => {
+    setSubmitSuccess(false)
+    setNom('')
+    setPrenom('')
+    setEmail('')
+    setTel('')
+    setJour('')
+    setDate('')
+    setRemarques('')
+    clearCart()
+  }
+
+  const inputStyle = {
+    border: '1px solid #E8D9C8',
+    background: '#FDF8F3',
+    color: '#2D1F14',
+    fontFamily: 'inherit',
+  }
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const el = e.currentTarget as HTMLElement
+    el.style.borderColor = '#A67C52'
+    el.style.boxShadow = '0 0 0 3px rgba(166,124,82,0.1)'
+    el.style.background = 'white'
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const el = e.currentTarget as HTMLElement
+    el.style.borderColor = '#E8D9C8'
+    el.style.boxShadow = 'none'
+    el.style.background = '#FDF8F3'
   }
 
   return (
@@ -66,7 +149,7 @@ export default function OrderForm() {
         </div>
 
         <div className="max-w-[800px] mx-auto">
-          {submitted && (
+          {submitSuccess && (
             <div
               className="rounded-[20px] p-12 text-center animate-on-scroll visible"
               style={{ background: 'white', boxShadow: '0 4px 16px rgba(45,31,20,0.08)' }}
@@ -78,17 +161,17 @@ export default function OrderForm() {
                 <CheckCircle size={32} />
               </div>
               <h3 className="font-display text-2xl font-normal mb-3" style={{ color: '#2D1F14' }}>
-                Commande envoyée !
+                Merci pour votre commande !
               </h3>
-              <p className="text-sm leading-[1.8] mb-8" style={{ color: '#6E4D32', maxWidth: '420px', margin: '0 auto 2rem' }}>
-                Merci pour votre commande. Nous vous confirmerons par e-mail ou téléphone dans les plus brefs délais.
+              <p
+                className="text-sm leading-[1.8] mb-8"
+                style={{ color: '#6E4D32', maxWidth: '420px', margin: '0 auto 2rem' }}
+              >
+                Benjamin a bien reçu votre commande. Vous recevrez une confirmation par email.
               </p>
               <button
                 type="button"
-                onClick={() => {
-                  setSubmitted(false)
-                  clearCart()
-                }}
+                onClick={resetForm}
                 className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300"
                 style={{ background: '#FDF8F3', color: '#A67C52', border: '1px solid #E8D9C8' }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#F5EDE3' }}
@@ -99,7 +182,7 @@ export default function OrderForm() {
             </div>
           )}
 
-          {!submitted && (
+          {!submitSuccess && (
             <>
               {isDisabled && (
                 <div
@@ -127,10 +210,17 @@ export default function OrderForm() {
 
               <form
                 id="orderForm"
+                name="order"
                 onSubmit={handleSubmit}
                 className="rounded-[20px] p-8 md:p-12 animate-on-scroll"
                 style={{ background: 'white', boxShadow: '0 4px 16px rgba(45,31,20,0.08)' }}
               >
+                <input type="hidden" name="form-name" value="order" />
+
+                <p className="hidden">
+                  <label>Ne pas remplir : <input name="bot-field" /></label>
+                </p>
+
                 <div
                   className="font-display text-xl font-semibold mb-6 pb-3"
                   style={{ color: '#2D1F14', borderBottom: '1px solid #F5EDE3' }}
@@ -200,41 +290,80 @@ export default function OrderForm() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                  {[
-                    { id: 'nom', label: 'Nom *', type: 'text', placeholder: 'Votre nom', required: true },
-                    { id: 'prenom', label: 'Prénom *', type: 'text', placeholder: 'Votre prénom', required: true },
-                    { id: 'email', label: 'Email *', type: 'email', placeholder: 'votre@email.be', required: true },
-                    { id: 'tel', label: 'Téléphone', type: 'tel', placeholder: '+32 ...', required: false },
-                  ].map((field) => (
-                    <div key={field.id} className="flex flex-col gap-1.5">
-                      <label
-                        htmlFor={field.id}
-                        className="text-xs font-semibold tracking-wide"
-                        style={{ color: '#6E4D32' }}
-                      >
-                        {field.label}
-                      </label>
-                      <input
-                        type={field.type}
-                        id={field.id}
-                        name={field.id}
-                        required={field.required}
-                        placeholder={field.placeholder}
-                        className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
-                        style={{ border: '1px solid #E8D9C8', background: '#FDF8F3', color: '#2D1F14', fontFamily: 'inherit' }}
-                        onFocus={(e) => {
-                          (e.currentTarget as HTMLElement).style.borderColor = '#A67C52'
-                          ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(166,124,82,0.1)'
-                          ;(e.currentTarget as HTMLElement).style.background = 'white'
-                        }}
-                        onBlur={(e) => {
-                          (e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8'
-                          ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
-                          ;(e.currentTarget as HTMLElement).style.background = '#FDF8F3'
-                        }}
-                      />
-                    </div>
-                  ))}
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="nom" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
+                      Nom *
+                    </label>
+                    <input
+                      type="text"
+                      id="nom"
+                      name="nom"
+                      required
+                      placeholder="Votre nom"
+                      value={nom}
+                      onChange={(e) => setNom(e.target.value)}
+                      className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
+                      style={inputStyle}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="prenom" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
+                      Prénom *
+                    </label>
+                    <input
+                      type="text"
+                      id="prenom"
+                      name="prenom"
+                      required
+                      placeholder="Votre prénom"
+                      value={prenom}
+                      onChange={(e) => setPrenom(e.target.value)}
+                      className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
+                      style={inputStyle}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="email" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      placeholder="votre@email.be"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
+                      style={inputStyle}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="tel" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
+                      Téléphone
+                    </label>
+                    <input
+                      type="tel"
+                      id="tel"
+                      name="tel"
+                      placeholder="+32 ..."
+                      value={tel}
+                      onChange={(e) => setTel(e.target.value)}
+                      className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
+                      style={inputStyle}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                    />
+                  </div>
 
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="jour" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
@@ -244,16 +373,12 @@ export default function OrderForm() {
                       id="jour"
                       name="jour"
                       required
+                      value={jour}
+                      onChange={(e) => setJour(e.target.value)}
                       className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
-                      style={{ border: '1px solid #E8D9C8', background: '#FDF8F3', color: '#2D1F14', fontFamily: 'inherit' }}
-                      onFocus={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderColor = '#A67C52'
-                        ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(166,124,82,0.1)'
-                      }}
-                      onBlur={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8'
-                        ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
-                      }}
+                      style={inputStyle}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
                     >
                       <option value="">Choisir un jour...</option>
                       <option value="mercredi">Mercredi</option>
@@ -271,16 +396,12 @@ export default function OrderForm() {
                       id="date"
                       name="date"
                       required
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
                       className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
-                      style={{ border: '1px solid #E8D9C8', background: '#FDF8F3', color: '#2D1F14', fontFamily: 'inherit' }}
-                      onFocus={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderColor = '#A67C52'
-                        ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(166,124,82,0.1)'
-                      }}
-                      onBlur={(e) => {
-                        (e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8'
-                        ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
-                      }}
+                      style={inputStyle}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
                     />
                   </div>
                 </div>
@@ -294,20 +415,24 @@ export default function OrderForm() {
                     name="remarques"
                     placeholder="Allergies, préférences, questions..."
                     rows={4}
+                    value={remarques}
+                    onChange={(e) => setRemarques(e.target.value)}
                     className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200 resize-y"
-                    style={{ border: '1px solid #E8D9C8', background: '#FDF8F3', color: '#2D1F14', fontFamily: 'inherit', minHeight: '100px' }}
-                    onFocus={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#A67C52'
-                      ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(166,124,82,0.1)'
-                      ;(e.currentTarget as HTMLElement).style.background = 'white'
-                    }}
-                    onBlur={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#E8D9C8'
-                      ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
-                      ;(e.currentTarget as HTMLElement).style.background = '#FDF8F3'
-                    }}
+                    style={{ ...inputStyle, minHeight: '100px' }}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                   />
                 </div>
+
+                {submitError && (
+                  <div
+                    className="flex items-center gap-3 px-5 py-4 rounded-xl mb-6 text-sm"
+                    style={{ background: '#FBF3EC', border: '1px solid #E8D9C8', color: '#6E4D32' }}
+                  >
+                    <Info size={16} className="flex-shrink-0" style={{ color: '#A67C52' }} />
+                    {submitError}
+                  </div>
+                )}
 
                 <div
                   className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6"
@@ -321,18 +446,27 @@ export default function OrderForm() {
                   </div>
                   <button
                     type="submit"
-                    disabled={!!isDisabled}
+                    disabled={!!isDisabled || submitting}
                     className="inline-flex items-center gap-2.5 px-9 py-4 rounded-full text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                     style={{ background: '#A67C52', boxShadow: '0 4px 20px rgba(166,124,82,0.3)', fontFamily: 'inherit' }}
                     onMouseEnter={(e) => {
-                      if (!isDisabled) (e.currentTarget as HTMLElement).style.background = '#8B6340'
+                      if (!isDisabled && !submitting) (e.currentTarget as HTMLElement).style.background = '#8B6340'
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.background = '#A67C52'
                     }}
                   >
-                    <ArrowRight size={18} />
-                    Envoyer la commande
+                    {submitting ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin" />
+                        Envoi en cours...
+                      </>
+                    ) : (
+                      <>
+                        <ArrowRight size={18} />
+                        Envoyer la commande
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
