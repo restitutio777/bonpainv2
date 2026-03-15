@@ -10,7 +10,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 scale-105"
         style={{
-          background: `linear-gradient(180deg, rgba(45,31,20,0.45) 0%, rgba(45,31,20,0.55) 50%, rgba(45,31,20,0.75) 100%), url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80') center/cover no-repeat`,
+          background: `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80') center/cover no-repeat`,
           animation: 'fadeIn 1.5s ease forwards',
         }}
       />
