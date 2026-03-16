@@ -11,6 +11,7 @@ import Info from './components/Info'
 import OrderForm from './components/OrderForm'
 import Footer from './components/Footer'
 import Modal from './components/Modal'
+import PWAInstallPrompt from './components/PWAInstallPrompt'
 import MentionsLegales from './components/legal/MentionsLegales'
 import Confidentialite from './components/legal/Confidentialite'
 import CGV from './components/legal/CGV'
@@ -82,6 +83,7 @@ function AppContent() {
       <About />
       <Footer />
       <FloatingCart />
+      <PWAInstallPrompt />
 
       {modalContent && (
         <Modal
