@@ -91,7 +91,7 @@ export default function About() {
             </div>
             <h2
               className="font-display font-normal leading-[1.15] tracking-tight mb-6"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#2D1F14' }}
+              style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
             >
               {title}{' '}
               <em className="not-italic italic" style={{ color: '#A67C52' }}>
@@ -102,7 +102,7 @@ export default function About() {
               <p
                 key={i}
                 className="leading-[1.8] mb-4"
-                style={{ fontSize: '1rem', color: '#6E4D32' }}
+                style={{ fontSize: '1.1rem', color: '#6E4D32' }}
               >
                 {paragraph}
               </p>
@@ -130,12 +130,12 @@ export default function About() {
                     <v.icon size={22} />
                   </div>
                   <h3
-                    className="font-display font-semibold text-lg mb-2"
+                    className="font-display font-semibold text-xl mb-2"
                     style={{ color: '#2D1F14' }}
                   >
                     {v.title}
                   </h3>
-                  <p className="text-sm leading-[1.6]" style={{ color: '#8B7A6B' }}>
+                  <p className="text-base leading-[1.6]" style={{ color: '#8B7A6B' }}>
                     {v.text}
                   </p>
                 </div>

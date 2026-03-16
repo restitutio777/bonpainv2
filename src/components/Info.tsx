@@ -49,7 +49,7 @@ export default function Info() {
           </div>
           <h2
             className="font-display font-normal leading-[1.15]"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#2D1F14' }}
+            style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
           >
             Quand, où,{' '}
             <em className="not-italic italic" style={{ color: '#A67C52' }}>
@@ -75,14 +75,14 @@ export default function Info() {
             >
               <Clock size={24} />
             </div>
-            <h3 className="font-display text-xl font-semibold mb-4" style={{ color: '#2D1F14' }}>
+            <h3 className="font-display text-2xl font-semibold mb-4" style={{ color: '#2D1F14' }}>
               Horaires
             </h3>
             <ul className="list-none p-0">
               {hours.map((h) => (
                 <li
                   key={h.day}
-                  className="py-2 text-sm leading-[1.7]"
+                  className="py-2 text-base leading-[1.7]"
                   style={{ borderBottom: '1px solid #F5EDE3', color: '#6E4D32' }}
                 >
                   <span className="font-semibold" style={{ color: '#2D1F14' }}>
@@ -110,10 +110,10 @@ export default function Info() {
             >
               <MapPin size={24} />
             </div>
-            <h3 className="font-display text-xl font-semibold mb-4" style={{ color: '#2D1F14' }}>
+            <h3 className="font-display text-2xl font-semibold mb-4" style={{ color: '#2D1F14' }}>
               Adresse
             </h3>
-            <p className="text-sm leading-[1.7]" style={{ color: '#6E4D32' }}>
+            <p className="text-base leading-[1.7]" style={{ color: '#6E4D32' }}>
               {addressLine.split('\n').map((line, i) => (
                 <span key={i}>
                   {line}
@@ -121,7 +121,7 @@ export default function Info() {
                 </span>
               ))}
             </p>
-            <p className="mt-3 text-xs leading-[1.7]" style={{ color: '#8B7A6B' }}>
+            <p className="mt-3 text-sm leading-[1.7]" style={{ color: '#8B7A6B' }}>
               Retrait sur place uniquement.
               <br />
               Commande minimum {orderLeadDays} jours à l'avance.
@@ -144,14 +144,14 @@ export default function Info() {
             >
               <Home size={24} />
             </div>
-            <h3 className="font-display text-xl font-semibold mb-4" style={{ color: '#2D1F14' }}>
+            <h3 className="font-display text-2xl font-semibold mb-4" style={{ color: '#2D1F14' }}>
               Points de vente
             </h3>
             <ul className="list-none p-0">
               {stores.map((s) => (
                 <li
                   key={s.name}
-                  className="py-2 text-sm leading-[1.7] flex flex-col items-center gap-1"
+                  className="py-2 text-base leading-[1.7] flex flex-col items-center gap-1"
                   style={{ borderBottom: '1px solid #F5EDE3' }}
                 >
                   <span style={{ color: '#2D1F14' }}>{s.name}</span>

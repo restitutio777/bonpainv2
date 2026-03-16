@@ -136,14 +136,14 @@ export default function OrderForm() {
           </div>
           <h2
             className="font-display font-normal leading-[1.15] mb-4"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#2D1F14' }}
+            style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
           >
             {title}{' '}
             <em className="not-italic italic" style={{ color: '#A67C52' }}>
               {titleAccent}
             </em>
           </h2>
-          <p className="text-base leading-[1.7]" style={{ color: '#8B7A6B' }}>
+          <p className="text-lg leading-[1.7]" style={{ color: '#8B7A6B' }}>
             {subtitle}
           </p>
         </div>

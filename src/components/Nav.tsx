@@ -25,7 +25,7 @@ export default function Nav() {
   return (
     <>
       <nav
-        className={`relative z-40 h-[72px] transition-all duration-500`}
+        className={`relative z-40 h-[88px] transition-all duration-500`}
       >
         <div
           className={`absolute inset-0 transition-all duration-500 ${scrolled ? 'glass-nav' : 'bg-black/30 backdrop-blur-sm'}`}
@@ -33,12 +33,12 @@ export default function Nav() {
         <div className="relative container mx-auto px-5 md:px-10 max-w-[1200px] h-full flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 no-underline text-warm-900">
             <WheatIcon
-              size={32}
+              size={40}
               className="text-warm-500"
               style={{ animation: 'floatWheat 4s ease-in-out infinite' } as CSSProperties}
             />
             <span
-              className="font-display text-xl font-medium tracking-tight"
+              className="font-display text-2xl font-medium tracking-tight"
               style={{ color: scrolled ? '#2D1F14' : 'white' }}
             >
               {bakeryName}
@@ -50,7 +50,7 @@ export default function Nav() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="relative text-sm font-medium uppercase tracking-wide no-underline transition-colors duration-300 group"
+                  className="relative text-base font-medium uppercase tracking-wide no-underline transition-colors duration-300 group"
                   style={{ color: scrolled ? '#6E4D32' : 'rgba(255,255,255,0.85)' }}
                 >
                   {link.label}
@@ -64,7 +64,7 @@ export default function Nav() {
             <li>
               <a
                 href="#order"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest no-underline text-white transition-all duration-300 hover:-translate-y-px"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold uppercase tracking-widest no-underline text-white transition-all duration-300 hover:-translate-y-px"
                 style={{
                   background: '#A67C52',
                   boxShadow: '0 2px 8px rgba(166,124,82,0.3)',

@@ -60,7 +60,7 @@ export default function Hero() {
         <p
           className="mx-auto mb-10 leading-[1.7]"
           style={{
-            fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+            fontSize: 'clamp(1.1rem, 2vw, 1.35rem)',
             color: 'rgba(255,255,255,0.75)',
             maxWidth: '520px',
             animation: 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.7s both',

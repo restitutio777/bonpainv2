@@ -38,14 +38,14 @@ export default function Products({ onOpenModal }: ProductsProps) {
           </div>
           <h2
             className="font-display font-normal leading-[1.15] mb-4"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#2D1F14' }}
+            style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
           >
             {title}{' '}
             <em className="not-italic italic" style={{ color: '#A67C52' }}>
               {titleAccent}
             </em>
           </h2>
-          <p className="text-base leading-[1.7]" style={{ color: '#8B7A6B' }}>
+          <p className="text-lg leading-[1.7]" style={{ color: '#8B7A6B' }}>
             {subtitle}
           </p>
         </div>
@@ -100,12 +100,12 @@ export default function Products({ onOpenModal }: ProductsProps) {
 
               <div className="p-6">
                 <h3
-                  className="font-display text-xl font-medium mb-1.5"
+                  className="font-display text-2xl font-medium mb-1.5"
                   style={{ color: '#2D1F14' }}
                 >
                   {product.name}
                 </h3>
-                <p className="text-sm leading-[1.5]" style={{ color: '#8B7A6B' }}>
+                <p className="text-base leading-[1.5]" style={{ color: '#8B7A6B' }}>
                   {product.description}
                 </p>
                 <div
@@ -113,7 +113,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                   style={{ borderTop: '1px solid #F5EDE3' }}
                 >
                   <span
-                    className="font-display text-lg font-semibold"
+                    className="font-display text-xl font-semibold"
                     style={{ color: '#A67C52' }}
                   >
                     € {product.price.toFixed(2).replace('.', ',')}
@@ -164,7 +164,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
           }}
         >
           <Calendar size={16} style={{ color: '#A67C52' }} />
-          <span className="text-sm" style={{ color: '#6E4D32' }}>
+          <span className="text-base" style={{ color: '#6E4D32' }}>
             {saturdayNotice}
           </span>
         </div>
