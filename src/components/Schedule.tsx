@@ -1,4 +1,4 @@
-import { Clock, CakeSlice, Wheat } from 'lucide-react'
+import { Clock, CakeSlice, Wheat, ChevronRight } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 
 const breads = [
@@ -20,20 +20,17 @@ const viennoiseries = ['Croissant', 'Pain au chocolat']
 const days = [
   {
     day: 'Mercredi',
-    hours: ['8:00 - 12:00'],
-    note: null,
+    hours: ['8h — 12h'],
     hasViennoiseries: false,
   },
   {
     day: 'Vendredi',
-    hours: ['8:00 - 12:00', '13:00 - 15:00'],
-    note: null,
+    hours: ['8h — 12h', '13h — 15h'],
     hasViennoiseries: false,
   },
   {
     day: 'Samedi',
-    hours: ['8:00 - 12:00'],
-    note: 'Pains & Viennoiseries',
+    hours: ['8h — 12h'],
     hasViennoiseries: true,
   },
 ]
@@ -51,7 +48,7 @@ export default function Schedule() {
         className="absolute top-0 left-0 right-0 h-px"
         style={{ background: 'linear-gradient(90deg, transparent, #E8D9C8, transparent)' }}
       />
-      <div className="container mx-auto px-5 md:px-10 max-w-[1200px]">
+      <div className="container mx-auto px-5 md:px-10 max-w-[1000px]">
         <div className="text-center max-w-[600px] mx-auto mb-16 animate-on-scroll">
           <div
             className="text-xs font-semibold uppercase tracking-[0.15em] mb-4"
@@ -64,7 +61,7 @@ export default function Schedule() {
             style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
           >
             Vente a l'atelier,{' '}
-            <em className="not-italic italic" style={{ color: '#A67C52' }}>
+            <em className="italic" style={{ color: '#A67C52' }}>
               sur commande
             </em>
           </h2>
@@ -73,139 +70,159 @@ export default function Schedule() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {days.map((d, i) => (
-            <div
-              key={d.day}
-              className="animate-on-scroll rounded-[20px] overflow-hidden transition-all duration-300 group"
-              style={{
-                background: 'white',
-                boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
-                transitionDelay: `${i * 0.1}s`,
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(45,31,20,0.1)'
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(45,31,20,0.06)'
-              }}
-            >
+        <div className="animate-on-scroll mb-12">
+          <div className="flex flex-col gap-3">
+            {days.map((d, i) => (
               <div
-                className="px-8 pt-8 pb-6 text-center"
-                style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)' }}
+                key={d.day}
+                className="rounded-2xl overflow-hidden transition-all duration-300"
+                style={{
+                  background: 'white',
+                  boxShadow: '0 1px 3px rgba(45,31,20,0.05)',
+                  animationDelay: `${i * 0.08}s`,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(45,31,20,0.08)'
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(45,31,20,0.05)'
+                }}
               >
-                <h3
-                  className="font-display text-2xl font-semibold mb-4"
-                  style={{ color: 'white' }}
-                >
-                  {d.day}
-                </h3>
-                <div className="flex flex-col items-center gap-2">
-                  {d.hours.map((h, idx) => (
-                    <div
-                      key={idx}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
-                      style={{ background: 'rgba(255,255,255,0.18)', color: 'white' }}
+                <div className="flex items-center px-6 py-5 md:px-8 md:py-6 gap-4 md:gap-8">
+                  <div
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)' }}
+                  >
+                    <span className="text-white font-display font-semibold text-lg md:text-xl">
+                      {d.day.slice(0, 2)}
+                    </span>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3
+                      className="font-display text-xl md:text-2xl font-semibold leading-tight"
+                      style={{ color: '#2D1F14' }}
                     >
-                      <Clock size={14} />
-                      {h}
+                      {d.day}
+                    </h3>
+                    <div className="flex items-center gap-1 mt-1">
+                      {d.hasViennoiseries ? (
+                        <div className="flex items-center gap-1.5">
+                          <Wheat size={13} style={{ color: '#B8956A' }} />
+                          <span className="text-sm" style={{ color: '#8B7A6B' }}>Pains</span>
+                          <span className="text-sm mx-0.5" style={{ color: '#D4BFA5' }}>&</span>
+                          <CakeSlice size={13} style={{ color: '#B8956A' }} />
+                          <span className="text-sm" style={{ color: '#8B7A6B' }}>Viennoiseries</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5">
+                          <Wheat size={13} style={{ color: '#B8956A' }} />
+                          <span className="text-sm" style={{ color: '#8B7A6B' }}>Pains</span>
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                    {d.hours.map((h, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 text-sm md:text-base font-medium"
+                        style={{ color: '#2D1F14' }}
+                      >
+                        <Clock size={15} style={{ color: '#A67C52' }} />
+                        {h}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="px-8 py-5">
-                {d.note ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <CakeSlice size={15} style={{ color: '#A67C52' }} />
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: '#A67C52' }}
-                    >
-                      {d.note}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <Wheat size={15} style={{ color: '#A67C52' }} />
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: '#A67C52' }}
-                    >
-                      Pains
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <div
-          className="animate-on-scroll rounded-[20px] p-8 md:p-10"
-          style={{
-            background: 'white',
-            boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
-          }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div>
+        <div className="animate-on-scroll">
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              background: 'white',
+              boxShadow: '0 1px 3px rgba(45,31,20,0.05)',
+            }}
+          >
+            <div
+              className="px-6 py-4 md:px-8 md:py-5 flex items-center gap-3"
+              style={{ borderBottom: '1px solid #F5EDE3' }}
+            >
               <div
-                className="text-xs font-semibold uppercase tracking-[0.12em] mb-5 flex items-center gap-2"
-                style={{ color: '#A67C52' }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: '#FDF3E7' }}
               >
-                <Wheat size={14} />
-                Nos pains
+                <Wheat size={16} style={{ color: '#A67C52' }} />
               </div>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-0">
-                {breads.map((bread, idx) => (
-                  <div
+              <h3
+                className="font-display text-lg font-semibold"
+                style={{ color: '#2D1F14' }}
+              >
+                Nos pains
+              </h3>
+            </div>
+            <div className="px-6 py-5 md:px-8 md:py-6">
+              <div className="flex flex-wrap gap-2">
+                {breads.map((bread) => (
+                  <span
                     key={bread}
-                    className="py-2.5 text-[0.95rem] leading-[1.5] flex items-center gap-2.5"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm"
                     style={{
-                      borderBottom: idx < breads.length - (breads.length % 2 === 0 ? 2 : 1) ? '1px solid #F5EDE3' : 'none',
+                      background: '#FDF8F3',
                       color: '#6E4D32',
+                      border: '1px solid #F0E4D5',
                     }}
                   >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: '#D4BFA5' }}
-                    />
+                    <ChevronRight size={12} style={{ color: '#C4A882' }} />
                     {bread}
-                  </div>
+                  </span>
                 ))}
               </div>
             </div>
 
-            <div>
+            <div
+              className="px-6 py-4 md:px-8 md:py-5 flex items-center gap-3"
+              style={{ borderTop: '1px solid #F5EDE3', borderBottom: '1px solid #F5EDE3' }}
+            >
               <div
-                className="text-xs font-semibold uppercase tracking-[0.12em] mb-5 flex items-center gap-2"
-                style={{ color: '#A67C52' }}
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: '#FDF3E7' }}
               >
-                <CakeSlice size={14} />
-                Viennoiseries
-                <span
-                  className="text-[0.65rem] font-medium normal-case tracking-normal ml-1 px-2 py-0.5 rounded-full"
-                  style={{ background: '#FDF3E7', color: '#A67C52' }}
-                >
-                  Samedi uniquement
-                </span>
+                <CakeSlice size={16} style={{ color: '#A67C52' }} />
               </div>
-              <div className="space-y-0">
-                {viennoiseries.map((v, idx) => (
-                  <div
+              <h3
+                className="font-display text-lg font-semibold"
+                style={{ color: '#2D1F14' }}
+              >
+                Viennoiseries
+              </h3>
+              <span
+                className="text-xs font-medium px-2.5 py-1 rounded-full ml-auto"
+                style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)', color: 'white' }}
+              >
+                Samedi
+              </span>
+            </div>
+            <div className="px-6 py-5 md:px-8 md:py-6">
+              <div className="flex flex-wrap gap-2">
+                {viennoiseries.map((v) => (
+                  <span
                     key={v}
-                    className="py-2.5 text-[0.95rem] leading-[1.5] flex items-center gap-2.5"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm"
                     style={{
-                      borderBottom: idx < viennoiseries.length - 1 ? '1px solid #F5EDE3' : 'none',
+                      background: '#FDF8F3',
                       color: '#6E4D32',
+                      border: '1px solid #F0E4D5',
                     }}
                   >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: '#A67C52' }}
-                    />
+                    <ChevronRight size={12} style={{ color: '#C4A882' }} />
                     {v}
-                  </div>
+                  </span>
                 ))}
               </div>
             </div>
