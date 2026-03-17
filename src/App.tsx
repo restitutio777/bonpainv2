@@ -7,6 +7,7 @@ import Nav from './components/Nav'
 import Hero from './components/Hero'
 import About from './components/About'
 import Products from './components/Products'
+import Schedule from './components/Schedule'
 import Info from './components/Info'
 import OrderForm from './components/OrderForm'
 import Footer from './components/Footer'
@@ -78,6 +79,7 @@ function AppContent() {
       </div>
       <Hero />
       <Products onOpenModal={(id: string) => setActiveModal(id)} />
+      <Schedule />
       <Info />
       <OrderForm />
       <About />

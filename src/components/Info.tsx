@@ -26,11 +26,11 @@ export default function Info() {
       ]
 
   const stores = partnerStores.length > 0
-    ? partnerStores.map((s) => ({ name: s.name, location: s.city }))
+    ? partnerStores.map((s) => ({ name: s.name, location: s.city, detail: '' }))
     : [
-        { name: 'Épicerie du Village', location: 'Waimes' },
-        { name: 'Bio-Laden Eifel', location: 'Bütgenbach' },
-        { name: 'Ferme-Fromagerie', location: 'Malmedy' },
+        { name: "L'Epicerie am Eck", location: 'Heppenbach', detail: 'Mercredi' },
+        { name: 'Naturkostladen — Daniel Offermann', location: 'Butgenbach', detail: 'Mercredi' },
+        { name: "L'Epicerie des Champs", location: 'Rue Neuve 29, 4960 Malmedy', detail: 'Ven, Sam, Dim' },
       ]
 
   const addressLine = address
@@ -151,10 +151,10 @@ export default function Info() {
               {stores.map((s) => (
                 <li
                   key={s.name}
-                  className="py-2 text-base leading-[1.7] flex flex-col items-center gap-1"
+                  className="py-3 text-base leading-[1.7] flex flex-col items-center gap-1.5"
                   style={{ borderBottom: '1px solid #F5EDE3' }}
                 >
-                  <span style={{ color: '#2D1F14' }}>{s.name}</span>
+                  <span className="font-medium text-sm" style={{ color: '#2D1F14' }}>{s.name}</span>
                   <span
                     className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-xs"
                     style={{ background: '#FDF8F3', color: '#A67C52' }}
@@ -162,6 +162,15 @@ export default function Info() {
                     <MapPin size={10} />
                     {s.location}
                   </span>
+                  {s.detail && (
+                    <span
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs"
+                      style={{ background: '#F5EDE3', color: '#6E4D32' }}
+                    >
+                      <Clock size={10} />
+                      {s.detail}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
