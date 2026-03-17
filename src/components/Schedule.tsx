@@ -105,11 +105,19 @@ export default function Schedule() {
                   )}
                 </div>
                 <div
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-right whitespace-nowrap"
                   style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}
                 >
-                  <Clock size={14} />
-                  {d.hours}
+                  <Clock size={14} className="flex-shrink-0" />
+                  <span className="flex flex-col leading-tight">
+                    {d.hours.includes('&') ? (
+                      d.hours.split('&').map((part, idx) => (
+                        <span key={idx}>{part.trim()}</span>
+                      ))
+                    ) : (
+                      d.hours
+                    )}
+                  </span>
                 </div>
               </div>
 
