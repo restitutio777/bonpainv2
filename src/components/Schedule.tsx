@@ -1,4 +1,4 @@
-import { Clock, CakeSlice } from 'lucide-react'
+import { Clock, CakeSlice, Wheat } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 
 const breads = [
@@ -20,19 +20,19 @@ const viennoiseries = ['Croissant', 'Pain au chocolat']
 const days = [
   {
     day: 'Mercredi',
-    hours: '8:00 - 12:00',
+    hours: ['8:00 - 12:00'],
     note: null,
     hasViennoiseries: false,
   },
   {
     day: 'Vendredi',
-    hours: '8:00 - 12:00 & 13:00 - 15:00',
+    hours: ['8:00 - 12:00', '13:00 - 15:00'],
     note: null,
     hasViennoiseries: false,
   },
   {
     day: 'Samedi',
-    hours: '8:00 - 12:00',
+    hours: ['8:00 - 12:00'],
     note: 'Pains & Viennoiseries',
     hasViennoiseries: true,
   },
@@ -73,106 +73,143 @@ export default function Schedule() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {days.map((d, i) => (
             <div
               key={d.day}
-              className="animate-on-scroll rounded-[20px] overflow-hidden transition-shadow duration-300"
+              className="animate-on-scroll rounded-[20px] overflow-hidden transition-all duration-300 group"
               style={{
                 background: 'white',
                 boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
                 transitionDelay: `${i * 0.1}s`,
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(45,31,20,0.08)'
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(45,31,20,0.1)'
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(45,31,20,0.06)'
               }}
             >
               <div
-                className="px-8 py-5 flex items-center justify-between"
+                className="px-8 pt-8 pb-6 text-center"
                 style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)' }}
               >
-                <div>
-                  <h3 className="font-display text-2xl font-semibold" style={{ color: 'white' }}>
-                    {d.day}
-                  </h3>
-                  {d.note && (
-                    <span className="text-xs font-medium mt-0.5 block" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                      {d.note}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-right whitespace-nowrap"
-                  style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}
+                <h3
+                  className="font-display text-2xl font-semibold mb-4"
+                  style={{ color: 'white' }}
                 >
-                  <Clock size={14} className="flex-shrink-0" />
-                  <span className="flex flex-col leading-tight">
-                    {d.hours.includes('&') ? (
-                      d.hours.split('&').map((part, idx) => (
-                        <span key={idx}>{part.trim()}</span>
-                      ))
-                    ) : (
-                      d.hours
-                    )}
-                  </span>
+                  {d.day}
+                </h3>
+                <div className="flex flex-col items-center gap-2">
+                  {d.hours.map((h, idx) => (
+                    <div
+                      key={idx}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
+                      style={{ background: 'rgba(255,255,255,0.18)', color: 'white' }}
+                    >
+                      <Clock size={14} />
+                      {h}
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="p-8">
-                <div
-                  className="text-xs font-semibold uppercase tracking-[0.12em] mb-4"
-                  style={{ color: '#A67C52' }}
-                >
-                  Pains disponibles
-                </div>
-                <ul className="list-none p-0 space-y-0">
-                  {breads.map((bread) => (
-                    <li
-                      key={bread}
-                      className="py-2 text-[0.95rem] leading-[1.5] flex items-center gap-2.5"
-                      style={{ borderBottom: '1px solid #F5EDE3', color: '#6E4D32' }}
-                    >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ background: '#D4BFA5' }}
-                      />
-                      {bread}
-                    </li>
-                  ))}
-                </ul>
-
-                {d.hasViennoiseries && (
-                  <div className="mt-6">
-                    <div
-                      className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] mb-4"
+              <div className="px-8 py-5">
+                {d.note ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <CakeSlice size={15} style={{ color: '#A67C52' }} />
+                    <span
+                      className="text-sm font-medium"
                       style={{ color: '#A67C52' }}
                     >
-                      <CakeSlice size={14} />
-                      Viennoiseries
-                    </div>
-                    <ul className="list-none p-0 space-y-0">
-                      {viennoiseries.map((v) => (
-                        <li
-                          key={v}
-                          className="py-2 text-[0.95rem] leading-[1.5] flex items-center gap-2.5"
-                          style={{ borderBottom: '1px solid #F5EDE3', color: '#6E4D32' }}
-                        >
-                          <span
-                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                            style={{ background: '#A67C52' }}
-                          />
-                          {v}
-                        </li>
-                      ))}
-                    </ul>
+                      {d.note}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    <Wheat size={15} style={{ color: '#A67C52' }} />
+                    <span
+                      className="text-sm font-medium"
+                      style={{ color: '#A67C52' }}
+                    >
+                      Pains
+                    </span>
                   </div>
                 )}
               </div>
             </div>
           ))}
+        </div>
+
+        <div
+          className="animate-on-scroll rounded-[20px] p-8 md:p-10"
+          style={{
+            background: 'white',
+            boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <div>
+              <div
+                className="text-xs font-semibold uppercase tracking-[0.12em] mb-5 flex items-center gap-2"
+                style={{ color: '#A67C52' }}
+              >
+                <Wheat size={14} />
+                Nos pains
+              </div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-0">
+                {breads.map((bread, idx) => (
+                  <div
+                    key={bread}
+                    className="py-2.5 text-[0.95rem] leading-[1.5] flex items-center gap-2.5"
+                    style={{
+                      borderBottom: idx < breads.length - (breads.length % 2 === 0 ? 2 : 1) ? '1px solid #F5EDE3' : 'none',
+                      color: '#6E4D32',
+                    }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ background: '#D4BFA5' }}
+                    />
+                    {bread}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div
+                className="text-xs font-semibold uppercase tracking-[0.12em] mb-5 flex items-center gap-2"
+                style={{ color: '#A67C52' }}
+              >
+                <CakeSlice size={14} />
+                Viennoiseries
+                <span
+                  className="text-[0.65rem] font-medium normal-case tracking-normal ml-1 px-2 py-0.5 rounded-full"
+                  style={{ background: '#FDF3E7', color: '#A67C52' }}
+                >
+                  Samedi uniquement
+                </span>
+              </div>
+              <div className="space-y-0">
+                {viennoiseries.map((v, idx) => (
+                  <div
+                    key={v}
+                    className="py-2.5 text-[0.95rem] leading-[1.5] flex items-center gap-2.5"
+                    style={{
+                      borderBottom: idx < viennoiseries.length - 1 ? '1px solid #F5EDE3' : 'none',
+                      color: '#6E4D32',
+                    }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ background: '#A67C52' }}
+                    />
+                    {v}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
