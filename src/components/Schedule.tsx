@@ -89,15 +89,6 @@ export default function Schedule() {
                 }}
               >
                 <div className="flex items-center px-6 py-5 md:px-8 md:py-6 gap-4 md:gap-8">
-                  <div
-                    className="w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)' }}
-                  >
-                    <span className="text-white font-display font-semibold text-lg md:text-xl">
-                      {d.day.slice(0, 2)}
-                    </span>
-                  </div>
-
                   <div className="flex-1 min-w-0">
                     <h3
                       className="font-display text-xl md:text-2xl font-semibold leading-tight"
