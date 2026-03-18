@@ -5,12 +5,12 @@ import { useSanity } from '../context/SanityContext'
 export default function Hero() {
   const { content } = useSanity()
 
-  const badge = content?.heroBadge || 'Boulangerie Artisanale — Waimes'
+  const badge = content?.heroBadge || 'Boulangerie Artisanale \u2014 Waimes'
   const title = content?.heroTitle || 'Du pain'
   const titleAccent = content?.heroTitleAccent || 'au levain,'
-  const subtitle = content?.heroSubtitle || 'Benjamin façonne chaque pain sur commande, avec des farines locales et un levain cultivé avec soin. Rien de plus, rien de moins.'
+  const subtitle = content?.heroSubtitle || 'Benjamin fa\u00e7onne chaque pain sur commande, avec des farines locales et un levain cultiv\u00e9 avec soin. Rien de plus, rien de moins.'
   const ctaPrimary = content?.heroCtaPrimary || 'Commander maintenant'
-  const ctaSecondary = content?.heroCtaSecondary || 'Découvrir notre histoire'
+  const ctaSecondary = content?.heroCtaSecondary || 'D\u00e9couvrir notre histoire'
 
   const bgStyle = content?.heroImage
     ? `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('${content.heroImage}') center/cover no-repeat`
@@ -116,7 +116,7 @@ export default function Hero() {
           animation: 'fadeIn 1s ease 1.5s both',
         }}
       >
-        <span>Défiler</span>
+        <span>D\u00e9filer</span>
         <div
           className="w-px h-10"
           style={{

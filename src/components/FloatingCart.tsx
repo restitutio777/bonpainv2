@@ -38,7 +38,7 @@ export default function FloatingCart() {
           (e.currentTarget as HTMLElement).style.background = '#A67C52'
           ;(e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(45,31,20,0.25), 0 2px 8px rgba(45,31,20,0.15)'
         }}
-        aria-label={`Panier — ${totalItems} article${totalItems > 1 ? 's' : ''}`}
+        aria-label={`Panier \u2014 ${totalItems} article${totalItems > 1 ? 's' : ''}`}
       >
         <div className="relative">
           <ShoppingBag size={20} />
@@ -56,7 +56,7 @@ export default function FloatingCart() {
           )}
         </div>
         <span className="font-semibold text-sm" style={{ letterSpacing: '0.02em' }}>
-          € {price.toFixed(2).replace('.', ',')}
+          \u20ac {price.toFixed(2).replace('.', ',')}
         </span>
       </button>
     </div>
