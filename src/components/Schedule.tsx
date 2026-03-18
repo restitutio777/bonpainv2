@@ -20,7 +20,7 @@ const viennoiseries = ['Croissant', 'Pain au chocolat']
 const days = [
   {
     day: 'Mercredi',
-    hours: ['8h — 12h'],
+    hours: ['8h — 12h', '13h — 15h'],
     hasViennoiseries: false,
   },
   {
