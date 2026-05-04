@@ -38,19 +38,19 @@ export default function Nav() {
               style={{ animation: 'floatWheat 4s ease-in-out infinite' } as CSSProperties}
             />
             <span
-              className="font-display text-2xl font-medium tracking-tight"
+              className="font-display text-xl lg:text-2xl font-medium tracking-tight whitespace-nowrap"
               style={{ color: scrolled ? '#2D1F14' : 'white' }}
             >
               {bakeryName}
             </span>
           </a>
 
-          <ul className="hidden md:flex items-center gap-9 list-none">
+          <ul className="hidden md:flex items-center gap-6 lg:gap-9 list-none">
             {links.map((link) => (
-              <li key={link.href}>
+              <li key={link.href} className="whitespace-nowrap">
                 <a
                   href={link.href}
-                  className="relative text-base font-medium uppercase tracking-wide no-underline transition-colors duration-300 group"
+                  className="relative text-sm lg:text-base font-medium uppercase tracking-wide no-underline transition-colors duration-300 group whitespace-nowrap"
                   style={{ color: scrolled ? '#6E4D32' : 'rgba(255,255,255,0.85)' }}
                 >
                   {link.label}
@@ -64,7 +64,7 @@ export default function Nav() {
             <li>
               <a
                 href="#order"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold uppercase tracking-widest no-underline text-white transition-all duration-300 hover:-translate-y-px"
+                className="inline-flex items-center gap-2 px-5 lg:px-6 py-2.5 rounded-full text-xs lg:text-sm font-semibold uppercase tracking-widest no-underline text-white transition-all duration-300 hover:-translate-y-px whitespace-nowrap"
                 style={{
                   background: '#A67C52',
                   boxShadow: '0 2px 8px rgba(166,124,82,0.3)',
