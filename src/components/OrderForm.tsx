@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
@@ -30,6 +30,12 @@ export default function OrderForm() {
   const [submitting, setSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (submitSuccess) {
+      document.getElementById('order')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [submitSuccess])
 
   const changeQty = (id: string, delta: number) => {
     const current = cart[id] || 0
