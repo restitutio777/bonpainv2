@@ -5,7 +5,7 @@ export const PRODUCTS_QUERY = `*[_type == "product" && isActive == true] | order
   category,
   description,
   price,
-  "image": image.asset->url,
+  "image": image.asset->url + "?w=800&h=600&auto=format&fit=crop&q=75",
   "imageAlt": image.alt,
   availability,
   isSeasonal,
@@ -56,7 +56,7 @@ export const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0] {
   partnerStores[] { name, city, url },
   seoTitle,
   seoDescription,
-  "seoImage": seoImage.asset->url
+  "seoImage": seoImage.asset->url + "?w=1200&h=630&auto=format&fit=crop&q=80"
 }`
 
 export const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0] {
@@ -66,12 +66,12 @@ export const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0] {
   heroSubtitle,
   heroCtaPrimary,
   heroCtaSecondary,
-  "heroImage": heroImage.asset->url,
+  "heroImage": heroImage.asset->url + "?w=1920&auto=format&fit=max&q=75",
   aboutLabel,
   aboutTitle,
   aboutTitleAccent,
   aboutText,
-  "aboutImage": aboutImage.asset->url,
+  "aboutImage": aboutImage.asset->url + "?w=1000&auto=format&fit=max&q=75",
   "aboutImageAlt": aboutImage.alt,
   values[] { title, description, icon },
   productsLabel,

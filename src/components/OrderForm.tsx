@@ -52,23 +52,17 @@ export default function OrderForm() {
       .filter((p) => p.orderInForm && (cart[p._id] || 0) > 0)
       .reduce((sum, p) => sum + p.price * (cart[p._id] || 0), 0)
 
-    const formData = new URLSearchParams()
-    formData.append('form-name', 'order')
-    formData.append('nom', nom)
-    formData.append('prenom', prenom)
-    formData.append('email', email)
-    formData.append('tel', tel)
-    formData.append('jour', jour)
-    formData.append('date', date)
-    formData.append('remarques', remarques)
-    formData.append('commande', orderLines)
-    formData.append('total', `€${totalVal.toFixed(2).replace('.', ',')}`)
-
     try {
-      const res = await fetch('/', {
+      const res = await fetch('/api/order', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: { nom, prenom, email, tel },
+          pickup: { jour, date },
+          remarques,
+          items: orderLines,
+          total: totalVal,
+        }),
       })
       if (res.ok) {
         setSubmitSuccess(true)
