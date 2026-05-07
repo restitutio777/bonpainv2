@@ -35,15 +35,20 @@ export default function Nav() {
             className="flex items-center no-underline"
             aria-label={bakeryName}
           >
-            <img
-              src="/bonpainfaitmain-logo.png"
-              alt={bakeryName}
-              className="h-10 lg:h-11 w-auto"
-              style={{
-                filter: scrolled ? 'brightness(0)' : 'none',
-                transition: 'filter 500ms ease',
-              }}
-            />
+            <picture>
+              <source srcSet="/bonpainfaitmain-logo.webp" type="image/webp" />
+              <img
+                src="/bonpainfaitmain-logo.png"
+                alt={bakeryName}
+                width={320}
+                height={252}
+                className="h-14 lg:h-16 w-auto"
+                style={{
+                  filter: scrolled ? 'brightness(0)' : 'none',
+                  transition: 'filter 500ms ease',
+                }}
+              />
+            </picture>
           </a>
 
           <ul className="hidden md:flex items-center gap-6 lg:gap-9 list-none">

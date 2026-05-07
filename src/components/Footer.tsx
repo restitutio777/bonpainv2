@@ -42,11 +42,16 @@ export default function Footer() {
               className="inline-flex items-center no-underline mb-4"
               aria-label={bakeryName}
             >
-              <img
-                src="/bonpainfaitmain-logo.png"
-                alt={bakeryName}
-                className="h-12 w-auto"
-              />
+              <picture>
+                <source srcSet="/bonpainfaitmain-logo.webp" type="image/webp" />
+                <img
+                  src="/bonpainfaitmain-logo.png"
+                  alt={bakeryName}
+                  width={320}
+                  height={252}
+                  className="h-14 w-auto"
+                />
+              </picture>
             </a>
             <p className="text-sm leading-[1.7]" style={{ color: '#BFA07E', maxWidth: '300px' }}>
               {footerDescription}
