@@ -5,7 +5,7 @@ export const PRODUCTS_QUERY = `*[_type == "product" && isActive == true] | order
   category,
   description,
   price,
-  "image": image.asset->url + "?w=800&h=600&auto=format&fit=crop&q=75",
+  image,
   "imageAlt": image.alt,
   availability,
   isSeasonal,

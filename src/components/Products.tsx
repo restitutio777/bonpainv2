@@ -3,6 +3,10 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
 import { getProductStatus } from '../lib/productStatus'
+import { urlFor } from '../lib/sanity'
+
+const FALLBACK_IMG =
+  'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80'
 
 interface ProductsProps {
   onOpenModal: (id: string) => void
@@ -84,7 +88,17 @@ export default function Products({ onOpenModal }: ProductsProps) {
             >
               <div className="overflow-hidden relative" style={{ aspectRatio: '4/3' }}>
                 <img
-                  src={product.image || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80'}
+                  src={
+                    product.image
+                      ? urlFor(product.image)
+                          .width(800)
+                          .height(600)
+                          .fit('crop')
+                          .auto('format')
+                          .quality(75)
+                          .url()
+                      : FALLBACK_IMG
+                  }
                   alt={product.imageAlt || product.name}
                   className="w-full h-full object-cover transition-transform duration-700"
                   style={{

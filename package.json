@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@sanity/client": "^7.17.0",
+    "@sanity/image-url": "^2.1.1",
     "@vercel/analytics": "^2.0.1",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",

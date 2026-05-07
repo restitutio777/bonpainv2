@@ -1,3 +1,5 @@
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+
 export interface SanityProduct {
   _id: string
   name: string
@@ -5,7 +7,8 @@ export interface SanityProduct {
   category: 'bread' | 'viennoiserie' | 'specialty' | 'tart'
   description: string
   price: number
-  image: string | null
+  /** Full Sanity image object (asset + crop + hotspot). Use urlFor() to build URLs. */
+  image: SanityImageSource | null
   imageAlt: string | null
   availability: 'all' | 'saturday' | 'on_order'
   isSeasonal: boolean
