@@ -3,13 +3,18 @@ import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
+import { getProductStatus } from '../lib/productStatus'
 
 export default function OrderForm() {
   useScrollAnimation()
   const { products, content, settings, vacation } = useSanity()
   const { cart, setQuantity, clearCart, totalPrice } = useCart()
 
-  const orderItems = products.filter((p) => p.orderInForm)
+  // Hide products that are explicitly out of season — Benjamin can re-enable
+  // them by updating seasonStart/seasonEnd in the studio.
+  const orderItems = products.filter(
+    (p) => p.orderInForm && getProductStatus(p).available
+  )
   const orderLeadDays = settings?.orderLeadDays || 2
   const isDisabled = vacation?.isActive && vacation?.disableOrdering
 

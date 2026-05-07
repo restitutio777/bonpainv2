@@ -2,6 +2,7 @@ import { Plus, Calendar } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
+import { getProductStatus } from '../lib/productStatus'
 
 interface ProductsProps {
   onOpenModal: (id: string) => void
@@ -51,13 +52,17 @@ export default function Products({ onOpenModal }: ProductsProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-          {products.map((product, i) => (
+          {products.map((product, i) => {
+            const status = getProductStatus(product)
+            const unavailable = !status.available
+            return (
             <div
               key={product._id}
               className="animate-on-scroll bg-white rounded-xl overflow-hidden cursor-pointer group transition-all duration-400"
               style={{
                 transitionDelay: `${(i % 3) * 0.1}s`,
                 boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
+                opacity: unavailable ? 0.78 : 1,
               }}
               onClick={() => {
                 if (product.hasModal) onOpenModal(product._id)
@@ -82,18 +87,24 @@ export default function Products({ onOpenModal }: ProductsProps) {
                   src={product.image || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80'}
                   alt={product.imageAlt || product.name}
                   className="w-full h-full object-cover transition-transform duration-700"
-                  style={{ transform: 'scale(1)' }}
+                  style={{
+                    transform: 'scale(1)',
+                    filter: unavailable ? 'grayscale(40%)' : 'none',
+                  }}
                 />
-                {product.badge && (
+                {status.badge && (
                   <div
                     className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide"
                     style={{
-                      background: 'rgba(45,31,20,0.75)',
+                      background:
+                        status.kind === 'unavailable'
+                          ? 'rgba(150,40,40,0.85)'
+                          : 'rgba(45,31,20,0.75)',
                       backdropFilter: 'blur(8px)',
                       color: '#F5EDE3',
                     }}
                   >
-                    {product.badge}
+                    {status.badge}
                   </div>
                 )}
               </div>
@@ -122,29 +133,38 @@ export default function Products({ onOpenModal }: ProductsProps) {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
-                      addToCart(product._id)
+                      if (!unavailable) addToCart(product._id)
                     }}
+                    disabled={unavailable}
                     className="relative w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200"
                     style={{
-                      background: cart[product._id] ? '#A67C52' : '#FDF8F3',
-                      border: `1px solid ${cart[product._id] ? '#A67C52' : '#E8D9C8'}`,
-                      color: cart[product._id] ? 'white' : '#A67C52',
+                      background: unavailable ? '#F0E5D8' : (cart[product._id] ? '#A67C52' : '#FDF8F3'),
+                      border: `1px solid ${unavailable ? '#E0D0BD' : (cart[product._id] ? '#A67C52' : '#E8D9C8')}`,
+                      color: unavailable ? '#BFA07E' : (cart[product._id] ? 'white' : '#A67C52'),
+                      cursor: unavailable ? 'not-allowed' : 'pointer',
                     }}
                     onMouseEnter={(e) => {
+                      if (unavailable) return
                       e.stopPropagation()
                       ;(e.currentTarget as HTMLElement).style.background = '#8B6340'
                       ;(e.currentTarget as HTMLElement).style.color = 'white'
                       ;(e.currentTarget as HTMLElement).style.borderColor = '#8B6340'
                     }}
                     onMouseLeave={(e) => {
+                      if (unavailable) return
                       e.stopPropagation()
                       ;(e.currentTarget as HTMLElement).style.background = cart[product._id] ? '#A67C52' : '#FDF8F3'
                       ;(e.currentTarget as HTMLElement).style.color = cart[product._id] ? 'white' : '#A67C52'
                       ;(e.currentTarget as HTMLElement).style.borderColor = cart[product._id] ? '#A67C52' : '#E8D9C8'
                     }}
-                    aria-label={`Ajouter ${product.name} au panier`}
+                    aria-label={
+                      unavailable
+                        ? `${product.name} actuellement non disponible`
+                        : `Ajouter ${product.name} au panier`
+                    }
+                    title={unavailable ? `${product.name} — ${status.badge}` : undefined}
                   >
-                    {cart[product._id] ? (
+                    {cart[product._id] && !unavailable ? (
                       <span className="text-xs font-bold">{cart[product._id]}</span>
                     ) : (
                       <Plus size={18} />
@@ -153,7 +173,8 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         <div
