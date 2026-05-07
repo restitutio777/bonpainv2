@@ -16,17 +16,17 @@ const defaultValues = [
   {
     icon: Clock,
     title: 'Fermentation lente',
-    text: 'Minimum 24h de levée pour un pain riche en saveurs et facile à digérer.',
+    text: 'Minimum 24 heures de fermentation. Le pain est plus digeste, le goût plus profond.',
   },
   {
     icon: Shield,
     title: 'Zéro gaspillage',
-    text: 'On ne cuit que ce qui est commandé. Chaque pain trouve son destinataire.',
+    text: 'On cuit ce qui est commandé. Rien de plus, rien de jeté.',
   },
   {
     icon: MapPin,
     title: 'Circuit court',
-    text: 'Farines locales, économie de proximité et distribution dans la région.',
+    text: 'Farines des Ardennes belges. À retirer au fournil ou chez quelques épiceries de la région.',
   },
 ]
 
@@ -35,18 +35,18 @@ export default function About() {
   const { content } = useSanity()
 
   const label = content?.aboutLabel || 'Notre histoire'
-  const title = content?.aboutTitle || 'Le goût du'
-  const titleAccent = content?.aboutTitleAccent || 'vrai pain'
+  const title = content?.aboutTitle || 'Benjamin & Nadia,'
+  const titleAccent = content?.aboutTitleAccent || 'à Sourbrodt'
   const aboutText = content?.aboutText
     ? content.aboutText
         .filter((b: any) => b._type === 'block')
         .map((b: any) => (b.children || []).map((c: any) => c.text || '').join(''))
         .filter(Boolean)
     : [
-        "Installé au cœur des Ardennes belges, Benjamin Ramakers a fondé Bon Pain Fait Main avec une conviction simple : le pain mérite du temps, des ingrédients honnêtes et un savoir-faire authentique. Chaque miche est pétrie à la main, levée lentement au levain naturel, et cuite uniquement sur commande — pas de gaspillage, pas de compromis.",
+        "Au cœur des Fagnes, à Sourbrodt, Benjamin et Nadia tiennent une petite boulangerie. Farines locales, levain naturel cultivé sur place, fermentation longue de 24 heures, cuisson sur commande. Pas de raccourci, pas d'invendu — c'est ce qui fait la différence dans la mie et dans le goût.",
       ]
   const aboutImage = content?.aboutImage || 'https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=800&q=80'
-  const aboutImageAlt = content?.aboutImageAlt || 'Benjamin pétrissant le pain'
+  const aboutImageAlt = content?.aboutImageAlt || 'Benjamin et Nadia au fournil'
 
   const values =
     content?.values && content.values.length > 0

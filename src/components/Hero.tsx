@@ -5,10 +5,12 @@ import { useSanity } from '../context/SanityContext'
 export default function Hero() {
   const { content } = useSanity()
 
-  const badge = content?.heroBadge || 'Boulangerie Artisanale \u2014 Waimes'
-  const title = content?.heroTitle || 'Du pain'
-  const titleAccent = content?.heroTitleAccent || 'au levain,'
-  const subtitle = content?.heroSubtitle || 'Benjamin fa\u00e7onne chaque pain sur commande, avec des farines locales et un levain cultiv\u00e9 avec soin. Rien de plus, rien de moins.'
+  const badge = content?.heroBadge || 'Boulangerie Artisanale \u2014 Sourbrodt'
+  const title = content?.heroTitle || 'Pain au levain,'
+  const titleAccent = content?.heroTitleAccent || 'fait \u00e0 la main'
+  const subtitle =
+    content?.heroSubtitle ||
+    "Levain naturel, fermentation longue de 24 heures, cuit le jour de votre retrait. On prend le temps qu'il faut, et \u00e7a se go\u00fbte."
   const ctaPrimary = content?.heroCtaPrimary || 'Commander maintenant'
   const ctaSecondary = content?.heroCtaSecondary || 'Voir nos pains'
 

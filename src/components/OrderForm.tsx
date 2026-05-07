@@ -21,8 +21,12 @@ export default function OrderForm() {
   const label = content?.orderLabel || 'Commander'
   const title = content?.orderTitle || 'Passez votre'
   const titleAccent = content?.orderTitleAccent || 'commande'
-  const subtitle = content?.orderSubtitle || "Sélectionnez vos pains, indiquez vos coordonnées, et nous préparons tout pour le jour de retrait choisi."
-  const orderNotice = content?.orderNotice || `Toute commande doit être passée au minimum ${orderLeadDays} jours à l'avance. Nous ne cuisons que ce qui a été commandé — merci de votre compréhension.`
+  const subtitle =
+    content?.orderSubtitle ||
+    "Choisissez vos pains, dites-nous quand vous passez, on s'occupe du reste."
+  const orderNotice =
+    content?.orderNotice ||
+    `Comptez ${orderLeadDays} jours entre votre commande et votre retrait — c'est le temps de fermentation, et c'est ce qui fait la différence.`
 
   const [nom, setNom] = useState('')
   const [prenom, setPrenom] = useState('')

@@ -18,10 +18,14 @@ export default function Products({ onOpenModal }: ProductsProps) {
   const { cart, addToCart } = useCart()
 
   const label = content?.productsLabel || 'Nos pains'
-  const title = content?.productsTitle || 'Cuits au feu de bois,'
-  const titleAccent = content?.productsTitleAccent || 'avec amour'
-  const subtitle = content?.productsSubtitle || "Chaque produit est réalisé à partir de levain naturel et de farines sélectionnées. Commande minimum 2 jours à l'avance."
-  const saturdayNotice = content?.saturdayNotice || 'Samedi uniquement : Croissants et pains au chocolat disponibles sur commande.'
+  const title = content?.productsTitle || 'Du pain'
+  const titleAccent = content?.productsTitleAccent || 'fait pour vous'
+  const subtitle =
+    content?.productsSubtitle ||
+    'Levain naturel, farines locales. Choisissez vos pains, on les prépare pour le jour de votre retrait.'
+  const saturdayNotice =
+    content?.saturdayNotice ||
+    'Le samedi, on ajoute des viennoiseries au programme — croissants et pains au chocolat sur commande.'
 
   return (
     <section
