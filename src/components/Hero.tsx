@@ -48,6 +48,7 @@ export default function Hero() {
           className="font-display font-light leading-[1.05] tracking-tight mb-6"
           style={{
             fontSize: 'clamp(3rem, 7vw, 5.5rem)',
+            textWrap: 'balance',
             animation: 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both',
           }}
         >
@@ -62,7 +63,8 @@ export default function Hero() {
           style={{
             fontSize: 'clamp(1.1rem, 2vw, 1.35rem)',
             color: 'rgba(255,255,255,0.75)',
-            maxWidth: '520px',
+            maxWidth: '560px',
+            textWrap: 'pretty',
             animation: 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.7s both',
           }}
         >
