@@ -1,4 +1,3 @@
-import WheatIcon from './WheatIcon'
 import { useSanity } from '../context/SanityContext'
 
 const navLinks = [
@@ -38,14 +37,16 @@ export default function Footer() {
       <div className="container mx-auto px-5 md:px-10 max-w-[1200px] pt-16 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div className="lg:col-span-1">
-            <a href="#" className="flex items-center gap-3 no-underline mb-4">
-              <WheatIcon size={32} style={{ color: '#BFA07E' }} />
-              <span
-                className="font-display text-xl font-medium"
-                style={{ color: '#F5EDE3' }}
-              >
-                {bakeryName}
-              </span>
+            <a
+              href="#"
+              className="inline-flex items-center no-underline mb-4"
+              aria-label={bakeryName}
+            >
+              <img
+                src="/bonpainfaitmain-logo.png"
+                alt={bakeryName}
+                className="h-12 w-auto"
+              />
             </a>
             <p className="text-sm leading-[1.7]" style={{ color: '#BFA07E', maxWidth: '300px' }}>
               {footerDescription}

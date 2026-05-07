@@ -1,6 +1,5 @@
-import { useState, useEffect, CSSProperties } from 'react'
+import { useState, useEffect } from 'react'
 import { ShoppingBag, Menu, X } from 'lucide-react'
-import WheatIcon from './WheatIcon'
 import { useSanity } from '../context/SanityContext'
 
 export default function Nav() {
@@ -31,18 +30,20 @@ export default function Nav() {
           className={`absolute inset-0 transition-all duration-500 ${scrolled ? 'glass-nav' : 'bg-black/30 backdrop-blur-sm'}`}
         />
         <div className="relative container mx-auto px-5 md:px-10 max-w-[1200px] h-full flex items-center justify-between">
-          <a href="#" className="flex items-center gap-3 no-underline text-warm-900">
-            <WheatIcon
-              size={40}
-              className="text-warm-500"
-              style={{ animation: 'floatWheat 4s ease-in-out infinite' } as CSSProperties}
+          <a
+            href="#"
+            className="flex items-center no-underline"
+            aria-label={bakeryName}
+          >
+            <img
+              src="/bonpainfaitmain-logo.png"
+              alt={bakeryName}
+              className="h-10 lg:h-11 w-auto"
+              style={{
+                filter: scrolled ? 'brightness(0)' : 'none',
+                transition: 'filter 500ms ease',
+              }}
             />
-            <span
-              className="font-display text-xl lg:text-2xl font-medium tracking-tight whitespace-nowrap"
-              style={{ color: scrolled ? '#2D1F14' : 'white' }}
-            >
-              {bakeryName}
-            </span>
           </a>
 
           <ul className="hidden md:flex items-center gap-6 lg:gap-9 list-none">
