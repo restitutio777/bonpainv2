@@ -56,7 +56,7 @@ export default function FloatingCart() {
           )}
         </div>
         <span className="font-semibold text-sm" style={{ letterSpacing: '0.02em' }}>
-          \u20ac {price.toFixed(2).replace('.', ',')}
+          € {price.toFixed(2).replace('.', ',')}
         </span>
       </button>
     </div>
