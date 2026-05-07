@@ -17,7 +17,7 @@ export default defineType({
   fields: [
     defineField({
       name: 'day',
-      title: 'Jour',
+      title: 'Jour de la semaine',
       type: 'string',
       options: { list: DAYS, layout: 'radio' },
       validation: (R) => R.required(),
@@ -25,19 +25,33 @@ export default defineType({
     defineField({
       name: 'isOpen',
       title: 'Ouvert ce jour',
+      description:
+        "Si décoché, ce jour apparaît comme fermé sur le site et les créneaux ci-dessous sont ignorés.",
       type: 'boolean',
       initialValue: false,
     }),
     defineField({
       name: 'slots',
-      title: 'Créneaux',
+      title: 'Plages horaires',
+      description:
+        'Une ou plusieurs plages d\'ouverture (ex. 8:00–12:00 puis 13:00–15:00).',
       type: 'array',
       of: [{ type: 'timeSlot' }],
       hidden: ({ document }) => !document?.isOpen,
+      validation: (R) =>
+        R.custom((slots, ctx) => {
+          const doc = ctx.document as { isOpen?: boolean } | undefined
+          if (doc?.isOpen && (!slots || (slots as unknown[]).length === 0)) {
+            return 'Ajoutez au moins une plage horaire ou décochez « Ouvert ce jour ».'
+          }
+          return true
+        }),
     }),
     defineField({
       name: 'note',
-      title: 'Note (optionnel)',
+      title: 'Mention spéciale (optionnel)',
+      description:
+        'Affichée à côté de l\'horaire (ex. « Pains & Viennoiseries » pour le samedi).',
       type: 'string',
     }),
     defineField({
@@ -50,18 +64,18 @@ export default defineType({
   ],
   orderings: [
     {
-      title: 'Ordre',
+      title: 'Ordre des jours',
       name: 'sortOrderAsc',
       by: [{ field: 'sortOrder', direction: 'asc' }],
     },
   ],
   preview: {
-    select: { day: 'day', isOpen: 'isOpen' },
-    prepare({ day, isOpen }) {
+    select: { day: 'day', isOpen: 'isOpen', note: 'note' },
+    prepare({ day, isOpen, note }) {
       const label = DAYS.find((d) => d.value === day)?.title || day
       return {
         title: label,
-        subtitle: isOpen ? 'Ouvert' : 'Fermé',
+        subtitle: isOpen ? `Ouvert${note ? ` · ${note}` : ''}` : 'Fermé',
       }
     },
   },

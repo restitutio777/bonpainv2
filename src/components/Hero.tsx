@@ -10,7 +10,7 @@ export default function Hero() {
   const titleAccent = content?.heroTitleAccent || 'au levain,'
   const subtitle = content?.heroSubtitle || 'Benjamin fa\u00e7onne chaque pain sur commande, avec des farines locales et un levain cultiv\u00e9 avec soin. Rien de plus, rien de moins.'
   const ctaPrimary = content?.heroCtaPrimary || 'Commander maintenant'
-  const ctaSecondary = content?.heroCtaSecondary || 'D\u00e9couvrir notre histoire'
+  const ctaSecondary = content?.heroCtaSecondary || 'Voir nos pains'
 
   const bgStyle = content?.heroImage
     ? `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('${content.heroImage}') center/cover no-repeat`
@@ -93,7 +93,7 @@ export default function Hero() {
             {ctaPrimary}
           </a>
           <a
-            href="#about"
+            href="#products"
             className="inline-flex items-center gap-2.5 px-9 py-4 rounded-full text-sm font-medium uppercase tracking-widest text-white no-underline transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/20"
             style={{
               background: 'rgba(255,255,255,0.08)',
@@ -106,8 +106,10 @@ export default function Hero() {
         </div>
       </div>
 
-      <div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+      <a
+        href="#about"
+        aria-label="D\u00e9couvrir notre histoire"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 no-underline transition-colors duration-300 hover:text-white"
         style={{
           color: 'rgba(255,255,255,0.4)',
           fontSize: '0.7rem',
@@ -116,15 +118,15 @@ export default function Hero() {
           animation: 'fadeIn 1s ease 1.5s both',
         }}
       >
-        <span>D\u00e9filer</span>
+        <span>Notre histoire</span>
         <div
           className="w-px h-10"
           style={{
-            background: 'linear-gradient(to bottom, rgba(255,255,255,0.4), transparent)',
+            background: 'linear-gradient(to bottom, currentColor, transparent)',
             animation: 'floatWheat 2s ease-in-out infinite',
           }}
         />
-      </div>
+      </a>
     </section>
   )
 }

@@ -2,28 +2,31 @@ import type { StructureResolver } from 'sanity/structure'
 
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title('Contenu')
+    .title('Bon Pain Fait Main')
     .items([
       S.listItem()
-        .title('Réglages du site')
+        .title('Mon entreprise')
+        .icon(() => '🏷️')
         .id('siteSettings')
         .child(
           S.document()
             .schemaType('siteSettings')
             .documentId('siteSettings')
-            .title('Réglages du site')
+            .title('Mon entreprise')
         ),
       S.listItem()
-        .title('Contenu de la page')
+        .title('Textes du site')
+        .icon(() => '✏️')
         .id('siteContent')
         .child(
           S.document()
             .schemaType('siteContent')
             .documentId('siteContent')
-            .title('Contenu de la page')
+            .title('Textes du site')
         ),
       S.listItem()
         .title('Bandeau vacances')
+        .icon(() => '🌴')
         .id('vacationBanner')
         .child(
           S.document()
@@ -32,6 +35,10 @@ export const structure: StructureResolver = (S) =>
             .title('Bandeau vacances')
         ),
       S.divider(),
-      S.documentTypeListItem('product').title('Produits'),
-      S.documentTypeListItem('schedule').title('Horaires'),
+      S.documentTypeListItem('product')
+        .title('Produits')
+        .icon(() => '🥖'),
+      S.documentTypeListItem('schedule')
+        .title('Horaires')
+        .icon(() => '🕐'),
     ])
