@@ -51,7 +51,7 @@ export default function About() {
   const values =
     content?.values && content.values.length > 0
       ? content.values.map((v) => ({
-          icon: iconMap[v.icon] || Clock,
+          icon: v.icon && iconMap[v.icon] ? iconMap[v.icon] : null,
           title: v.title,
           text: v.description,
         }))
@@ -123,12 +123,14 @@ export default function About() {
                       '0 1px 3px rgba(45,31,20,0.06)';
                   }}
                 >
-                  <div
-                    className="w-11 h-11 flex items-center justify-center rounded-lg mb-4"
-                    style={{ background: '#FDF8F3', color: '#A67C52' }}
-                  >
-                    <v.icon size={22} />
-                  </div>
+                  {v.icon ? (
+                    <div
+                      className="w-11 h-11 flex items-center justify-center rounded-lg mb-4"
+                      style={{ background: '#FDF8F3', color: '#A67C52' }}
+                    >
+                      <v.icon size={22} />
+                    </div>
+                  ) : null}
                   <h3
                     className="font-display font-semibold text-xl mb-2"
                     style={{ color: '#2D1F14' }}
