@@ -91,7 +91,11 @@ export default function About() {
             </div>
             <h2
               className="font-display font-normal leading-[1.15] tracking-tight mb-6"
-              style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
+              style={{
+                fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
+                color: '#2D1F14',
+                textWrap: 'balance',
+              }}
             >
               {title}{' '}
               <em className="not-italic italic" style={{ color: '#A67C52' }}>
@@ -102,7 +106,11 @@ export default function About() {
               <p
                 key={i}
                 className="leading-[1.8] mb-4"
-                style={{ fontSize: '1.1rem', color: '#6E4D32' }}
+                style={{
+                  fontSize: '1.1rem',
+                  color: '#6E4D32',
+                  textWrap: 'pretty',
+                }}
               >
                 {paragraph}
               </p>

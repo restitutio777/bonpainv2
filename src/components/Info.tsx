@@ -49,7 +49,11 @@ export default function Info() {
           </div>
           <h2
             className="font-display font-normal leading-[1.15]"
-            style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
+            style={{
+              fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
+              color: '#2D1F14',
+              textWrap: 'balance',
+            }}
           >
             Quand, où,{' '}
             <em className="not-italic italic" style={{ color: '#A67C52' }}>
