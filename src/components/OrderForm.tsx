@@ -39,6 +39,7 @@ export default function OrderForm() {
   const [submitting, setSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [expandedInfoId, setExpandedInfoId] = useState<string | null>(null)
 
   useEffect(() => {
     if (submitSuccess) {
@@ -245,57 +246,90 @@ export default function OrderForm() {
                 </div>
 
                 <div className="flex flex-col gap-3 mb-10">
-                  {orderItems.map((item) => (
-                    <div
-                      key={item._id}
-                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-lg gap-3 transition-colors duration-200"
-                      style={{ background: '#FDF8F3' }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = '#F5EDE3'
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = '#FDF8F3'
-                      }}
-                    >
-                      <div>
-                        <span className="font-medium text-sm" style={{ color: '#2D1F14' }}>
-                          {item.name}
-                        </span>
-                        <span className="text-xs ml-2" style={{ color: '#8B7A6B' }}>
-                          — €{item.price.toFixed(2).replace('.', ',')}
-                          {item.availability === 'saturday' && (
-                            <em className="not-italic ml-1 text-xs" style={{ color: '#8B7A6B' }}>
-                              (sam.)
-                            </em>
-                          )}
-                        </span>
+                  {orderItems.map((item) => {
+                    const hasInfo = !!item.description?.trim()
+                    const isExpanded = expandedInfoId === item._id
+                    return (
+                      <div
+                        key={item._id}
+                        className="flex flex-col p-4 rounded-lg transition-colors duration-200"
+                        style={{ background: '#FDF8F3' }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.background = '#F5EDE3'
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.background = '#FDF8F3'
+                        }}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div>
+                            <span className="font-medium text-sm" style={{ color: '#2D1F14' }}>
+                              {item.name}
+                            </span>
+                            {hasInfo && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setExpandedInfoId(isExpanded ? null : item._id)
+                                }
+                                aria-expanded={isExpanded}
+                                aria-controls={`info-${item._id}`}
+                                className="ml-1.5 text-xs italic underline-offset-2 hover:underline transition-colors"
+                                style={{ color: '#A67C52' }}
+                              >
+                                ({isExpanded ? 'fermer' : 'infos'})
+                              </button>
+                            )}
+                            <span className="text-xs ml-2" style={{ color: '#8B7A6B' }}>
+                              — €{item.price.toFixed(2).replace('.', ',')}
+                              {item.availability === 'saturday' && (
+                                <em className="not-italic ml-1 text-xs" style={{ color: '#8B7A6B' }}>
+                                  (sam.)
+                                </em>
+                              )}
+                            </span>
+                          </div>
+                          <div className="qty-control self-end sm:self-auto">
+                            <button
+                              type="button"
+                              className="qty-btn"
+                              onClick={() => changeQty(item._id, -1)}
+                              disabled={!!isDisabled}
+                            >
+                              −
+                            </button>
+                            <input
+                              type="text"
+                              className="qty-value"
+                              value={cart[item._id] || 0}
+                              readOnly
+                            />
+                            <button
+                              type="button"
+                              className="qty-btn"
+                              onClick={() => changeQty(item._id, 1)}
+                              disabled={!!isDisabled}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                        {hasInfo && isExpanded && (
+                          <div
+                            id={`info-${item._id}`}
+                            className="mt-3 pt-3 text-sm leading-[1.6]"
+                            style={{
+                              color: '#6E4D32',
+                              borderTop: '1px solid #E8D9C8',
+                              textWrap: 'pretty',
+                            }}
+                          >
+                            {item.description}
+                          </div>
+                        )}
                       </div>
-                      <div className="qty-control self-end sm:self-auto">
-                        <button
-                          type="button"
-                          className="qty-btn"
-                          onClick={() => changeQty(item._id, -1)}
-                          disabled={!!isDisabled}
-                        >
-                          −
-                        </button>
-                        <input
-                          type="text"
-                          className="qty-value"
-                          value={cart[item._id] || 0}
-                          readOnly
-                        />
-                        <button
-                          type="button"
-                          className="qty-btn"
-                          onClick={() => changeQty(item._id, 1)}
-                          disabled={!!isDisabled}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
 
                 <div
