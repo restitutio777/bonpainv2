@@ -1,4 +1,4 @@
-import { Clock, MapPin, Home } from 'lucide-react'
+import { Clock, MapPin, Home, Navigation } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 
@@ -36,6 +36,11 @@ export default function Info() {
   const addressLine = address
     ? `${address.street}\n${address.postalCode} ${address.city}, ${address.country}`
     : 'Rue de la Roer 19\n4950 Waimes, Belgique'
+
+  const directionsQuery = address
+    ? `${address.street}, ${address.postalCode} ${address.city}, ${address.country}`
+    : 'Rue de la Roer 19, 4950 Waimes, Belgique'
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(directionsQuery)}`
 
   return (
     <section id="info" className="py-28 lg:py-36" style={{ background: '#FAF6F1' }}>
@@ -130,6 +135,22 @@ export default function Info() {
               <br />
               Commande minimum {orderLeadDays} jours à l'avance.
             </p>
+            <a
+              href={directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium no-underline transition-colors"
+              style={{ color: '#A67C52' }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = '#8B6340'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = '#A67C52'
+              }}
+            >
+              <Navigation size={14} />
+              Itinéraire
+            </a>
           </div>
 
           <div
