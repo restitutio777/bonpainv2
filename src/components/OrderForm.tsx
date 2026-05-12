@@ -227,17 +227,10 @@ export default function OrderForm() {
 
               <form
                 id="orderForm"
-                name="order"
                 onSubmit={handleSubmit}
                 className="rounded-[20px] p-8 md:p-12 animate-on-scroll"
                 style={{ background: 'white', boxShadow: '0 4px 16px rgba(45,31,20,0.08)' }}
               >
-                <input type="hidden" name="form-name" value="order" />
-
-                <p className="hidden">
-                  <label>Ne pas remplir : <input name="bot-field" /></label>
-                </p>
-
                 <div
                   className="font-display text-xl font-semibold mb-6 pb-3"
                   style={{ color: '#2D1F14', borderBottom: '1px solid #F5EDE3' }}
