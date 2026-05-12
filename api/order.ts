@@ -86,6 +86,12 @@ function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: s
 
   // Build plain-text version
   const textLines = [
+    `═══════════════════════════════════════════════════════`,
+    `  ✓ LISTE À JOUR — toutes les commandes pour ce jour`,
+    `    sont dans CE message.`,
+    `    Les messages précédents de ce fil sont obsolètes.`,
+    `═══════════════════════════════════════════════════════`,
+    ``,
     `${pickup.jour.toUpperCase()} ${dateFr} — ${orders.length} commande${orders.length > 1 ? 's' : ''}`,
     ``,
     `À PRÉPARER :`,
@@ -107,6 +113,14 @@ function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: s
   // Build HTML version
   const html = `
     <div style="font-family: -apple-system, system-ui, sans-serif; color: #2D1F14; max-width: 640px; line-height: 1.5;">
+      <div style="background: #F0E8DD; border-radius: 8px; padding: 14px 18px; margin: 0 0 24px;">
+        <div style="font-weight: 600; color: #2D1F14; font-size: 14px; margin-bottom: 4px;">
+          ✓ Liste à jour — toutes les commandes pour ce jour sont dans ce message.
+        </div>
+        <div style="color: #6E4D32; font-size: 13px;">
+          Les messages précédents de ce fil sont des versions antérieures (obsolètes).
+        </div>
+      </div>
       <h2 style="margin: 0 0 8px; font-size: 20px; color: #2D1F14;">
         ${escapeHtml(pickup.jour)} ${escapeHtml(dateFr)}
       </h2>
