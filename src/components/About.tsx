@@ -1,34 +1,5 @@
-import { Clock, Shield, MapPin, Wheat, Heart, Leaf, Star } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
-
-const iconMap: Record<string, React.ElementType> = {
-  clock: Clock,
-  shield: Shield,
-  'map-pin': MapPin,
-  wheat: Wheat,
-  heart: Heart,
-  leaf: Leaf,
-  star: Star,
-}
-
-const defaultValues = [
-  {
-    icon: Clock,
-    title: 'Fermentation lente',
-    text: 'Minimum 24 heures de fermentation. Le pain est plus digeste, le goût plus profond.',
-  },
-  {
-    icon: Shield,
-    title: 'Zéro gaspillage',
-    text: 'On cuit ce qui est commandé. Rien de plus, rien de jeté.',
-  },
-  {
-    icon: MapPin,
-    title: 'Circuit court',
-    text: 'Farines des Ardennes belges. À retirer au fournil ou chez quelques épiceries de la région.',
-  },
-]
 
 export default function About() {
   useScrollAnimation()
@@ -43,19 +14,10 @@ export default function About() {
         .map((b: any) => (b.children || []).map((c: any) => c.text || '').join(''))
         .filter(Boolean)
     : [
-        "Au cœur des Fagnes, à Sourbrodt, Benjamin et Nadia tiennent une petite boulangerie. Farines locales, levain naturel cultivé sur place, fermentation longue de 24 heures, cuisson sur commande. Pas de raccourci, pas d'invendu — c'est ce qui fait la différence dans la mie et dans le goût.",
+        "À Sourbrodt, au cœur des Fagnes, Benjamin et Nadia tiennent une petite boulangerie. Farines choisies, levain naturel cultivé sur place, fermentation longue de 24 heures, cuisson sur commande. Pas de raccourci, pas d'invendu — c'est cette lenteur assumée qui fait la différence dans la mie et dans le goût.",
       ]
   const aboutImage = content?.aboutImage || 'https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=800&q=80'
   const aboutImageAlt = content?.aboutImageAlt || 'Benjamin et Nadia au fournil'
-
-  const values =
-    content?.values && content.values.length > 0
-      ? content.values.map((v) => ({
-          icon: v.icon && iconMap[v.icon] ? iconMap[v.icon] : null,
-          title: v.title,
-          text: v.description,
-        }))
-      : defaultValues
 
   return (
     <section
@@ -115,42 +77,6 @@ export default function About() {
                 {paragraph}
               </p>
             ))}
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">
-              {values.map((v) => (
-                <div
-                  key={v.title}
-                  className="p-6 rounded-xl transition-all duration-300 hover:-translate-y-1"
-                  style={{ background: 'white', boxShadow: '0 1px 3px rgba(45,31,20,0.06)' }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.boxShadow =
-                      '0 4px 16px rgba(45,31,20,0.08)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.boxShadow =
-                      '0 1px 3px rgba(45,31,20,0.06)';
-                  }}
-                >
-                  {v.icon ? (
-                    <div
-                      className="w-11 h-11 flex items-center justify-center rounded-lg mb-4"
-                      style={{ background: '#FDF8F3', color: '#A67C52' }}
-                    >
-                      <v.icon size={22} />
-                    </div>
-                  ) : null}
-                  <h3
-                    className="font-display font-semibold text-xl mb-2"
-                    style={{ color: '#2D1F14' }}
-                  >
-                    {v.title}
-                  </h3>
-                  <p className="text-base leading-[1.6]" style={{ color: '#8B7A6B' }}>
-                    {v.text}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
