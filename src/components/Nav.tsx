@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ShoppingBag, Menu, X } from 'lucide-react'
+import { ShoppingBag, Menu, X, Phone } from 'lucide-react'
 import { useSanity } from '../context/SanityContext'
 
 export default function Nav() {
@@ -8,6 +8,8 @@ export default function Nav() {
   const { settings } = useSanity()
 
   const bakeryName = settings?.bakeryName || 'Bon Pain Fait Main'
+  const phone = settings?.phone || '+32 493 21 09 25'
+  const phoneHref = `tel:${phone.replace(/\s/g, '')}`
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50)
@@ -69,6 +71,20 @@ export default function Nav() {
             ))}
             <li>
               <a
+                href={phoneHref}
+                aria-label={`Appeler ${phone}`}
+                title={phone}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full no-underline transition-all duration-300 hover:-translate-y-px"
+                style={{
+                  border: `1px solid ${scrolled ? '#D4BFA5' : 'rgba(255,255,255,0.4)'}`,
+                  color: scrolled ? '#6E4D32' : 'rgba(255,255,255,0.85)',
+                }}
+              >
+                <Phone size={16} />
+              </a>
+            </li>
+            <li>
+              <a
                 href="#order"
                 className="inline-flex items-center gap-2 px-5 lg:px-6 py-2.5 rounded-full text-xs lg:text-sm font-semibold uppercase tracking-widest no-underline text-white transition-all duration-300 hover:-translate-y-px whitespace-nowrap"
                 style={{
@@ -90,14 +106,24 @@ export default function Nav() {
             </li>
           </ul>
 
-          <button
-            className="md:hidden p-2 transition-colors"
-            style={{ color: scrolled ? '#2D1F14' : 'white' }}
-            onClick={() => setMobileOpen(true)}
-            aria-label="Menu"
-          >
-            <Menu size={24} />
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <a
+              href={phoneHref}
+              aria-label={`Appeler ${phone}`}
+              className="p-2 transition-colors"
+              style={{ color: scrolled ? '#2D1F14' : 'white' }}
+            >
+              <Phone size={22} />
+            </a>
+            <button
+              className="p-2 transition-colors"
+              style={{ color: scrolled ? '#2D1F14' : 'white' }}
+              onClick={() => setMobileOpen(true)}
+              aria-label="Menu"
+            >
+              <Menu size={24} />
+            </button>
+          </div>
         </div>
       </nav>
 
