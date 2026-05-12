@@ -43,7 +43,7 @@ Bäckerei-Website für Benjamin Ramakers, Waimes (Belgien). Vite + React + TypeS
 
 ```
 .
-├── api/order.ts          Vercel Serverless Function (TODO: Resend einbinden)
+├── api/order.ts          Vercel Serverless Function — Resend an Bäcker + Bestätigung an Kunde
 ├── src/                  Frontend (Vite + React + TS + Tailwind)
 ├── studio/               Sanity Studio v3 (deploy via npx sanity deploy)
 ├── public/               robots.txt, sitemap.xml, PWA-Icons
@@ -63,7 +63,7 @@ Bäckerei-Website für Benjamin Ramakers, Waimes (Belgien). Vite + React + TypeS
 Frontend:  Vite 5 + React 18 + TypeScript + Tailwind 3
 CMS:       Sanity v3 (gehostet, Free-Plan)
 Hosting:   Vercel (Hobby Free)
-Email:     Resend (TODO)
+Email:     Resend (Code wired — Env-Vars noch in Vercel zu setzen)
 Domain:    bonpainfaitmain.be (TODO)
 Analytics: Vercel Analytics (via inject() in main.tsx)
 PWA:       vite-plugin-pwa
@@ -90,8 +90,7 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 | Wer | Was |
 |---|---|
 | Bäcker | Site reviewen, Studio testen (Preis korrigieren, eigenes Foto austauschen) |
-| Du | **Resend einrichten** — resend.com → API-Key → Domain `bonpainfaitmain.be` verifizieren → Vercel Env-Vars setzen: `RESEND_API_KEY`, `ORDER_TO_EMAIL=bonpain.artisan@gmail.com`, `ORDER_FROM_EMAIL=orders@bonpainfaitmain.be` |
-| Du | `api/order.ts` editieren — `console.log` durch `Resend.emails.send(...)` ersetzen, committen, push |
+| Du | **Resend Env-Vars in Vercel setzen** — `RESEND_API_KEY` (von resend.com/api-keys), `ORDER_TO_EMAIL=bonpain.artisan@gmail.com`, `ORDER_FROM_EMAIL=orders@bonpainfaitmain.be`. Solange `RESEND_API_KEY` fehlt, loggt der Handler nur und das Formular bleibt funktional — aber Bestellungen erreichen Benjamin nicht. Sender-Domain muss in Resend verifiziert sein (DNS-Records bei Registrar) — danach kann jede `@bonpainfaitmain.be`-Adresse als Absender dienen. |
 | Du | **Domain `bonpainfaitmain.be` auf Vercel anschließen** — Settings → Domains → Add → DNS-Records (A für root, CNAME für www) bei Registrar setzen |
 | Du | Alte hardcoded Site auf `bonpainfaitmain.be` parallel abschalten / DNS umlegen |
 
