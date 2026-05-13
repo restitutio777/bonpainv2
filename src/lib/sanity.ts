@@ -1,5 +1,5 @@
 import { createClient } from '@sanity/client'
-import imageUrlBuilder from '@sanity/image-url'
+import { createImageUrlBuilder } from '@sanity/image-url'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
 const token = import.meta.env.VITE_SANITY_TOKEN
@@ -12,7 +12,7 @@ export const sanityClient = createClient({
   ...(token ? { token } : {}),
 })
 
-const builder = imageUrlBuilder(sanityClient)
+const builder = createImageUrlBuilder(sanityClient)
 
 /**
  * Build an image URL that respects the document's crop + hotspot.
