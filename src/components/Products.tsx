@@ -73,7 +73,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
             return (
             <div
               key={product._id}
-              className="animate-on-scroll bg-white rounded-xl overflow-hidden cursor-pointer group transition-all duration-400"
+              className={`animate-on-scroll bg-white rounded-xl overflow-hidden group transition-all duration-400 ${product.hasModal ? 'cursor-pointer' : ''}`}
               style={{
                 transitionDelay: `${(i % 3) * 0.1}s`,
                 boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
@@ -83,6 +83,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 if (product.hasModal) onOpenModal(product._id)
               }}
               onMouseEnter={(e) => {
+                if (!product.hasModal) return
                 const card = e.currentTarget as HTMLElement
                 card.style.transform = 'translateY(-6px)'
                 card.style.boxShadow = '0 8px 32px rgba(45,31,20,0.1)'
@@ -90,6 +91,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 if (img) img.style.transform = 'scale(1.05)'
               }}
               onMouseLeave={(e) => {
+                if (!product.hasModal) return
                 const card = e.currentTarget as HTMLElement
                 card.style.transform = 'translateY(0)'
                 card.style.boxShadow = '0 1px 3px rgba(45,31,20,0.06)'
