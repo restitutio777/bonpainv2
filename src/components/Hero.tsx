@@ -112,7 +112,7 @@ export default function Hero() {
 
       <a
         href="#about"
-        aria-label="D\u00e9couvrir notre histoire"
+        aria-label="Découvrir notre histoire"
         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 no-underline transition-colors duration-300 hover:text-white"
         style={{
           color: 'rgba(255,255,255,0.4)',
