@@ -21,15 +21,22 @@ export default function Footer() {
   const email = settings?.email || 'bonpain.artisan@gmail.com'
   const phone = settings?.phone || null
   const address = settings?.address
-  const facebookUrl = settings?.facebookUrl || '#'
-  const instagramUrl = settings?.instagramUrl || '#'
+  const facebookUrl = settings?.facebookUrl
+  const instagramUrl = settings?.instagramUrl
+
+  const addressLabel = address
+    ? `${address.street}, ${address.postalCode} ${address.city}`
+    : 'Rue de la Roer 19, 4950 Waimes'
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+    address
+      ? `${address.street}, ${address.postalCode} ${address.city}, ${address.country}`
+      : 'Rue de la Roer 19, 4950 Waimes, Belgique'
+  )}`
 
   const contactLinks = [
     { href: `mailto:${email}`, label: email },
     ...(phone ? [{ href: `tel:${phone.replace(/\s/g, '')}`, label: phone }] : []),
-    ...(address
-      ? [{ href: '#', label: `${address.street}, ${address.postalCode} ${address.city}` }]
-      : [{ href: '#', label: 'Rue de la Roer 19, 4950 Waimes' }]),
+    { href: directionsUrl, label: addressLabel, external: true },
   ]
 
   return (
@@ -75,6 +82,9 @@ export default function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
+                      {...('external' in link && link.external
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {})}
                       className="text-sm no-underline transition-colors duration-200 hover:text-warm-100"
                       style={{ color: '#BFA07E' }}
                       onMouseEnter={(e) => {
@@ -100,22 +110,24 @@ export default function Footer() {
           <span>&copy; {new Date().getFullYear()} {bakeryName} — Tous droits réservés</span>
           <div className="flex gap-4">
             {[
-              {
+              facebookUrl && {
                 label: 'Facebook',
                 href: facebookUrl,
                 path: 'M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z',
                 isInstagram: false,
               },
-              {
+              instagramUrl && {
                 label: 'Instagram',
                 href: instagramUrl,
                 path: null,
                 isInstagram: true,
               },
-            ].map((social) => (
+            ].filter((s): s is { label: string; href: string; path: string | null; isInstagram: boolean } => Boolean(s)).map((social) => (
               <a
                 key={social.label}
-                href={social.href || '#'}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={social.label}
                 className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 hover:-translate-y-0.5"
                 style={{ background: 'rgba(255,255,255,0.05)', color: '#BFA07E' }}
