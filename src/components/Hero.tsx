@@ -16,7 +16,7 @@ export default function Hero() {
 
   const bgStyle = content?.heroImage
     ? `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('${content.heroImage}') center/cover no-repeat`
-    : `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80') center/cover no-repeat`
+    : `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('/BAEKEREI_346_1.webp') center/cover no-repeat`
 
   return (
     <section
