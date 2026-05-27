@@ -10,11 +10,6 @@
       <stop offset="55%" stop-color="#E0B888"/>
       <stop offset="100%" stop-color="#B8814F"/>
     </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#A67C52" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#D4A373"/>
-      <stop offset="100%" stop-color="#A67C52" stop-opacity="0"/>
-    </linearGradient>
     <filter id="lift" x="-15%" y="-15%" width="130%" height="130%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
       <feOffset dx="0" dy="4" result="shadow"/>
@@ -26,37 +21,35 @@
   <!-- Dark rounded badge -->
   <rect width="512" height="512" rx="100" ry="100" fill="url(#bg)"/>
 
-  <!-- Inner hairline frame, evokes wax seal -->
+  <!-- Hairline inner frame, wax-seal feel -->
   <rect x="40" y="40" width="432" height="432" rx="76" ry="76"
         fill="none" stroke="#C9985E" stroke-opacity="0.18" stroke-width="2"/>
 
-  <!-- Custom serif "B" — balanced bowls, slight flare -->
+  <!-- Centered serif 'B' — bbox 136..376 × 100..392, optical center on canvas -->
   <g filter="url(#lift)">
-    <path fill="url(#letter)" d="
-      M 158 110
-      L 296 110
-      C 354 110 392 142 392 192
-      C 392 222 374 248 344 260
-      C 386 270 412 300 412 344
-      C 412 398 368 432 302 432
-      L 158 432
+    <path fill="url(#letter)" fill-rule="evenodd" d="
+      M 136 100
+      L 266 100
+      C 326 100 360 128 360 182
+      C 360 216 338 236 306 244
+      C 344 252 376 276 376 322
+      C 376 370 334 392 270 392
+      L 136 392
       Z
 
-      M 214 156
-      L 214 240
-      L 286 240
-      C 320 240 340 226 340 198
-      C 340 172 322 156 286 156
+      M 190 142
+      L 190 216
+      L 266 216
+      C 298 216 312 202 312 178
+      C 312 158 296 142 266 142
       Z
 
-      M 214 280
-      L 214 386
-      L 296 386
-      C 336 386 358 366 358 336
-      C 358 304 336 280 296 280
+      M 190 272
+      L 190 376
+      L 270 376
+      C 310 376 328 356 328 322
+      C 328 294 312 272 266 272
+      L 190 272
       Z"/>
   </g>
-
-  <!-- Decorative accent line below the B, fading at both ends -->
-  <rect x="180" y="456" width="152" height="3" fill="url(#accent)"/>
 </svg>
