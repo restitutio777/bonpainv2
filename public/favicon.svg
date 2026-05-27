@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Bon Pain Fait Main">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#3D2A18"/>
+      <stop offset="55%" stop-color="#2D1F14"/>
+      <stop offset="100%" stop-color="#160D06"/>
+    </radialGradient>
+    <linearGradient id="letter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4E6D1"/>
+      <stop offset="55%" stop-color="#E0B888"/>
+      <stop offset="100%" stop-color="#B8814F"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A67C52" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#D4A373"/>
+      <stop offset="100%" stop-color="#A67C52" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="lift" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="4" result="shadow"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Dark rounded badge -->
+  <rect width="512" height="512" rx="100" ry="100" fill="url(#bg)"/>
+
+  <!-- Inner hairline frame, evokes wax seal -->
+  <rect x="40" y="40" width="432" height="432" rx="76" ry="76"
+        fill="none" stroke="#C9985E" stroke-opacity="0.18" stroke-width="2"/>
+
+  <!-- Custom serif "B" — balanced bowls, slight flare -->
+  <g filter="url(#lift)">
+    <path fill="url(#letter)" d="
+      M 158 110
+      L 296 110
+      C 354 110 392 142 392 192
+      C 392 222 374 248 344 260
+      C 386 270 412 300 412 344
+      C 412 398 368 432 302 432
+      L 158 432
+      Z
+
+      M 214 156
+      L 214 240
+      L 286 240
+      C 320 240 340 226 340 198
+      C 340 172 322 156 286 156
+      Z
+
+      M 214 280
+      L 214 386
+      L 296 386
+      C 336 386 358 366 358 336
+      C 358 304 336 280 296 280
+      Z"/>
+  </g>
+
+  <!-- Decorative accent line below the B, fading at both ends -->
+  <rect x="180" y="456" width="152" height="3" fill="url(#accent)"/>
+</svg>
