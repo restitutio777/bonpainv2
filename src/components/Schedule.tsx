@@ -25,7 +25,7 @@ const days = [
   },
   {
     day: 'Vendredi',
-    hours: ['8h — 12h', '13h — 15h'],
+    hours: ['8h — 12h', '13h — 17h'],
     hasViennoiseries: false,
   },
   {

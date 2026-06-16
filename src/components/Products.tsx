@@ -156,6 +156,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                   >
                     € {product.price.toFixed(2).replace('.', ',')}
                   </span>
+                  {product.orderInForm !== false && (
                   <button
                     type="button"
                     onClick={(e) => {
@@ -197,6 +198,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                       <Plus size={18} />
                     )}
                   </button>
+                  )}
                 </div>
               </div>
             </div>
