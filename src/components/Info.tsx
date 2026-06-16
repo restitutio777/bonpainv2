@@ -20,8 +20,8 @@ export default function Info() {
             : s.note || '',
         }))
     : [
-        { day: 'Mercredi', time: '8h00 à 12h00' },
-        { day: 'Vendredi', time: '8h00 à 12h00 & 13h00 à 15h00' },
+        { day: 'Mercredi', time: '8h00 à 12h00 & 13h00 à 15h00' },
+        { day: 'Vendredi', time: '8h00 à 12h00 & 13h00 à 17h00' },
         { day: 'Samedi', time: '8h00 à 12h00' },
       ]
 
