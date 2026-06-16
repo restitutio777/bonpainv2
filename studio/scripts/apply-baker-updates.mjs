@@ -33,10 +33,10 @@ const client = createClient({
 
 // — Prix des 4 nouveaux pains (à confirmer par le boulanger) —
 const NEW_BREADS = [
-  { id: 'product-pain-seigle',   name: 'Pain au seigle',        price: null, sortOrder: 5.6 },
-  { id: 'product-epeautre',      name: 'Épeautre (sans sésame)', price: null, sortOrder: 4.5 },
-  { id: 'product-rustik',        name: 'Le Rustik',             price: null, sortOrder: 5.7 },
-  { id: 'product-fagnard',       name: 'Le Fagnard',            price: null, sortOrder: 5.8 },
+  { id: 'product-pain-seigle',   name: 'Pain au seigle',        price: 5.7, sortOrder: 5.6 },
+  { id: 'product-epeautre',      name: 'Épeautre (sans sésame)', price: 5.7, sortOrder: 4.5 },
+  { id: 'product-rustik',        name: 'Le Rustik',             price: 5.7, sortOrder: 5.7 },
+  { id: 'product-fagnard',       name: 'Le Fagnard',            price: 5.7, sortOrder: 5.8 },
 ]
 
 function slugify(s) {
