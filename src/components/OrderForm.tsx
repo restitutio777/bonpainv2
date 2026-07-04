@@ -5,6 +5,7 @@ import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
 import { getProductStatus } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
+import { orderEndpoint } from '../lib/orderApi'
 
 export default function OrderForm() {
   useScrollAnimation()
@@ -117,7 +118,7 @@ export default function OrderForm() {
       .reduce((sum, p) => sum + p.price * (cart[p._id] || 0), 0)
 
     try {
-      const res = await fetch('/api/order', {
+      const res = await fetch(orderEndpoint(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

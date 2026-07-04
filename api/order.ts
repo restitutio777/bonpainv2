@@ -303,9 +303,41 @@ async function fetchAllOrdersForDay(
   }
 }
 
-export default async function handler(req: { method?: string; body: unknown }, res: {
+// The static build is also served from classic hosting on the bakery's own
+// domain; the form there posts cross-origin to this function.
+const ALLOWED_ORIGINS = new Set([
+  'https://bonpainfaitmain.be',
+  'https://www.bonpainfaitmain.be',
+])
+
+type Req = {
+  method?: string
+  body: unknown
+  headers?: Record<string, string | string[] | undefined>
+}
+type Res = {
   status: (code: number) => { json: (data: unknown) => void; end: () => void }
-}) {
+  setHeader: (key: string, value: string) => void
+}
+
+function applyCors(req: Req, res: Res) {
+  const origin = typeof req.headers?.origin === 'string' ? req.headers.origin : ''
+  if (ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+    res.setHeader('Vary', 'Origin')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    res.setHeader('Access-Control-Max-Age', '86400')
+  }
+}
+
+export default async function handler(req: Req, res: Res) {
+  applyCors(req, res)
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end()
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
