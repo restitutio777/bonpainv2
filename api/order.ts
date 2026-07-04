@@ -202,7 +202,7 @@ function buildBakerSingleOrder(order: OrderPayload) {
     `Total : ${formatPrice(total)}`,
     remarques ? `\nRemarques : ${remarques}` : null,
     ``,
-    `⚠ Cette commande arrive einzeln (Redis-Digest war nicht erreichbar).`,
+    `⚠ Cette commande a été envoyée individuellement (le récapitulatif du jour était momentanément indisponible).`,
   ]
     .filter(Boolean)
     .join('\n')
@@ -225,7 +225,7 @@ function buildBakerSingleOrder(order: OrderPayload) {
       <p><strong>Total : ${escapeHtml(formatPrice(total))}</strong></p>
       ${remarques ? `<p><strong>Remarques</strong><br>${escapeHtml(remarques)}</p>` : ''}
       <p style="color: #8B6340; font-size: 12px; margin-top: 24px;">
-        ⚠ Diese Bestellung wurde einzeln verschickt (Tagesübersicht war kurz nicht erreichbar).
+        ⚠ Cette commande a été envoyée individuellement (le récapitulatif du jour était momentanément indisponible).
       </p>
     </div>
   `
@@ -371,13 +371,21 @@ export default async function handler(req: { method?: string; body: unknown }, r
     }),
   ])
 
-  if (bakerRes.status === 'rejected') {
-    console.error('[order] baker email failed', bakerRes.reason)
+  // Resend v6 resolves with { data, error } and only rejects on network
+  // failures — check both paths, or API errors slip through as 200.
+  const bakerFailure =
+    bakerRes.status === 'rejected' ? bakerRes.reason : bakerRes.value.error
+
+  if (bakerFailure) {
+    console.error('[order] baker email failed', bakerFailure)
     return res.status(500).json({ error: 'Email delivery failed' })
   }
 
-  if (customerRes.status === 'rejected') {
-    console.warn('[order] customer confirmation failed', customerRes.reason)
+  const customerFailure =
+    customerRes.status === 'rejected' ? customerRes.reason : customerRes.value.error
+
+  if (customerFailure) {
+    console.warn('[order] customer confirmation failed', customerFailure)
   }
 
   return res.status(200).json({ ok: true })

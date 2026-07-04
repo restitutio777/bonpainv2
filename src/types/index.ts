@@ -1,4 +1,21 @@
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { SanityImageSource } from '@sanity/image-url'
+
+export interface PortableTextSpan {
+  _type: 'span'
+  _key: string
+  text: string
+  marks?: string[]
+}
+
+export interface PortableTextBlock {
+  _type: 'block'
+  _key: string
+  style?: string
+  children: PortableTextSpan[]
+  markDefs?: { _key: string; _type: string; [key: string]: unknown }[]
+  listItem?: string
+  level?: number
+}
 
 export interface SanityProduct {
   _id: string
@@ -19,8 +36,8 @@ export interface SanityProduct {
   modalTitleDe: string | null
   modalSubtitleFr: string | null
   modalSubtitleDe: string | null
-  modalBodyFr: any[] | null
-  modalBodyDe: any[] | null
+  modalBodyFr: PortableTextBlock[] | null
+  modalBodyDe: PortableTextBlock[] | null
   badge: string | null
   orderInForm: boolean
   sortOrder: number
@@ -67,12 +84,6 @@ export interface SiteSettings {
   seoImage: string | null
 }
 
-export interface ValuePillar {
-  title: string
-  description: string
-  icon: string
-}
-
 export interface SiteContent {
   heroBadge: string | null
   heroTitle: string
@@ -84,10 +95,9 @@ export interface SiteContent {
   aboutLabel: string | null
   aboutTitle: string
   aboutTitleAccent: string | null
-  aboutText: any[] | null
+  aboutText: PortableTextBlock[] | null
   aboutImage: string | null
   aboutImageAlt: string | null
-  values: ValuePillar[]
   productsLabel: string | null
   productsTitle: string
   productsTitleAccent: string | null

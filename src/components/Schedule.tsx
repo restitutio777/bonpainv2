@@ -1,5 +1,7 @@
 import { Clock, CakeSlice, Wheat, ChevronRight } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
+import { useSanity } from '../context/SanityContext'
+import { dayLabelFr, formatTimeFr, isViennoiserieDay, openDays } from '../lib/schedule'
 
 const breads = [
   'Pain Gris levain',
@@ -17,7 +19,8 @@ const breads = [
 
 const viennoiseries = ['Croissant', 'Pain au chocolat']
 
-const days = [
+// Shown until the CMS schedule loads (or if it is empty).
+const FALLBACK_DAYS = [
   {
     day: 'Mercredi',
     hours: ['8h — 12h', '13h — 15h'],
@@ -37,6 +40,18 @@ const days = [
 
 export default function Schedule() {
   useScrollAnimation()
+  const { schedule } = useSanity()
+
+  const cmsDays = openDays(schedule).map((s) => ({
+    day: dayLabelFr(s.day),
+    hours: (s.slots || []).map(
+      (slot) => `${formatTimeFr(slot.open, 'short')} — ${formatTimeFr(slot.close, 'short')}`
+    ),
+    hasViennoiseries: isViennoiserieDay(s),
+  }))
+
+  const days = cmsDays.length > 0 ? cmsDays : FALLBACK_DAYS
+  const viennoiserieDay = days.find((d) => d.hasViennoiseries)?.day || 'Samedi'
 
   return (
     <section
@@ -196,7 +211,7 @@ export default function Schedule() {
                 className="text-xs font-medium px-2.5 py-1 rounded-full ml-auto"
                 style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)', color: 'white' }}
               >
-                Samedi
+                {viennoiserieDay}
               </span>
             </div>
             <div className="px-6 py-5 md:px-8 md:py-6">

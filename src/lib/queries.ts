@@ -73,7 +73,6 @@ export const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0] {
   aboutText,
   "aboutImage": aboutImage.asset->url + "?w=1000&auto=format&fit=max&q=75",
   "aboutImageAlt": aboutImage.alt,
-  values[] { title, description, icon },
   productsLabel,
   productsTitle,
   productsTitleAccent,

@@ -4,10 +4,11 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
 import { getProductStatus } from '../lib/productStatus'
+import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 
 export default function OrderForm() {
   useScrollAnimation()
-  const { products, content, settings, vacation } = useSanity()
+  const { products, content, settings, vacation, schedule } = useSanity()
   const { cart, setQuantity, clearCart, totalPrice } = useCart()
 
   // Hide products that are explicitly out of season — Benjamin can re-enable
@@ -17,6 +18,34 @@ export default function OrderForm() {
   )
   const orderLeadDays = settings?.orderLeadDays || 2
   const isDisabled = vacation?.isActive && vacation?.disableOrdering
+
+  // Pickup days come from the CMS schedule (days marked open in the studio);
+  // the hardcoded trio is only a fallback while loading.
+  const pickupDays = (() => {
+    const fromCms = openDays(schedule)
+      .map((s) => ({
+        value: dayLabelFr(s.day).toLowerCase(),
+        label: dayLabelFr(s.day),
+        weekday: dayIndex(s.day),
+      }))
+      .filter((d): d is { value: string; label: string; weekday: number } => d.weekday !== undefined)
+    return fromCms.length > 0
+      ? fromCms
+      : [
+          { value: 'mercredi', label: 'Mercredi', weekday: 3 },
+          { value: 'vendredi', label: 'Vendredi', weekday: 5 },
+          { value: 'samedi', label: 'Samedi', weekday: 6 },
+        ]
+  })()
+
+  // Earliest allowed pickup date (local time), respecting the lead time.
+  const minPickupDate = (() => {
+    const d = new Date()
+    d.setDate(d.getDate() + orderLeadDays)
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate()
+    ).padStart(2, '0')}`
+  })()
 
   const label = content?.orderLabel || 'Commander'
   const title = content?.orderTitle || 'Passez votre'
@@ -56,8 +85,27 @@ export default function OrderForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setSubmitting(true)
     setSubmitError(null)
+
+    const selectedDay = pickupDays.find((p) => p.value === jour)
+    if (selectedDay && date) {
+      // `T00:00:00` forces local-time parsing so getDay() matches the picker.
+      const weekday = new Date(`${date}T00:00:00`).getDay()
+      if (weekday !== selectedDay.weekday) {
+        setSubmitError(
+          `La date choisie ne tombe pas un ${selectedDay.label.toLowerCase()}. Merci de vérifier le jour et la date de retrait.`
+        )
+        return
+      }
+    }
+    if (date && date < minPickupDate) {
+      setSubmitError(
+        `Merci de prévoir au moins ${orderLeadDays} jours entre la commande et le retrait.`
+      )
+      return
+    }
+
+    setSubmitting(true)
 
     const orderLines = products
       .filter((p) => p.orderInForm && (cart[p._id] || 0) > 0)
@@ -424,9 +472,11 @@ export default function OrderForm() {
                       onBlur={handleBlur}
                     >
                       <option value="">Choisir un jour...</option>
-                      <option value="mercredi">Mercredi</option>
-                      <option value="vendredi">Vendredi</option>
-                      <option value="samedi">Samedi</option>
+                      {pickupDays.map((d) => (
+                        <option key={d.value} value={d.value}>
+                          {d.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -439,6 +489,7 @@ export default function OrderForm() {
                       id="date"
                       name="date"
                       required
+                      min={minPickupDate}
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                       className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"

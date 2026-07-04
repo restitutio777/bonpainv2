@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { SanityProvider, useSanity } from './context/SanityContext'
 import { CartProvider } from './context/CartContext'
+import type { PortableTextBlock } from './types'
 import FloatingCart from './components/FloatingCart'
 import VacationBanner from './components/VacationBanner'
 import Nav from './components/Nav'
@@ -27,12 +28,12 @@ function usePath() {
   return path
 }
 
-function extractText(blocks: any[] | null): string[] {
+function extractText(blocks: PortableTextBlock[] | null): string[] {
   if (!blocks) return []
   return blocks
-    .filter((b: any) => b._type === 'block')
-    .map((b: any) =>
-      (b.children || []).map((c: any) => c.text || '').join('')
+    .filter((b) => b._type === 'block')
+    .map((b) =>
+      (b.children || []).map((c) => c.text || '').join('')
     )
     .filter(Boolean)
 }

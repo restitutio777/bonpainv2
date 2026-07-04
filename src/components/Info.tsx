@@ -1,6 +1,7 @@
 import { Clock, MapPin, Home, Navigation } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
+import { dayLabelFr, formatTimeFr } from '../lib/schedule'
 
 export default function Info() {
   useScrollAnimation()
@@ -14,9 +15,11 @@ export default function Info() {
     ? schedule
         .filter((s) => s.isOpen)
         .map((s) => ({
-          day: s.day,
+          day: dayLabelFr(s.day),
           time: s.slots
-            ? s.slots.map((slot) => `${slot.open} à ${slot.close}`).join(' & ')
+            ? s.slots
+                .map((slot) => `${formatTimeFr(slot.open)} à ${formatTimeFr(slot.close)}`)
+                .join(' & ')
             : s.note || '',
         }))
     : [

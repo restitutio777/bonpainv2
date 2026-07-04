@@ -8,10 +8,10 @@ export default function About() {
   const label = content?.aboutLabel || 'Notre histoire'
   const title = content?.aboutTitle || 'Benjamin & Nadia,'
   const titleAccent = content?.aboutTitleAccent || 'à Sourbrodt'
-  const aboutText = content?.aboutText
+  const aboutText: string[] = content?.aboutText
     ? content.aboutText
-        .filter((b: any) => b._type === 'block')
-        .map((b: any) => (b.children || []).map((c: any) => c.text || '').join(''))
+        .filter((b) => b._type === 'block')
+        .map((b) => (b.children || []).map((c) => c.text || '').join(''))
         .filter(Boolean)
     : [
         "À Sourbrodt, au cœur des Fagnes, Benjamin et Nadia tiennent une petite boulangerie. Farines choisies, levain naturel cultivé sur place, fermentation longue de 24 heures, cuisson sur commande. Pas de raccourci, pas d'invendu — c'est cette lenteur assumée qui fait la différence dans la mie et dans le goût.",
