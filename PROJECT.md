@@ -89,7 +89,8 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 
 **Vor dem Domain-Anschluss:**
 - ✅ Resend läuft. Testbestellung am 2026-08-24 gegen die Production-Function: HTTP 200, Bäcker- und Kundenmail rausgegangen.
-- 🔴 **Upstash Redis ist tot.** Die Env-Vars sind gesetzt, aber der Host `eager-moccasin-122278.upstash.io` löst nicht mehr auf (`ENOTFOUND`) — die Datenbank existiert nicht mehr. Folge in Produktion: **kein Tagesdigest** (Benjamin bekommt pro Bestellung eine Einzelmail mit dem Hinweis „récapitulatif momentanément indisponible") und **das IP-Rate-Limit ist wirkungslos** (fällt bewusst offen aus). Fix: in Vercel → Storage/Marketplace eine neue Upstash-Redis-Instanz anlegen und `KV_REST_API_URL` / `KV_REST_API_TOKEN` neu verbinden.
+- ✅ **Upstash Redis repariert (2026-08-24).** Die alte Instanz `bonpain-orders` war „Archived due to inactivity" — der Host löste nicht mehr auf, dadurch kein Tagesdigest und kein wirksames Rate-Limit. Behoben: tote Instanz vom Projekt getrennt (ihre 5 verwalteten Env-Vars sind damit weg), aktive Instanz `upstash-kv-cinereous-helmet` mit Prefix `KV` verbunden → `KV_REST_API_URL` / `KV_REST_API_TOKEN` stimmen wieder. Verifiziert: `/api/keepalive` schreibt und liest, Testbestellungen laufen ohne Redis-Fehler durch.
+- **Damit es nicht wieder passiert:** täglicher Cron `/api/keepalive` (05:00 UTC, `vercel.json`) hält die Free-Instanz aktiv. Wenn der Ping scheitert, steht das laut in den Runtime-Logs.
 - Sender-Domain in Resend verifiziert (DNS bei Registrar) — sollte mit dem funktionierenden Versand erledigt sein, beim Domainwechsel gegenprüfen.
 - Vier Produkte ohne Foto (Épeautre sans sésame, Pain au seigle, Le Rustik, Le Fagnard) — zeigen bis dahin das lokale Ersatzbild. Alt-Texte fehlen dort ebenfalls.
 - ~~Panettone-Saison abgelaufen~~ → am 2026-08-24 auf Ostern 2027 gesetzt (12.03.–29.03.2027, `studio/scripts/set-panettone-season-2027.mjs`). Karte zeigt jetzt „Disponible dès le 12 mars".
