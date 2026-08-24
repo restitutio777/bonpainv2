@@ -53,7 +53,7 @@ export const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0] {
   orderLeadDays,
   facebookUrl,
   instagramUrl,
-  partnerStores[] { name, city, url },
+  partnerStores[] { name, city, salesDays, url },
   seoTitle,
   seoDescription,
   "seoImage": seoImage.asset->url + "?w=1200&h=630&auto=format&fit=crop&q=80"

@@ -348,6 +348,7 @@ export default function OrderForm() {
                               className="qty-btn"
                               onClick={() => changeQty(item._id, -1)}
                               disabled={!!isDisabled}
+                              aria-label={`Retirer un ${item.name}`}
                             >
                               −
                             </button>
@@ -356,12 +357,14 @@ export default function OrderForm() {
                               className="qty-value"
                               value={cart[item._id] || 0}
                               readOnly
+                              aria-label={`Quantité — ${item.name}`}
                             />
                             <button
                               type="button"
                               className="qty-btn"
                               onClick={() => changeQty(item._id, 1)}
                               disabled={!!isDisabled}
+                              aria-label={`Ajouter un ${item.name}`}
                             >
                               +
                             </button>
@@ -532,6 +535,7 @@ export default function OrderForm() {
 
                 {submitError && (
                   <div
+                    role="alert"
                     className="flex items-center gap-3 px-5 py-4 rounded-xl mb-6 text-sm"
                     style={{ background: '#FBF3EC', border: '1px solid #E8D9C8', color: '#6E4D32' }}
                   >

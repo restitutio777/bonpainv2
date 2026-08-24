@@ -60,6 +60,9 @@ export default function About() {
 
   // Observateur local : les chapitres n'existent qu'une fois le contenu chargé,
   // l'observateur global (monté une seule fois) les manquerait sinon.
+  const chapterCount = chapters.length
+  const hasClosingPara = Boolean(closing)
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -76,7 +79,7 @@ export default function About() {
       .querySelectorAll('#about .animate-on-scroll')
       .forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [chapters.length, Boolean(closing)])
+  }, [chapterCount, hasClosingPara])
 
   return (
     <section id="about" className="py-28 lg:py-36" style={{ background: '#FAF6F1' }}>

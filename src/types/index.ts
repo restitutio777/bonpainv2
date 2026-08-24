@@ -78,7 +78,7 @@ export interface SiteSettings {
   orderLeadDays: number
   facebookUrl: string | null
   instagramUrl: string | null
-  partnerStores: { name: string; city: string; url: string | null }[]
+  partnerStores: { name: string; city: string; salesDays: string | null; url: string | null }[]
   seoTitle: string | null
   seoDescription: string | null
   seoImage: string | null

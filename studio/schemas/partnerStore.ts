@@ -18,6 +18,12 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'salesDays',
+      title: 'Jours de vente (optionnel)',
+      description: "Ex. « Mercredi » ou « Ven, Sam, Dim ». Laisser vide pour ne rien afficher.",
+      type: 'string',
+    }),
+    defineField({
       name: 'url',
       title: 'Site web (optionnel)',
       description: "Lien complet (https://...). Laisser vide si pas de site.",

@@ -39,6 +39,11 @@ type StoredOrder = OrderPayload & { receivedAt: string }
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 
+// The form submits the weekday lowercased ("mercredi"); the emails read
+// better capitalized, and the transform is deterministic so the digest
+// subject stays constant per pickup day (Gmail threading depends on that).
+const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s)
+
 const formatPrice = (n: number) => `€${n.toFixed(2).replace('.', ',')}`
 
 const formatPickupDate = (iso: string): string => {
@@ -66,7 +71,7 @@ const parseOrderItems = (items: string): Array<{ qty: number; name: string }> =>
 function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: string }) {
   const dateFr = formatPickupDate(pickup.date)
   // Constant subject per pickup day so Gmail threads all digests together.
-  const subject = `${pickup.jour} ${dateFr} — Commandes`
+  const subject = `${capitalize(pickup.jour)} ${dateFr} — Commandes`
 
   // Aggregate item totals across all orders for this pickup day.
   const totals = new Map<string, number>()
@@ -122,7 +127,7 @@ function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: s
         </div>
       </div>
       <h2 style="margin: 0 0 8px; font-size: 20px; color: #2D1F14;">
-        ${escapeHtml(pickup.jour)} ${escapeHtml(dateFr)}
+        ${escapeHtml(capitalize(pickup.jour))} ${escapeHtml(dateFr)}
       </h2>
       <p style="margin: 0 0 24px; color: #6E4D32;">
         ${orders.length} commande${orders.length > 1 ? 's' : ''}
@@ -185,7 +190,7 @@ function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: s
 function buildBakerSingleOrder(order: OrderPayload) {
   const { customer, pickup, remarques, items, total } = order
   const dateFr = formatPickupDate(pickup.date)
-  const subject = `Nouvelle commande — ${customer.prenom} ${customer.nom} — retrait ${pickup.jour} ${dateFr}`
+  const subject = `Nouvelle commande — ${customer.prenom} ${customer.nom} — retrait ${capitalize(pickup.jour)} ${dateFr}`
 
   const text = [
     `Nouvelle commande reçue.`,
@@ -194,7 +199,7 @@ function buildBakerSingleOrder(order: OrderPayload) {
     `Email  : ${customer.email}`,
     customer.tel ? `Tél    : ${customer.tel}` : null,
     ``,
-    `Retrait : ${pickup.jour} ${dateFr}`,
+    `Retrait : ${capitalize(pickup.jour)} ${dateFr}`,
     ``,
     `Commande :`,
     items,
@@ -216,7 +221,7 @@ function buildBakerSingleOrder(order: OrderPayload) {
         <a href="mailto:${encodeURIComponent(customer.email)}">${escapeHtml(customer.email)}</a>
         ${customer.tel ? `<br><a href="tel:${escapeHtml(customer.tel.replace(/\s/g, ''))}">${escapeHtml(customer.tel)}</a>` : ''}
       </p>
-      <p><strong>Retrait</strong><br>${escapeHtml(pickup.jour)} ${escapeHtml(dateFr)}</p>
+      <p><strong>Retrait</strong><br>${escapeHtml(capitalize(pickup.jour))} ${escapeHtml(dateFr)}</p>
       <p><strong>Commande</strong></p>
       <ul style="padding-left: 1.2em;">${items
         .split('\n')
@@ -243,7 +248,7 @@ function buildCustomerConfirmation(order: OrderPayload) {
     ``,
     `Merci, on a bien reçu votre commande.`,
     ``,
-    `Retrait : ${pickup.jour} ${dateFr}`,
+    `Retrait : ${capitalize(pickup.jour)} ${dateFr}`,
     `Adresse : Rue de la Roer 19, 4950 Waimes`,
     ``,
     `Votre commande :`,
@@ -263,7 +268,7 @@ function buildCustomerConfirmation(order: OrderPayload) {
       <p>Merci, on a bien reçu votre commande.</p>
       <p>
         <strong>Retrait</strong><br>
-        ${escapeHtml(pickup.jour)} ${escapeHtml(dateFr)}<br>
+        ${escapeHtml(capitalize(pickup.jour))} ${escapeHtml(dateFr)}<br>
         <span style="color: #6E4D32;">Rue de la Roer 19, 4950 Waimes</span>
       </p>
       <p><strong>Votre commande</strong></p>

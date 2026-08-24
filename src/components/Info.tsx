@@ -29,7 +29,7 @@ export default function Info() {
       ]
 
   const stores = partnerStores.length > 0
-    ? partnerStores.map((s) => ({ name: s.name, location: s.city, detail: '' }))
+    ? partnerStores.map((s) => ({ name: s.name, location: s.city, detail: s.salesDays || '' }))
     : [
         { name: "L'Epicerie am Eck", location: 'Heppenbach', detail: 'Mercredi' },
         { name: 'Naturkostladen — Daniel Offermann', location: 'Butgenbach', detail: 'Mercredi' },
