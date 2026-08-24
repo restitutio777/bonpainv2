@@ -93,7 +93,9 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 - Sender-Domain in Resend verifiziert (DNS bei Registrar).
 - Vier Produkte ohne Foto (Épeautre sans sésame, Pain au seigle, Le Rustik, Le Fagnard) — zeigen bis dahin das lokale Ersatzbild. Alt-Texte fehlen dort ebenfalls.
 - Panettone: Saison 2026-03-20 bis 2026-04-06 abgelaufen → Karte steht dauerhaft auf „Saison terminée". Entweder Termine fürs nächste Jahr setzen oder Produkt unsichtbar schalten.
-- `siteSettings.partnerStores` enthält generische Namen (Epicerie du Village, Bio-Laden Eifel, Ferme-Fromagerie). Die echten Partner (L'Epicerie am Eck / Naturkostladen Offermann / L'Epicerie des Champs) stehen nur noch im Code-Fallback und werden von den CMS-Werten überschrieben.
+- ~~`siteSettings.partnerStores` enthielt Platzhalter~~ → am 2026-08-24 mit `studio/scripts/fix-partner-stores.mjs` auf die echten Partner korrigiert (Quelle: bonpainfaitmain.be).
+- Zwei Produkte der alten Site fehlen im Dataset: **Épeautre sésame** und **Cramique** (Cramique mit fertigem Beschreibungstext auf der alten Site). Preise unbekannt → beim Bäcker erfragen, dann anlegen.
+- **Studio-Deploy steht aus:** `partnerStore.salesDays` ist neu im Schema. Der lokal eingeloggte Sanity-CLI-Account hat keine Rechte an Projekt 5f1udd5l (`Forbidden … sanity.project.read`). Vor dem Deploy: `cd studio && npx sanity login` mit dem Account der Org `ovS9cwHZj`, dann `npx sanity deploy`. Die Website selbst zeigt die Verkaufstage bereits — nur im Studio ist das Feld bis dahin unsichtbar.
 
 
 | Wer | Was |
