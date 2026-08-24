@@ -87,12 +87,12 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 
 ## 🔜 Offen
 
-**Vor dem Domain-Anschluss zwingend prüfen (nur im Vercel-Dashboard machbar):**
-- `RESEND_API_KEY`, `ORDER_TO_EMAIL`, `ORDER_FROM_EMAIL` gesetzt? Solange nicht, wird jede Bestellung nur geloggt.
-- `KV_REST_API_URL` / `KV_REST_API_TOKEN` (Upstash) gesetzt? Ohne Redis kein Tagesdigest **und kein Rate-Limit** — dann fällt der Handler auf Einzel-Mails zurück.
-- Sender-Domain in Resend verifiziert (DNS bei Registrar).
+**Vor dem Domain-Anschluss:**
+- ✅ Resend läuft. Testbestellung am 2026-08-24 gegen die Production-Function: HTTP 200, Bäcker- und Kundenmail rausgegangen.
+- 🔴 **Upstash Redis ist tot.** Die Env-Vars sind gesetzt, aber der Host `eager-moccasin-122278.upstash.io` löst nicht mehr auf (`ENOTFOUND`) — die Datenbank existiert nicht mehr. Folge in Produktion: **kein Tagesdigest** (Benjamin bekommt pro Bestellung eine Einzelmail mit dem Hinweis „récapitulatif momentanément indisponible") und **das IP-Rate-Limit ist wirkungslos** (fällt bewusst offen aus). Fix: in Vercel → Storage/Marketplace eine neue Upstash-Redis-Instanz anlegen und `KV_REST_API_URL` / `KV_REST_API_TOKEN` neu verbinden.
+- Sender-Domain in Resend verifiziert (DNS bei Registrar) — sollte mit dem funktionierenden Versand erledigt sein, beim Domainwechsel gegenprüfen.
 - Vier Produkte ohne Foto (Épeautre sans sésame, Pain au seigle, Le Rustik, Le Fagnard) — zeigen bis dahin das lokale Ersatzbild. Alt-Texte fehlen dort ebenfalls.
-- Panettone: Saison 2026-03-20 bis 2026-04-06 abgelaufen → Karte steht dauerhaft auf „Saison terminée". Entweder Termine fürs nächste Jahr setzen oder Produkt unsichtbar schalten.
+- ~~Panettone-Saison abgelaufen~~ → am 2026-08-24 auf Ostern 2027 gesetzt (12.03.–29.03.2027, `studio/scripts/set-panettone-season-2027.mjs`). Karte zeigt jetzt „Disponible dès le 12 mars".
 - ~~`siteSettings.partnerStores` enthielt Platzhalter~~ → am 2026-08-24 mit `studio/scripts/fix-partner-stores.mjs` auf die echten Partner korrigiert (Quelle: bonpainfaitmain.be).
 - Zwei Produkte der alten Site fehlen im Dataset: **Épeautre sésame** und **Cramique** (Cramique mit fertigem Beschreibungstext auf der alten Site). Preise unbekannt → beim Bäcker erfragen, dann anlegen.
 - **Studio-Deploy steht aus:** `partnerStore.salesDays` ist neu im Schema. Der lokal eingeloggte Sanity-CLI-Account hat keine Rechte an Projekt 5f1udd5l (`Forbidden … sanity.project.read`). Vor dem Deploy: `cd studio && npx sanity login` mit dem Account der Org `ovS9cwHZj`, dann `npx sanity deploy`. Die Website selbst zeigt die Verkaufstage bereits — nur im Studio ist das Feld bis dahin unsichtbar.
