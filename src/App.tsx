@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { SanityProvider, useSanity } from './context/SanityContext'
 import { CartProvider } from './context/CartContext'
 import type { PortableTextBlock } from './types'
+import { useSeo } from './lib/seo'
 import FloatingCart from './components/FloatingCart'
 import VacationBanner from './components/VacationBanner'
 import Nav from './components/Nav'
@@ -40,7 +41,8 @@ function extractText(blocks: PortableTextBlock[] | null): string[] {
 
 function AppContent() {
   const path = usePath()
-  const { products, loading } = useSanity()
+  const { products, settings, schedule, loading } = useSanity()
+  useSeo(settings, schedule)
   const [activeModal, setActiveModal] = useState<string | null>(null)
 
   if (path === '/mentions-legales') return <MentionsLegales />

@@ -73,3 +73,13 @@ function formatDay(d: Date): string {
     month: 'long',
   }).format(d)
 }
+
+/**
+ * Whether a product may end up in a cart / order line: the baker enabled it
+ * for the order form AND it is currently available (season, etc.).
+ * Cart display and the submitted payload must use the SAME predicate, or the
+ * total shown to the customer differs from the total sent to the bakery.
+ */
+export function isOrderable(product: SanityProduct, now: Date = new Date()): boolean {
+  return product.orderInForm !== false && getProductStatus(product, now).available
+}

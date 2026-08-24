@@ -87,6 +87,15 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 
 ## 🔜 Offen
 
+**Vor dem Domain-Anschluss zwingend prüfen (nur im Vercel-Dashboard machbar):**
+- `RESEND_API_KEY`, `ORDER_TO_EMAIL`, `ORDER_FROM_EMAIL` gesetzt? Solange nicht, wird jede Bestellung nur geloggt.
+- `KV_REST_API_URL` / `KV_REST_API_TOKEN` (Upstash) gesetzt? Ohne Redis kein Tagesdigest **und kein Rate-Limit** — dann fällt der Handler auf Einzel-Mails zurück.
+- Sender-Domain in Resend verifiziert (DNS bei Registrar).
+- Vier Produkte ohne Foto (Épeautre sans sésame, Pain au seigle, Le Rustik, Le Fagnard) — zeigen bis dahin das lokale Ersatzbild. Alt-Texte fehlen dort ebenfalls.
+- Panettone: Saison 2026-03-20 bis 2026-04-06 abgelaufen → Karte steht dauerhaft auf „Saison terminée". Entweder Termine fürs nächste Jahr setzen oder Produkt unsichtbar schalten.
+- `siteSettings.partnerStores` enthält generische Namen (Epicerie du Village, Bio-Laden Eifel, Ferme-Fromagerie). Die echten Partner (L'Epicerie am Eck / Naturkostladen Offermann / L'Epicerie des Champs) stehen nur noch im Code-Fallback und werden von den CMS-Werten überschrieben.
+
+
 | Wer | Was |
 |---|---|
 | Bäcker | Site reviewen, Studio testen (Preis korrigieren, eigenes Foto austauschen) |

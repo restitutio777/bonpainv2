@@ -1,4 +1,14 @@
 import LegalLayout from './LegalLayout';
+import { useSanity } from '../../context/SanityContext';
+import { dayLabelFr, formatTimeFr, openDays } from '../../lib/schedule';
+
+// The opening hours in the CGV are a contractual statement — they must follow
+// the studio schedule, not a copy that silently goes stale.
+const FALLBACK_HOURS = [
+  'Mercredi : 8h00 – 12h00 & 13h00 – 15h00',
+  'Vendredi : 8h00 – 12h00 & 13h00 – 17h00',
+  'Samedi : 8h00 – 12h00',
+];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -17,6 +27,16 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function CGV() {
+  const { schedule, settings } = useSanity();
+  const orderLeadDays = settings?.orderLeadDays || 2;
+  const cmsHours = openDays(schedule).map(
+    (d) =>
+      `${dayLabelFr(d.day)} : ${(d.slots || [])
+        .map((s) => `${formatTimeFr(s.open)} – ${formatTimeFr(s.close)}`)
+        .join(' & ')}`
+  );
+  const hours = cmsHours.length > 0 ? cmsHours : FALLBACK_HOURS;
+
   return (
     <LegalLayout title="Conditions Générales de Vente" description="Conditions générales de vente de Bon Pain Fait Main — commandes, retrait, prix et annulations pour la boulangerie artisanale à Waimes.">
       <p className="text-sm leading-[1.9] mb-10" style={{ color: '#6E4D32' }}>
@@ -36,7 +56,7 @@ export default function CGV() {
 
       <Section title="2. Produits">
         <p>
-          Les produits proposés sont des pains et viennoiseries artisanaux fabriqués à la main avec des ingrédients naturels. Les produits sont fabriqués uniquement sur commande. Toute commande doit être passée <strong style={{ color: '#2D1F14' }}>au minimum 2 jours à l'avance</strong> (4 jours pour le Panettone).
+          Les produits proposés sont des pains et viennoiseries artisanaux fabriqués à la main avec des ingrédients naturels. Les produits sont fabriqués uniquement sur commande. Toute commande doit être passée <strong style={{ color: '#2D1F14' }}>au minimum {orderLeadDays} jours à l'avance</strong> (4 jours pour le Panettone).
         </p>
       </Section>
 
@@ -57,9 +77,9 @@ export default function CGV() {
           Les produits sont disponibles en retrait à l'atelier (Rue de la Roer 19, 4950 Waimes) aux horaires suivants :
         </p>
         <ul className="mt-3 space-y-1 list-disc list-inside">
-          <li>Mercredi : 8h00 – 12h00</li>
-          <li>Vendredi : 8h00 – 12h00 & 13h00 – 15h00</li>
-          <li>Samedi : 8h00 – 12h00</li>
+          {hours.map((h) => (
+            <li key={h}>{h}</li>
+          ))}
         </ul>
         <p className="mt-3">
           Les produits sont également disponibles dans nos épiceries partenaires. Aucune livraison à domicile n'est proposée.

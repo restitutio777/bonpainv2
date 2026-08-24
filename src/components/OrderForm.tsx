@@ -3,7 +3,7 @@ import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
-import { getProductStatus } from '../lib/productStatus'
+import { isOrderable } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 import { orderEndpoint } from '../lib/orderApi'
 
@@ -14,9 +14,7 @@ export default function OrderForm() {
 
   // Hide products that are explicitly out of season — Benjamin can re-enable
   // them by updating seasonStart/seasonEnd in the studio.
-  const orderItems = products.filter(
-    (p) => p.orderInForm && getProductStatus(p).available
-  )
+  const orderItems = products.filter((p) => isOrderable(p))
   const orderLeadDays = settings?.orderLeadDays || 2
   const isDisabled = vacation?.isActive && vacation?.disableOrdering
 
@@ -40,13 +38,16 @@ export default function OrderForm() {
   })()
 
   // Earliest allowed pickup date (local time), respecting the lead time.
-  const minPickupDate = (() => {
+  // Recomputed on demand: a tab left open past midnight would otherwise keep
+  // validating against yesterday's limit.
+  const earliestPickupDate = () => {
     const d = new Date()
     d.setDate(d.getDate() + orderLeadDays)
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
       d.getDate()
     ).padStart(2, '0')}`
-  })()
+  }
+  const minPickupDate = earliestPickupDate()
 
   const label = content?.orderLabel || 'Commander'
   const title = content?.orderTitle || 'Passez votre'
@@ -82,11 +83,18 @@ export default function OrderForm() {
     setQuantity(id, Math.min(20, Math.max(0, current + delta)))
   }
 
-  const total = totalPrice(products)
+  // Only orderable products count — same predicate as the submitted payload.
+  const total = totalPrice(orderItems)
+  const itemCount = orderItems.reduce((n, p) => n + (cart[p._id] || 0), 0)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setSubmitError(null)
+
+    if (itemCount === 0) {
+      setSubmitError('Votre panier est vide. Ajoutez au moins un produit avant d\u2019envoyer la commande.')
+      return
+    }
 
     const selectedDay = pickupDays.find((p) => p.value === jour)
     if (selectedDay && date) {
@@ -99,7 +107,7 @@ export default function OrderForm() {
         return
       }
     }
-    if (date && date < minPickupDate) {
+    if (date && date < earliestPickupDate()) {
       setSubmitError(
         `Merci de prévoir au moins ${orderLeadDays} jours entre la commande et le retrait.`
       )
@@ -108,14 +116,13 @@ export default function OrderForm() {
 
     setSubmitting(true)
 
-    const orderLines = products
-      .filter((p) => p.orderInForm && (cart[p._id] || 0) > 0)
+    const ordered = orderItems.filter((p) => (cart[p._id] || 0) > 0)
+
+    const orderLines = ordered
       .map((p) => `${cart[p._id]}x ${p.name} — €${(p.price * cart[p._id]).toFixed(2).replace('.', ',')}`)
       .join('\n')
 
-    const totalVal = products
-      .filter((p) => p.orderInForm && (cart[p._id] || 0) > 0)
-      .reduce((sum, p) => sum + p.price * (cart[p._id] || 0), 0)
+    const totalVal = ordered.reduce((sum, p) => sum + p.price * (cart[p._id] || 0), 0)
 
     try {
       const res = await fetch(orderEndpoint(), {
@@ -132,6 +139,10 @@ export default function OrderForm() {
       if (res.ok) {
         setSubmitSuccess(true)
         clearCart()
+      } else if (res.status === 429) {
+        setSubmitError(
+          'Trop de commandes envoyées depuis cet appareil. Merci de réessayer plus tard ou de nous appeler.'
+        )
       } else {
         setSubmitError('Une erreur est survenue. Veuillez réessayer.')
       }
@@ -541,11 +552,12 @@ export default function OrderForm() {
                   </div>
                   <button
                     type="submit"
-                    disabled={!!isDisabled || submitting}
+                    disabled={!!isDisabled || submitting || itemCount === 0}
                     className="inline-flex items-center gap-2.5 px-9 py-4 rounded-full text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                     style={{ background: '#A67C52', boxShadow: '0 4px 20px rgba(166,124,82,0.3)', fontFamily: 'inherit' }}
                     onMouseEnter={(e) => {
-                      if (!isDisabled && !submitting) (e.currentTarget as HTMLElement).style.background = '#8B6340'
+                      if (!isDisabled && !submitting && itemCount > 0)
+                        (e.currentTarget as HTMLElement).style.background = '#8B6340'
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.background = '#A67C52'

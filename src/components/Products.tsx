@@ -5,8 +5,9 @@ import { useCart } from '../context/CartContext'
 import { getProductStatus } from '../lib/productStatus'
 import { urlFor } from '../lib/sanity'
 
-const FALLBACK_IMG =
-  'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80'
+// Local file, not a hotlinked stock photo: a product without a picture should
+// still show the bakery's own bread, and not depend on a third-party host.
+const FALLBACK_IMG = '/BAEKEREI_564_1.webp'
 
 interface ProductsProps {
   onOpenModal: (id: string) => void

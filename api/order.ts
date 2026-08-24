@@ -303,6 +303,44 @@ async function fetchAllOrdersForDay(
   }
 }
 
+// The endpoint is public and sends mail to whatever address the payload
+// carries, so it needs a floor under abuse: cap the payload, sanity-check the
+// email, and rate-limit per IP. Without Redis the limiter degrades to
+// allow-all — the payload caps still apply.
+const MAX = {
+  name: 80,
+  email: 160,
+  tel: 40,
+  remarques: 1000,
+  items: 4000,
+  jour: 20,
+}
+
+const RATE_LIMIT_PER_HOUR = 6
+
+const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s)
+
+const tooLong = (v: unknown, max: number) => typeof v === 'string' && v.length > max
+
+function clientIp(req: Req): string {
+  const fwd = req.headers?.['x-forwarded-for']
+  const raw = Array.isArray(fwd) ? fwd[0] : fwd
+  return (typeof raw === 'string' ? raw.split(',')[0].trim() : '') || 'unknown'
+}
+
+/** Returns true when the request is over the limit. Fails open. */
+async function isRateLimited(redis: Redis, ip: string): Promise<boolean> {
+  const key = `ratelimit:order:${ip}`
+  try {
+    const count = await redis.incr(key)
+    if (count === 1) await redis.expire(key, 3600)
+    return count > RATE_LIMIT_PER_HOUR
+  } catch (e) {
+    console.error('[order] rate limit check failed', e)
+    return false
+  }
+}
+
 // The static build is also served from classic hosting on the bakery's own
 // domain; the form there posts cross-origin to this function.
 const ALLOWED_ORIGINS = new Set([
@@ -348,6 +386,23 @@ export default async function handler(req: Req, res: Res) {
     return res.status(400).json({ error: 'Invalid order payload' })
   }
 
+  if (
+    !isEmail(order.customer.email) ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(order.pickup.date) ||
+    tooLong(order.customer.email, MAX.email) ||
+    tooLong(order.customer.nom, MAX.name) ||
+    tooLong(order.customer.prenom, MAX.name) ||
+    tooLong(order.customer.tel, MAX.tel) ||
+    tooLong(order.remarques, MAX.remarques) ||
+    tooLong(order.items, MAX.items) ||
+    tooLong(order.pickup.jour, MAX.jour) ||
+    typeof order.total !== 'number' ||
+    !Number.isFinite(order.total) ||
+    order.total < 0
+  ) {
+    return res.status(400).json({ error: 'Invalid order payload' })
+  }
+
   const apiKey = process.env.RESEND_API_KEY
   const toEmail = process.env.ORDER_TO_EMAIL
   const fromEmail = process.env.ORDER_FROM_EMAIL
@@ -370,6 +425,12 @@ export default async function handler(req: Req, res: Res) {
 
   if (kvUrl && kvToken) {
     const redis = new Redis({ url: kvUrl, token: kvToken })
+
+    if (await isRateLimited(redis, clientIp(req))) {
+      console.warn('[order] rate limited', clientIp(req))
+      return res.status(429).json({ error: 'Too many orders, please try again later' })
+    }
+
     const allOrders = await fetchAllOrdersForDay(redis, order)
     if (allOrders && allOrders.length > 0) {
       bakerEmail = buildBakerDigest(allOrders, order.pickup)

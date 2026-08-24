@@ -1,13 +1,15 @@
 import { ShoppingBag } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useSanity } from '../context/SanityContext'
+import { isOrderable } from '../lib/productStatus'
 
 export default function FloatingCart() {
   const { totalItems, totalPrice, cart } = useCart()
   const { products } = useSanity()
 
   const hasItems = totalItems > 0
-  const price = totalPrice(products)
+  // Same subset the order form submits, so the badge total never lies.
+  const price = totalPrice(products.filter((p) => isOrderable(p)))
 
   const handleClick = () => {
     const el = document.getElementById('order')

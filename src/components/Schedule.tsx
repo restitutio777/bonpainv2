@@ -2,22 +2,23 @@ import { Clock, CakeSlice, Wheat, ChevronRight } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { dayLabelFr, formatTimeFr, isViennoiserieDay, openDays } from '../lib/schedule'
+import { getProductStatus } from '../lib/productStatus'
 
-const breads = [
-  'Pain Gris levain',
-  'Pain Fagnard',
+// Shown until the products load — the real lists come from the studio, so the
+// baker never has to touch code to add or drop a bread.
+const FALLBACK_BREADS = [
+  'Pain gris au levain',
+  'Le Fagnard',
   'Pain aux noix',
-  'Pain Epeautre',
-  'Pain epeautre sesame',
-  'Pain Rustik',
-  'Pain aux seigle',
-  'Pain bucheron',
-  'Cramique',
-  'Baguettes tradition',
+  'Épeautre (sans sésame)',
+  'Le Rustik',
+  'Pain au seigle',
+  'Pain bûcheron',
+  'Baguette',
   'Tarte du jour',
 ]
 
-const viennoiseries = ['Croissant', 'Pain au chocolat']
+const FALLBACK_VIENNOISERIES = ['Croissant', 'Pain au chocolat']
 
 // Shown until the CMS schedule loads (or if it is empty).
 const FALLBACK_DAYS = [
@@ -40,7 +41,21 @@ const FALLBACK_DAYS = [
 
 export default function Schedule() {
   useScrollAnimation()
-  const { schedule } = useSanity()
+  const { schedule, products, settings } = useSanity()
+  const orderLeadDays = settings?.orderLeadDays || 2
+
+  // Only products the baker currently sells: hidden ones are already filtered
+  // out by the query, out-of-season ones by getProductStatus.
+  const available = products.filter((p) => getProductStatus(p).available)
+  const cmsBreads = available
+    .filter((p) => p.category !== 'viennoiserie')
+    .map((p) => p.name)
+  const cmsViennoiseries = available
+    .filter((p) => p.category === 'viennoiserie')
+    .map((p) => p.name)
+  const breads = cmsBreads.length > 0 ? cmsBreads : FALLBACK_BREADS
+  const viennoiseries =
+    cmsViennoiseries.length > 0 ? cmsViennoiseries : FALLBACK_VIENNOISERIES
 
   const cmsDays = openDays(schedule).map((s) => ({
     day: dayLabelFr(s.day),
@@ -75,13 +90,13 @@ export default function Schedule() {
             className="font-display font-normal leading-[1.15] mb-4"
             style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
           >
-            Vente a l'atelier,{' '}
+            Vente à l'atelier,{' '}
             <em className="italic" style={{ color: '#A67C52' }}>
               sur commande
             </em>
           </h2>
           <p className="text-lg leading-[1.7]" style={{ color: '#8B7A6B' }}>
-            Uniquement sur commande — merci de reserver minimum 2 jours a l'avance.
+            Uniquement sur commande — merci de réserver minimum {orderLeadDays} jours à l'avance.
           </p>
         </div>
 
