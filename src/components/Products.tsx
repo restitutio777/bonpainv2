@@ -23,10 +23,10 @@ export default function Products({ onOpenModal }: ProductsProps) {
   const titleAccent = content?.productsTitleAccent || 'fait pour vous'
   const subtitle =
     content?.productsSubtitle ||
-    'Levain naturel, farines locales. Choisissez vos pains, on les prépare pour le jour de votre retrait.'
+    'Pains sur commande et assortiment du jour, préparés avec soin en petite production. Choisissez vos pains, nous les préparons pour le jour de votre retrait.'
   const saturdayNotice =
     content?.saturdayNotice ||
-    'Le samedi, on ajoute des viennoiseries au programme — croissants et pains au chocolat sur commande.'
+    'Le samedi, nous ajoutons un petit choix de viennoiseries faites maison — croissants et pains au chocolat sur commande.'
 
   return (
     <section
