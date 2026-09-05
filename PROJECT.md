@@ -88,6 +88,7 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 ## 🔜 Offen
 
 **Vor dem Domain-Anschluss:**
+- ✅ **Neue Accueil-Texte im Dataset (2026-09-05).** `studio/scripts/update-textes-accueil-2026.mjs` ausgeführt: `heroSubtitle`, `productsSubtitle`, `saturdayNotice`, `orderNotice` in `siteContent` überschrieben. Per GROQ gegen `production` und auf https://bonpainv2.vercel.app verifiziert. Die Werbeaussage „fermentation longue de 24 heures" ist damit aus dem Dataset verschwunden (dataset-weite GROQ-Suche nach „24 heures": 0 Treffer). Verbleibende „24 heures"-Stelle im Code ist die Stornofrist in [CGV.tsx](src/components/legal/CGV.tsx) — juristisch, keine Produktaussage, bleibt.
 - ✅ Resend läuft. Testbestellung am 2026-08-24 gegen die Production-Function: HTTP 200, Bäcker- und Kundenmail rausgegangen.
 - ✅ **Upstash Redis repariert (2026-08-24).** Die alte Instanz `bonpain-orders` war „Archived due to inactivity" — der Host löste nicht mehr auf, dadurch kein Tagesdigest und kein wirksames Rate-Limit. Behoben: tote Instanz vom Projekt getrennt (ihre 5 verwalteten Env-Vars sind damit weg), aktive Instanz `upstash-kv-cinereous-helmet` mit Prefix `KV` verbunden → `KV_REST_API_URL` / `KV_REST_API_TOKEN` stimmen wieder. Verifiziert: `/api/keepalive` schreibt und liest, Testbestellungen laufen ohne Redis-Fehler durch.
 - **Damit es nicht wieder passiert:** täglicher Cron `/api/keepalive` (05:00 UTC, `vercel.json`) hält die Free-Instanz aktiv. Wenn der Ping scheitert, steht das laut in den Runtime-Logs.
