@@ -35,7 +35,11 @@ export default function About() {
         .map((b) => (b.children || []).map((c) => c.text || '').join(''))
         .filter(Boolean)
     : [
-        "À Sourbrodt, au cœur des Fagnes, Benjamin et Nadia tiennent une petite boulangerie. Farines choisies, levain naturel cultivé sur place, fermentation longue de 24 heures, cuisson sur commande. Pas de raccourci, pas d'invendu — c'est cette lenteur assumée qui fait la différence dans la mie et dans le goût.",
+        "Bienvenue à Sourbrodt (Waimes), au cœur des Fagnes, où Benjamin et Nadia vous accueillent dans leur petite boulangerie artisanale.",
+        "Pains sur commande et assortiment du jour, préparés avec soin en petite production. Pour les commandes, nous vous conseillons de réserver de préférence 2 jours à l'avance afin de nous permettre de préparer chaque pain dans les meilleures conditions.",
+        "Levain naturel cultivé sur place, farines soigneusement sélectionnées et fermentation longue : ici, nous prenons le temps de faire du bon pain, tout simplement.",
+        "Nous vous proposons également un petit choix de viennoiseries faites maison, préparées avec la même attention.",
+        "Au plaisir de vous recevoir et de vous faire découvrir nos pains et douceurs artisanales !",
       ]
 
   // Récit : premier paragraphe en chapô, dernier en citation de clôture,

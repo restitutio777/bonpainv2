@@ -57,7 +57,7 @@ export default function OrderForm() {
     "Choisissez vos pains, dites-nous quand vous passez, on s'occupe du reste."
   const orderNotice =
     content?.orderNotice ||
-    `Comptez ${orderLeadDays} jours entre votre commande et votre retrait — c'est le temps de fermentation, et c'est ce qui fait la différence.`
+    `Pour les commandes, nous vous conseillons de réserver de préférence ${orderLeadDays} jours à l'avance afin de nous permettre de préparer chaque pain dans les meilleures conditions.`
 
   const [nom, setNom] = useState('')
   const [prenom, setPrenom] = useState('')

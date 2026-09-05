@@ -10,7 +10,7 @@ export default function Hero() {
   const titleAccent = content?.heroTitleAccent || 'fait \u00e0 la main'
   const subtitle =
     content?.heroSubtitle ||
-    "Levain naturel, fermentation longue de 24 heures, cuit le jour de votre retrait. On prend le temps qu'il faut, et \u00e7a se go\u00fbte."
+    "Levain naturel cultiv\u00e9 sur place, farines soigneusement s\u00e9lectionn\u00e9es et fermentation longue : ici, nous prenons le temps de faire du bon pain, tout simplement."
   const ctaPrimary = content?.heroCtaPrimary || 'Commander maintenant'
   const ctaSecondary = content?.heroCtaSecondary || 'Voir nos pains'
 
