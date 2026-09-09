@@ -23,3 +23,8 @@ dist-ssr
 .env
 
 .claude/
+
+# TEMPORÄR — Fototest 2026-09-09, nicht committen (Vercel deployt main automatisch)
+img-test/
+public/img-test/
+src/lib/imgTestOverrides.ts
