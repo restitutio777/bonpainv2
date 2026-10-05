@@ -1,28 +1,37 @@
 // Vercel Serverless Function — receives orders from the OrderForm.
 //
 // Flow per request:
-//   1. Store the order in Upstash Redis under `orders:{pickupDateISO}`.
-//   2. Read ALL orders for that pickup day from Redis.
+//   1. Check the payload: field formats, product names against Sanity, and
+//      that the customer's email domain exists. Apply the abuse limits.
+//   2. Store the order in Upstash Redis under `orders:{pickupDateISO}` and
+//      read back ALL orders for that pickup day.
 //   3. Send Benjamin a DIGEST email with aggregate counts + per-customer
 //      list — subject is constant per pickup day so Gmail threads them.
-//   4. Send the customer an immediate confirmation.
+//   4. Only once Benjamin's email is accepted, send the customer a
+//      confirmation.
 //
-// Result for Benjamin: one Gmail thread per pickup day, where the most
-// recent message is always the current state. No fragmented per-order
-// inbox. Customer confirmation is unchanged.
+// The response always says what actually happened, because the form shows
+// it to the customer: an order Benjamin did not receive is an error, and a
+// confirmation that could not be sent is reported as such. (The old PHP site
+// derived "sent" from the return value of mail() and told every customer a
+// confirmation was on its way while many never got one.)
 //
 // Env vars (Vercel → Project → Settings → Environment Variables):
-//   RESEND_API_KEY     — from https://resend.com/api-keys
-//   ORDER_TO_EMAIL     — Benjamin's inbox, e.g. bonpain.artisan@gmail.com
-//   ORDER_FROM_EMAIL   — verified Resend sender, e.g. orders@bonpainfaitmain.be
-//   KV_REST_API_URL    — auto-injected by Vercel/Upstash integration
-//   KV_REST_API_TOKEN  — auto-injected by Vercel/Upstash integration
+//   RESEND_API_KEY         — from https://resend.com/api-keys
+//   ORDER_TO_EMAIL         — Benjamin's inbox, e.g. bonpain.artisan@gmail.com
+//   ORDER_FROM_EMAIL       — verified Resend sender, e.g. orders@bonpainfaitmain.be
+//   ORDER_TO_EMAIL_PREVIEW — optional: where preview deployments send the
+//                            bakery mail (default: the test order's own address)
+//   KV_REST_API_URL        — auto-injected by Vercel/Upstash integration
+//   KV_REST_API_TOKEN      — auto-injected by Vercel/Upstash integration
 //
-// Graceful degradation:
-//   - No Resend keys → log order, return 200 (form keeps working).
-//   - No Redis keys → log error, fall back to a single-order email
-//     to Benjamin so the order isn't silently lost.
+// Degradation:
+//   - No Resend keys → 503, the form tells the customer to phone.
+//   - No Redis → single-order email to Benjamin instead of the digest, and
+//     no rate limits (the payload checks still apply).
 
+import { createHash } from 'node:crypto'
+import { Resolver } from 'node:dns/promises'
 import { Resend } from 'resend'
 import { Redis } from '@upstash/redis'
 
@@ -35,6 +44,12 @@ type OrderPayload = {
 }
 
 type StoredOrder = OrderPayload & { receivedAt: string }
+
+// Preview deployments share the production env vars and Redis store. Keep
+// their orders out of the real day lists and their mail away from the bakery.
+const IS_PRODUCTION = process.env.VERCEL_ENV === 'production'
+const KEY_PREFIX = IS_PRODUCTION ? '' : 'preview:'
+const SUBJECT_PREFIX = IS_PRODUCTION ? '' : '[TEST] '
 
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
@@ -71,7 +86,7 @@ const parseOrderItems = (items: string): Array<{ qty: number; name: string }> =>
 function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: string }) {
   const dateFr = formatPickupDate(pickup.date)
   // Constant subject per pickup day so Gmail threads all digests together.
-  const subject = `${capitalize(pickup.jour)} ${dateFr} — Commandes`
+  const subject = `${SUBJECT_PREFIX}${capitalize(pickup.jour)} ${dateFr} — Commandes`
 
   // Aggregate item totals across all orders for this pickup day.
   const totals = new Map<string, number>()
@@ -190,7 +205,7 @@ function buildBakerDigest(orders: StoredOrder[], pickup: { jour: string; date: s
 function buildBakerSingleOrder(order: OrderPayload) {
   const { customer, pickup, remarques, items, total } = order
   const dateFr = formatPickupDate(pickup.date)
-  const subject = `Nouvelle commande — ${customer.prenom} ${customer.nom} — retrait ${capitalize(pickup.jour)} ${dateFr}`
+  const subject = `${SUBJECT_PREFIX}Nouvelle commande — ${customer.prenom} ${customer.nom} — retrait ${capitalize(pickup.jour)} ${dateFr}`
 
   const text = [
     `Nouvelle commande reçue.`,
@@ -241,12 +256,14 @@ function buildBakerSingleOrder(order: OrderPayload) {
 function buildCustomerConfirmation(order: OrderPayload) {
   const { customer, pickup, items, total } = order
   const dateFr = formatPickupDate(pickup.date)
-  const subject = `Votre commande chez Bon Pain Fait Main`
+  // The pickup day in the subject also identifies the order in a bounce
+  // notice (see api/resend-webhook.ts), which only carries the subject.
+  const subject = `${SUBJECT_PREFIX}Votre commande chez Bon Pain Fait Main — retrait ${capitalize(pickup.jour)} ${dateFr}`
 
   const text = [
     `Bonjour ${customer.prenom},`,
     ``,
-    `Merci, on a bien reçu votre commande.`,
+    `Merci, on a bien reçu votre commande. Cet e-mail est votre confirmation.`,
     ``,
     `Retrait : ${capitalize(pickup.jour)} ${dateFr}`,
     `Adresse : Rue de la Roer 19, 4950 Waimes`,
@@ -265,7 +282,7 @@ function buildCustomerConfirmation(order: OrderPayload) {
   const html = `
     <div style="font-family: -apple-system, system-ui, sans-serif; color: #2D1F14; max-width: 560px; line-height: 1.6;">
       <p>Bonjour ${escapeHtml(customer.prenom)},</p>
-      <p>Merci, on a bien reçu votre commande.</p>
+      <p>Merci, on a bien reçu votre commande. Cet e-mail est votre confirmation.</p>
       <p>
         <strong>Retrait</strong><br>
         ${escapeHtml(capitalize(pickup.jour))} ${escapeHtml(dateFr)}<br>
@@ -288,44 +305,211 @@ function buildCustomerConfirmation(order: OrderPayload) {
   return { subject, text, html }
 }
 
-async function fetchAllOrdersForDay(
+/**
+ * Stores the order and returns every order for that pickup day, plus a way
+ * to take this one back out if Benjamin's email then fails — otherwise the
+ * customer's retry would list it twice in the next digest.
+ */
+async function storeAndFetchDay(
   redis: Redis,
   order: OrderPayload
-): Promise<StoredOrder[] | null> {
-  const key = `orders:${order.pickup.date}`
-  const record: StoredOrder = { ...order, receivedAt: new Date().toISOString() }
+): Promise<{ orders: StoredOrder[]; unstore: () => Promise<void> } | null> {
+  const key = `${KEY_PREFIX}orders:${order.pickup.date}`
+  const entry = JSON.stringify({ ...order, receivedAt: new Date().toISOString() } satisfies StoredOrder)
   try {
-    await redis.lpush(key, JSON.stringify(record))
+    await redis.lpush(key, entry)
     // Keep the key for 60 days past last write — long enough for any
     // post-mortem (claim "I never ordered that"), short enough to keep
     // storage tiny.
     await redis.expire(key, 60 * 24 * 3600)
     const raw = await redis.lrange(key, 0, -1)
-    return raw.map((v) => (typeof v === 'string' ? JSON.parse(v) : (v as StoredOrder)))
+    return {
+      orders: raw.map((v) => (typeof v === 'string' ? JSON.parse(v) : (v as StoredOrder))),
+      unstore: async () => {
+        try {
+          await redis.lrem(key, 1, entry)
+        } catch (e) {
+          console.error('[order] could not remove the undelivered order from Redis', e)
+        }
+      },
+    }
   } catch (e) {
     console.error('[order] Redis lpush/lrange failed', e)
     return null
   }
 }
 
-// The endpoint is public and sends mail to whatever address the payload
-// carries, so it needs a floor under abuse: cap the payload, sanity-check the
-// email, and rate-limit per IP. Without Redis the limiter degrades to
-// allow-all — the payload caps still apply.
+// ── Checks ──────────────────────────────────────────────────────────────
+// The endpoint is public and the confirmation goes to whatever address the
+// payload carries, so everything that ends up in that mail is checked: the
+// first name, the pickup day and the item lines. No links anywhere.
+
 const MAX = {
   name: 80,
   email: 160,
   tel: 40,
   remarques: 1000,
   items: 4000,
-  jour: 20,
+  lines: 30,
+  qty: 20, // same cap as the form's +/- buttons
 }
 
-const RATE_LIMIT_PER_HOUR = 6
+const LIMITS = {
+  perIpPerHour: 6,
+  perAddressPerDay: 5,
+  // Resend Free sends 100 mails a day and every order costs two. The old
+  // site's busiest day had 15 orders. Past this, the form asks people to
+  // phone instead of failing later on the mail quota.
+  perDay: 40,
+}
+
+const WEEKDAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
 
 const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s)
+const NAME = /^[\p{L}\p{M}][\p{L}\p{M}'’ .-]*$/u
+// "site.com" — a dot glued between word characters reads as a domain.
+const DOMAIN_LIKE = /[\p{L}\d-]\.\p{L}{2,}/u
+const LINK = /https?:\/\/|www\./i
+const TEL = /^[0-9+()./\s-]*$/
+const ITEM_LINE = /^(\d{1,2})x (.{1,80}?) — €(\d{1,4},\d{2})$/
+// Used only while Sanity is unreachable: product names have no dots,
+// slashes, colons or @, so nothing in a line can become a link.
+const ITEM_NAME_FALLBACK = /^[\p{L}\p{M}0-9'’ (),-]+$/u
 
-const tooLong = (v: unknown, max: number) => typeof v === 'string' && v.length > max
+type Rejection = { status: number; body: Record<string, unknown> }
+type ItemLine = { qty: number; name: string; amount: number }
+
+const invalid = (field: string): Rejection => ({ status: 400, body: { error: 'invalid', field } })
+const hasLink = (field: string): Rejection => ({ status: 400, body: { error: 'links', field } })
+
+const isRejection = (x: unknown): x is Rejection =>
+  typeof x === 'object' && x !== null && 'status' in x && 'body' in x
+
+function checkName(v: unknown, field: string): Rejection | string {
+  if (typeof v !== 'string' || !v.trim() || v.length > MAX.name) return invalid(field)
+  const s = v.trim()
+  if (LINK.test(s) || DOMAIN_LIKE.test(s) || s.includes('@')) return hasLink(field)
+  return NAME.test(s) ? s : invalid(field)
+}
+
+function checkOptional(v: unknown, max: number, field: string): Rejection | string | undefined {
+  if (v === undefined || v === null || v === '') return undefined
+  if (typeof v !== 'string' || v.length > max) return invalid(field)
+  return v.trim() || undefined
+}
+
+/** Returns a cleaned order (trimmed fields, total recomputed from the lines) or a rejection. */
+function checkPayload(raw: unknown): { order: OrderPayload; lines: ItemLine[] } | Rejection {
+  const o = raw as Partial<OrderPayload> | null
+  if (!o || typeof o !== 'object' || !o.customer || !o.pickup) return invalid('payload')
+  const c = o.customer
+
+  const nom = checkName(c.nom, 'nom')
+  if (isRejection(nom)) return nom
+  const prenom = checkName(c.prenom, 'prenom')
+  if (isRejection(prenom)) return prenom
+
+  if (typeof c.email !== 'string' || c.email.length > MAX.email) return invalid('email')
+  const email = c.email.trim()
+  if (!isEmail(email)) return invalid('email')
+
+  const tel = checkOptional(c.tel, MAX.tel, 'tel')
+  if (isRejection(tel)) return tel
+  if (tel && !TEL.test(tel)) return invalid('tel')
+
+  const remarques = checkOptional(o.remarques, MAX.remarques, 'remarques')
+  if (isRejection(remarques)) return remarques
+  if (remarques && LINK.test(remarques)) return hasLink('remarques')
+
+  const jour = typeof o.pickup.jour === 'string' ? o.pickup.jour.toLowerCase() : ''
+  const date = typeof o.pickup.date === 'string' ? o.pickup.date : ''
+  if (!WEEKDAYS.includes(jour)) return invalid('jour')
+  const day = new Date(`${date}T00:00:00Z`)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(day.getTime())) return invalid('date')
+  if (day.toISOString().slice(0, 10) !== date) return invalid('date') // 2026-02-31 etc.
+  if (WEEKDAYS[day.getUTCDay()] !== jour) return invalid('date')
+  if (day.getTime() < Date.now() - 2 * 24 * 3600 * 1000) return invalid('date')
+
+  if (typeof o.items !== 'string' || o.items.length > MAX.items) return invalid('items')
+  const rawLines = o.items.split('\n').map((l) => l.trim()).filter(Boolean)
+  if (rawLines.length === 0 || rawLines.length > MAX.lines) return invalid('items')
+  const lines: ItemLine[] = []
+  for (const line of rawLines) {
+    const m = line.match(ITEM_LINE)
+    if (!m) return invalid('items')
+    const qty = parseInt(m[1], 10)
+    if (qty < 1 || qty > MAX.qty) return invalid('items')
+    lines.push({ qty, name: m[2], amount: parseFloat(m[3].replace(',', '.')) })
+  }
+
+  const total = Math.round(lines.reduce((sum, l) => sum + l.amount, 0) * 100) / 100
+
+  return {
+    order: {
+      customer: { nom, prenom, email, ...(tel ? { tel } : {}) },
+      pickup: { jour, date },
+      ...(remarques ? { remarques } : {}),
+      items: rawLines.join('\n'),
+      total,
+    },
+    lines,
+  }
+}
+
+const SANITY_PROJECT = process.env.VITE_SANITY_PROJECT_ID || '5f1udd5l'
+const SANITY_DATASET = process.env.VITE_SANITY_DATASET || 'production'
+const PRODUCT_NAMES_URL =
+  `https://${SANITY_PROJECT}.apicdn.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}` +
+  `?query=${encodeURIComponent('*[_type == "product"].name')}`
+
+/** Product names as the form shows them (same public CDN), or null when Sanity is unreachable. */
+async function productNames(): Promise<Set<string> | null> {
+  try {
+    const res = await fetch(PRODUCT_NAMES_URL, { signal: AbortSignal.timeout(3000) })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const { result } = (await res.json()) as { result?: unknown }
+    if (!Array.isArray(result)) throw new Error('unexpected response')
+    return new Set(result.filter((n): n is string => typeof n === 'string'))
+  } catch (e) {
+    console.error('[order] product list unavailable, checking the item format only', e)
+    return null
+  }
+}
+
+const DNS_NO_SUCH = new Set(['ENOTFOUND', 'ENODATA'])
+
+/**
+ * False only when DNS says for certain that the domain cannot receive mail
+ * ("gmail.col"). A resolver hiccup must not cost an order.
+ */
+async function mailDomainExists(domain: string): Promise<boolean> {
+  const resolver = new Resolver({ timeout: 2500, tries: 2 })
+  const results = await Promise.allSettled([
+    resolver.resolveMx(domain),
+    resolver.resolve4(domain),
+    resolver.resolve6(domain),
+  ])
+  const definitelyMissing = results.every((r) =>
+    r.status === 'fulfilled'
+      ? r.value.length === 0
+      : DNS_NO_SUCH.has((r.reason as NodeJS.ErrnoException)?.code ?? '')
+  )
+  return !definitelyMissing
+}
+
+const hashed = (s: string) => createHash('sha256').update(s).digest('hex').slice(0, 32)
+
+/** Counts this request; true when over `max`. Fails open. */
+async function overLimit(redis: Redis, key: string, max: number, ttlSeconds: number): Promise<boolean> {
+  try {
+    const count = await redis.incr(key)
+    if (count === 1) await redis.expire(key, ttlSeconds)
+    return count > max
+  } catch (e) {
+    console.error('[order] rate limit check failed', e)
+    return false
+  }
+}
 
 function clientIp(req: Req): string {
   const fwd = req.headers?.['x-forwarded-for']
@@ -333,21 +517,10 @@ function clientIp(req: Req): string {
   return (typeof raw === 'string' ? raw.split(',')[0].trim() : '') || 'unknown'
 }
 
-/** Returns true when the request is over the limit. Fails open. */
-async function isRateLimited(redis: Redis, ip: string): Promise<boolean> {
-  const key = `ratelimit:order:${ip}`
-  try {
-    const count = await redis.incr(key)
-    if (count === 1) await redis.expire(key, 3600)
-    return count > RATE_LIMIT_PER_HOUR
-  } catch (e) {
-    console.error('[order] rate limit check failed', e)
-    return false
-  }
-}
+// ── HTTP ────────────────────────────────────────────────────────────────
 
-// The static build is also served from classic hosting on the bakery's own
-// domain; the form there posts cross-origin to this function.
+// The static build may also be served from the bakery's own domain while it
+// is hosted elsewhere; the form there posts cross-origin to this function.
 const ALLOWED_ORIGINS = new Set([
   'https://bonpainfaitmain.be',
   'https://www.bonpainfaitmain.be',
@@ -374,6 +547,18 @@ function applyCors(req: Req, res: Res) {
   }
 }
 
+type Mail = Parameters<Resend['emails']['send']>[0]
+
+/** Resend v6 resolves with { data, error } and only rejects on network failures — check both. */
+async function send(resend: Resend, mail: Mail): Promise<unknown> {
+  try {
+    const { error } = await resend.emails.send(mail)
+    return error
+  } catch (e) {
+    return e ?? 'unknown error'
+  }
+}
+
 export default async function handler(req: Req, res: Res) {
   applyCors(req, res)
 
@@ -385,60 +570,69 @@ export default async function handler(req: Req, res: Res) {
     return res.status(405).end()
   }
 
-  const order = req.body as OrderPayload
-
-  if (!order?.customer?.email || !order?.items || !order?.pickup?.jour || !order?.pickup?.date) {
-    return res.status(400).json({ error: 'Invalid order payload' })
+  const checked = checkPayload(req.body)
+  if (isRejection(checked)) {
+    return res.status(checked.status).json(checked.body)
   }
+  const { order, lines } = checked
 
-  if (
-    !isEmail(order.customer.email) ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(order.pickup.date) ||
-    tooLong(order.customer.email, MAX.email) ||
-    tooLong(order.customer.nom, MAX.name) ||
-    tooLong(order.customer.prenom, MAX.name) ||
-    tooLong(order.customer.tel, MAX.tel) ||
-    tooLong(order.remarques, MAX.remarques) ||
-    tooLong(order.items, MAX.items) ||
-    tooLong(order.pickup.jour, MAX.jour) ||
-    typeof order.total !== 'number' ||
-    !Number.isFinite(order.total) ||
-    order.total < 0
-  ) {
-    return res.status(400).json({ error: 'Invalid order payload' })
-  }
+  // Metadata only. The full order goes to the log solely when it would
+  // otherwise be lost (below); everything else is in Redis and the mails.
+  console.log('[order] received', JSON.stringify({ pickup: order.pickup.date, lines: lines.length, total: order.total }))
 
   const apiKey = process.env.RESEND_API_KEY
   const toEmail = process.env.ORDER_TO_EMAIL
   const fromEmail = process.env.ORDER_FROM_EMAIL
 
-  // Always log — Vercel logs are the last-resort safety net.
-  console.log('[order]', JSON.stringify(order))
-
   if (!apiKey || !toEmail || !fromEmail) {
-    console.warn('[order] Resend env vars missing — order logged but no email sent')
-    return res.status(200).json({ ok: true, delivery: 'logged' })
+    console.error('[order] Resend env vars missing — order NOT delivered:', JSON.stringify(order))
+    return res.status(503).json({ error: 'not_configured' })
   }
 
-  const resend = new Resend(apiKey)
+  const kvUrl = process.env.KV_REST_API_URL
+  const kvToken = process.env.KV_REST_API_TOKEN
+  const redis = kvUrl && kvToken ? new Redis({ url: kvUrl, token: kvToken }) : null
+
+  if (redis && (await overLimit(redis, `${KEY_PREFIX}ratelimit:ip:${hashed(clientIp(req))}`, LIMITS.perIpPerHour, 3600))) {
+    console.warn('[order] rate limited (ip)')
+    return res.status(429).json({ error: 'rate_limited' })
+  }
+
+  const domain = order.customer.email.split('@')[1].toLowerCase()
+  const [domainOk, names] = await Promise.all([mailDomainExists(domain), productNames()])
+  if (!domainOk) {
+    return res.status(400).json({ error: 'email_domain', domain })
+  }
+  for (const line of lines) {
+    if (names ? !names.has(line.name) : !ITEM_NAME_FALLBACK.test(line.name)) {
+      // A product renamed in the studio while the customer had the page open.
+      return res.status(409).json({ error: 'products_changed' })
+    }
+  }
+
+  if (redis) {
+    const address = order.customer.email.toLowerCase()
+    if (await overLimit(redis, `${KEY_PREFIX}ratelimit:email:${hashed(address)}`, LIMITS.perAddressPerDay, 24 * 3600)) {
+      console.warn('[order] rate limited (address)')
+      return res.status(429).json({ error: 'rate_limited' })
+    }
+    const today = new Date().toISOString().slice(0, 10)
+    if (await overLimit(redis, `${KEY_PREFIX}ratelimit:day:${today}`, LIMITS.perDay, 2 * 24 * 3600)) {
+      console.error('[order] daily order limit reached')
+      return res.status(429).json({ error: 'daily_limit' })
+    }
+  }
 
   // Try to build the daily digest. If Redis isn't available, fall back to a
   // single-order email so the order isn't lost.
   let bakerEmail: { subject: string; text: string; html: string }
-  const kvUrl = process.env.KV_REST_API_URL
-  const kvToken = process.env.KV_REST_API_TOKEN
+  let unstore: (() => Promise<void>) | null = null
 
-  if (kvUrl && kvToken) {
-    const redis = new Redis({ url: kvUrl, token: kvToken })
-
-    if (await isRateLimited(redis, clientIp(req))) {
-      console.warn('[order] rate limited', clientIp(req))
-      return res.status(429).json({ error: 'Too many orders, please try again later' })
-    }
-
-    const allOrders = await fetchAllOrdersForDay(redis, order)
-    if (allOrders && allOrders.length > 0) {
-      bakerEmail = buildBakerDigest(allOrders, order.pickup)
+  if (redis) {
+    const day = await storeAndFetchDay(redis, order)
+    if (day && day.orders.length > 0) {
+      bakerEmail = buildBakerDigest(day.orders, order.pickup)
+      unstore = day.unstore
     } else {
       console.warn('[order] Redis returned no orders, falling back to single-order email')
       bakerEmail = buildBakerSingleOrder(order)
@@ -448,43 +642,45 @@ export default async function handler(req: Req, res: Res) {
     bakerEmail = buildBakerSingleOrder(order)
   }
 
-  const customerMail = buildCustomerConfirmation(order)
+  // Preview deployments never mail the bakery: their orders go to
+  // ORDER_TO_EMAIL_PREVIEW, or back to the address the test order names.
+  const bakerTo = IS_PRODUCTION ? toEmail : process.env.ORDER_TO_EMAIL_PREVIEW || order.customer.email
 
-  const [bakerRes, customerRes] = await Promise.allSettled([
-    resend.emails.send({
-      from: fromEmail,
-      to: [toEmail],
-      replyTo: order.customer.email,
-      subject: bakerEmail.subject,
-      text: bakerEmail.text,
-      html: bakerEmail.html,
-    }),
-    resend.emails.send({
-      from: fromEmail,
-      to: [order.customer.email],
-      replyTo: toEmail,
-      subject: customerMail.subject,
-      text: customerMail.text,
-      html: customerMail.html,
-    }),
-  ])
+  const resend = new Resend(apiKey)
 
-  // Resend v6 resolves with { data, error } and only rejects on network
-  // failures — check both paths, or API errors slip through as 200.
-  const bakerFailure =
-    bakerRes.status === 'rejected' ? bakerRes.reason : bakerRes.value.error
+  // Benjamin first: the customer is only confirmed once the bakery has the order.
+  const bakerFailure = await send(resend, {
+    from: fromEmail,
+    to: [bakerTo],
+    replyTo: order.customer.email,
+    subject: bakerEmail.subject,
+    text: bakerEmail.text,
+    html: bakerEmail.html,
+    tags: [{ name: 'kind', value: 'order' }],
+  })
 
   if (bakerFailure) {
     console.error('[order] baker email failed', bakerFailure)
-    return res.status(500).json({ error: 'Email delivery failed' })
+    console.error('[order] order NOT delivered:', JSON.stringify(order))
+    await unstore?.()
+    return res.status(502).json({ error: 'delivery_failed' })
   }
 
-  const customerFailure =
-    customerRes.status === 'rejected' ? customerRes.reason : customerRes.value.error
+  const customerMail = buildCustomerConfirmation(order)
+  const customerFailure = await send(resend, {
+    from: fromEmail,
+    to: [order.customer.email],
+    replyTo: bakerTo,
+    subject: customerMail.subject,
+    text: customerMail.text,
+    html: customerMail.html,
+    tags: [{ name: 'kind', value: 'confirmation' }],
+  })
 
   if (customerFailure) {
     console.warn('[order] customer confirmation failed', customerFailure)
+    return res.status(200).json({ ok: true, confirmation: 'failed' })
   }
 
-  return res.status(200).json({ ok: true })
+  return res.status(200).json({ ok: true, confirmation: 'sent' })
 }

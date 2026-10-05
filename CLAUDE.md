@@ -1,5 +1,7 @@
 # bonpain-v2
 
+Zuerst [memory/MEMORY.md](memory/MEMORY.md) lesen (Stand, Entscheidungen, Offenes), Details in [PROJECT.md](PROJECT.md).
+
 <!-- cloud-local-sync -->
 ## Cloud ↔ Local: immer überall up to date
 
