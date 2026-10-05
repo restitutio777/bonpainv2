@@ -66,6 +66,7 @@ Hosting:   Vercel (Hobby Free)
 Email:     Resend (Absenderdomain bonpainfaitmain.be, Versand über AWS eu-west-1)
 Domain:    bonpainfaitmain.be (TODO)
 Analytics: Vercel Analytics (via inject() in main.tsx)
+Fonts:     selbst gehostet, src/fonts/ (WOFF2, OFL), Aliase in tailwind.config.js
 PWA:       vite-plugin-pwa
 SEO:       JSON-LD Bakery + sitemap + robots
 Deploy:    GitHub-Push → main → Vercel auto-deploy
@@ -145,7 +146,7 @@ Optional: `_dmarc` um `rua=mailto:…` ergänzen, damit Berichte über abgelehnt
 - **`CRON_SECRET` in Vercel setzen** (beliebiger langer Zufallswert), dann ist `/api/keepalive` nur noch für den Cron erreichbar.
 - **Resend-Tarif im Dashboard prüfen.** Der Code rechnet mit Free (100/Tag, 3.000/Monat, Resend-Doku 2026-10-05); v1 hatte max. 15 Bestellungen/Tag ≈ 30 Mails.
 - **Funktionsregion:** Funktionen laufen in `iad1` (USA, laut Deployment). Region der Upstash-Instanz ist über die API nicht lesbar. Liegt Upstash in der EU, `"regions": ["fra1"]` o. ä. in `vercel.json` erwägen und die Datenschutzseite anpassen.
-- **Google Fonts** werden von Google geladen ([index.html](index.html)); die Datenschutzseite nennt das. Besser: selbst hosten (WOFF2, `@font-face`), dann den Absatz streichen.
+- ✅ **Schriften selbst gehostet (2026-10-05)**, Branch `claude/fonts-selbst-hosten` (setzt auf `claude/bestellweg-absichern` auf). Cormorant Garamond und DM Sans liegen als WOFF2 (Latin) in [src/fonts/](src/fonts/), keine Anfrage mehr an fonts.googleapis.com/gstatic.com; Google-Fonts-Satz aus der Datenschutzseite gestrichen (Gmail bleibt).
 - **Datenschutzseite und Impressum** am 2026-10-05 überarbeitet (Hoster, Auftragsverarbeiter, Aufbewahrung, Beschwerderecht). Rechtstext → vor dem Go-live vom Betreiber/Bäcker freigeben lassen.
 - ✅ **Neue Accueil-Texte im Dataset (2026-09-05).** `studio/scripts/update-textes-accueil-2026.mjs` ausgeführt: `heroSubtitle`, `productsSubtitle`, `saturdayNotice`, `orderNotice` in `siteContent` überschrieben. Per GROQ gegen `production` und auf https://bonpainv2.vercel.app verifiziert. Die Werbeaussage „fermentation longue de 24 heures" ist damit aus dem Dataset verschwunden (dataset-weite GROQ-Suche nach „24 heures": 0 Treffer). Verbleibende „24 heures"-Stelle im Code ist die Stornofrist in [CGV.tsx](src/components/legal/CGV.tsx) — juristisch, keine Produktaussage, bleibt.
 - ✅ Resend läuft. Testbestellung am 2026-08-24 gegen die Production-Function: HTTP 200, Bäcker- und Kundenmail rausgegangen.
