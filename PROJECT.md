@@ -140,10 +140,10 @@ Optional: `_dmarc` um `rua=mailto:…` ergänzen, damit Berichte über abgelehnt
 ## 🔜 Offen
 
 **Vor dem Domain-Anschluss:**
-- **Bestellweg-Absicherung (2026-10-05)** auf Branch `claude/bestellweg-absichern`, lokal geprüft. Offen: Merge nach `main` (= Production-Deploy) nach Freigabe; Testbestellung über Preview an mail-tester.com (SPF/DKIM/DMARC belegen, Absenderadresse ablesen).
+- **Bestellweg-Absicherung (2026-10-05)** auf Branch `claude/bestellweg-absichern`, lokal und im Preview geprüft. Mailtest über Preview an mail-tester.com am 2026-10-05: **10/10**, `From: orders@bonpainfaitmain.be`, SPF pass (envelope-from `…@send.bonpainfaitmain.be`, AWS eu-west-1), DKIM pass (`d=bonpainfaitmain.be`, `s=resend`), DMARC pass (`p=reject`). Offen: Merge nach `main` (= Production-Deploy).
 - **Resend-Webhook einrichten** (Resend → Webhooks): URL `https://bonpainv2.vercel.app/api/resend-webhook` (nach dem Umzug die echte Domain), Events `email.bounced`, `email.complained`, `email.failed`, `email.suppressed`; Signing Secret als `RESEND_WEBHOOK_SECRET` in Vercel (Production). Ohne Secret antwortet der Endpunkt 503 und tut nichts.
-- **`CRON_SECRET` in Vercel setzen** (beliebiger langer Zufallswert), dann ist `/api/keepalive` nur noch für den Cron erreichbar.
-- **Resend-Tarif im Dashboard prüfen.** Der Code rechnet mit Free (100/Tag, 3.000/Monat, Resend-Doku 2026-10-05); v1 hatte max. 15 Bestellungen/Tag ≈ 30 Mails.
+- ✅ **`CRON_SECRET`** am 2026-10-05 gesetzt (Production + Development) und neu deployt; `/api/keepalive` antwortet von außen mit 401.
+- **Resend-Tarif im Dashboard prüfen** (im verbundenen Browser war Resend am 2026-10-05 ausgeloggt). Der Code rechnet mit Free (100/Tag, 3.000/Monat, Resend-Doku 2026-10-05); v1 hatte max. 15 Bestellungen/Tag ≈ 30 Mails.
 - **Funktionsregion:** Funktionen laufen in `iad1` (USA, laut Deployment). Region der Upstash-Instanz ist über die API nicht lesbar. Liegt Upstash in der EU, `"regions": ["fra1"]` o. ä. in `vercel.json` erwägen und die Datenschutzseite anpassen.
 - **Google Fonts** werden von Google geladen ([index.html](index.html)); die Datenschutzseite nennt das. Besser: selbst hosten (WOFF2, `@font-face`), dann den Absatz streichen.
 - **Datenschutzseite und Impressum** am 2026-10-05 überarbeitet (Hoster, Auftragsverarbeiter, Aufbewahrung, Beschwerderecht). Rechtstext → vor dem Go-live vom Betreiber/Bäcker freigeben lassen.
