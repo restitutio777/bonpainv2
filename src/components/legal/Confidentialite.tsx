@@ -61,8 +61,11 @@ export default function Confidentialite() {
           "regions"), Resend sends through AWS eu-west-1 (MX of
           send.bonpainfaitmain.be), Vercel and Upstash state EU-U.S. DPF
           certification in their privacy policies, Resend's DPA incorporates
-          the EU SCCs and states DPF compliance. Update this section when the
-          function region, the mail provider or the fonts change. */}
+          the EU SCCs and states DPF compliance. Fonts are self-hosted
+          (src/fonts) since 2026-10-05, so Google only appears here for Gmail.
+          Update this section when the function region or the mail provider
+          changes, or when the site starts loading anything from a provider
+          not listed here. */}
       <Section title="Hébergement et sous-traitants">
         <p>
           Pour faire fonctionner le site et le formulaire de commande, nous faisons appel aux prestataires suivants. Ils traitent les données uniquement pour notre compte.
@@ -78,7 +81,7 @@ export default function Confidentialite() {
             <strong style={{ color: '#2D1F14' }}>Upstash</strong> (États-Unis) — enregistrement temporaire des commandes pour établir la liste de chaque jour de retrait.
           </li>
           <li>
-            <strong style={{ color: '#2D1F14' }}>Google</strong> — la boîte e-mail de la boulangerie (Gmail), où arrivent les commandes. Les polices de caractères du site sont chargées depuis les serveurs de Google Fonts ; votre navigateur transmet pour cela votre adresse IP à Google.
+            <strong style={{ color: '#2D1F14' }}>Google</strong> — la boîte e-mail de la boulangerie (Gmail), où arrivent les commandes.
           </li>
           <li>
             <strong style={{ color: '#2D1F14' }}>Sanity</strong> (Sanity AS, Norvège) — textes et photos du site. Aucune donnée de commande n'y est enregistrée.
