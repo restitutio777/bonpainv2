@@ -10,7 +10,8 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Bestellweg nach den v1-Vorfällen vom 05.10.2026 geprüft und abgesichert, Branch `claude/bestellweg-absichern` (noch nicht in `main`). Befund und Verhalten: PROJECT.md → „Bestellweg". Lokal 26 Fälle gegen Mock-Resend/Mock-Upstash grün, Formular im Browser geprüft.
 - Mail-DNS für Resend steht in der Infomaniak-Zone (`resend._domainkey`, `send` MX/SPF, AWS eu-west-1). DMARC `p=reject`, kein `rua`.
 - Mailtest 2026-10-05 über Preview an mail-tester.com: 10/10, Absender `orders@bonpainfaitmain.be`, SPF/DKIM (`s=resend`)/DMARC pass.
-- `CRON_SECRET` gesetzt und deployt (2026-10-05), `/api/keepalive` → 401 von außen. `RESEND_WEBHOOK_SECRET` fehlt noch in Vercel.
+- `CRON_SECRET` gesetzt und deployt (2026-10-05), `/api/keepalive` → 401 von außen.
+- Resend-Konto: Team **intuitivmedia**, Tarif **Free**, Domain bonpainfaitmain.be verifiziert. Webhook am 2026-10-05 angelegt (`3d90ed39-9e8e-44ed-9c8f-af370b456d2c`): `https://bonpainv2.vercel.app/api/resend-webhook`, Events bounced/complained/failed/suppressed, enabled. Route existiert in Production erst nach dem Merge (bis dahin 404).
 - Datenschutzseite/Impressum nennen jetzt Vercel, Resend, Upstash, Google (Gmail, Fonts), Sanity; Freigabe durch Betreiber steht aus.
 
 ## Entscheidungen (mit Grund)
@@ -25,7 +26,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 
 ## Offene Aufgaben
 - Merge `claude/bestellweg-absichern` → `main` (Production) nach Freigabe.
-- Nach dem Merge: Resend-Webhook auf `https://bonpainv2.vercel.app/api/resend-webhook` anlegen + `RESEND_WEBHOOK_SECRET` (Production) in Vercel. Resend-Tarif und Konto-Inhaber prüfen (Dashboard; braucht Login des Betreibers).
+- `RESEND_WEBHOOK_SECRET` (Production, Sensitive) in Vercel eintragen: Wert = Signing Secret des Webhooks in Resend (Copy-Button). Wirkt erst nach Merge + Deploy.
 - Upstash-Region klären, ggf. Funktionsregion nach EU (`vercel.json` `regions`) und Datenschutztext anpassen.
 - Google Fonts selbst hosten, dann Absatz in [Confidentialite.tsx](../src/components/legal/Confidentialite.tsx) streichen.
 - Cramique und Épeautre sésame fehlen in Sanity (v1 hat beide) — Preise beim Bäcker erfragen.
