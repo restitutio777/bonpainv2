@@ -44,7 +44,6 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Vercel Hobby: Runtime-Logs 1 Stunde. Wer Fehler nachweisen will, muss innerhalb der Stunde schauen.
 - Upstash Free archiviert bei Inaktivität → täglicher Cron `/api/keepalive` (05:00 UTC).
 - `npm ci` vor lokalen Tests: Root-`node_modules` fehlt in frischen Checkouts.
-- `src/components/Products.tsx` kann eine lokale, uncommittete Fototest-Änderung (`imgTestOverrides`) tragen — nie mitcommitten (gitignored Datei, Vercel deployt `main` automatisch). Sicherung (Patch, `imgTestOverrides.ts`, Testbilder) seit 2026-10-05 in `~/Desktop/Sanity-Websites/_backup-bonpain-v2-fototest-2026-10-05/` (LIESMICH.txt erklärt das Zurückspielen; nur lokal, nicht in Cloud-Sessions).
 - In zsh splittet `for q in "A b"; set -- $q` nicht an Leerzeichen → bei dig-Schleifen `for t n in …` nutzen.
 - Rechtstexte (Datenschutz, Impressum, CGV) nur mit Freigabe des Betreibers live schalten.
 - `className="not-italic italic"` auf den Akzentwörtern der Überschriften: in Tailwind 3 gewinnt `not-italic` (steht später im CSS), die Wörter sind also nicht kursiv. Kursiv sind nur „sur commande" (Schedule), das Schlusszitat (About) und „(infos)" im Formular.
