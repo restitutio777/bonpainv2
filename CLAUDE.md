@@ -2,6 +2,19 @@
 
 Zuerst [memory/MEMORY.md](memory/MEMORY.md) lesen (Stand, Entscheidungen, Offenes), Details in [PROJECT.md](PROJECT.md).
 
+## Schriften
+
+Selbst gehostet in [src/fonts/](src/fonts/) (`@font-face` in `fonts.css`, importiert in `main.tsx`), WOFF2, Subset Latin, SIL OFL 1.1 (`OFL-*.txt` daneben). Nichts wird von Google geladen.
+
+| Font | Alias (Tailwind) | Fallback | Einsatz | Schnitte |
+|---|---|---|---|---|
+| Cormorant Garamond | `font-display` | Georgia, serif | Überschriften, Hero, Preise, Zitat | 300–700, kursiv 400 |
+| DM Sans | `font-body` (Body-Default in `index.css`) | -apple-system, sans-serif | Fließtext, Navigation, Buttons, Formular | 400–700, kursiv 400 |
+
+- Im Markup nur die Aliase verwenden, nie den Fontnamen.
+- Neuer Schnitt (z. B. DM Sans 300) → `@font-face` in `fonts.css` anpassen bzw. Datei ergänzen. Sonst nimmt der Browser still den nächstliegenden Schnitt oder verdickt künstlich.
+- Zeichen außerhalb von Latin (z. B. `→`, `ā`) fallen auf Georgia bzw. den Systemfont zurück.
+
 <!-- cloud-local-sync -->
 ## Cloud ↔ Local: immer überall up to date
 
