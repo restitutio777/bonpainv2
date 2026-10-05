@@ -112,10 +112,14 @@ export default {
     // Baker mails and the notices themselves: logged above, never mailed about.
     if (kind !== 'confirmation') return new Response(null, { status: 204 })
 
+    // Test orders from preview deployments ("[TEST] " subject, see
+    // api/order.ts) report to the same production webhook. Their notices
+    // must not reach the bakery either.
+    const isTest = data.subject.startsWith('[TEST] ')
     const from = process.env.ORDER_FROM_EMAIL
-    const to = IS_PRODUCTION ? process.env.ORDER_TO_EMAIL : process.env.ORDER_TO_EMAIL_PREVIEW
+    const to = IS_PRODUCTION && !isTest ? process.env.ORDER_TO_EMAIL : process.env.ORDER_TO_EMAIL_PREVIEW
     if (!from || !to) {
-      console.error('[resend-webhook] no sender/recipient for the notice')
+      console.warn(`[resend-webhook] no notice sent (${isTest ? 'test order' : 'no sender/recipient'})`)
       return new Response(null, { status: 204 })
     }
 
