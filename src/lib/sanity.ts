@@ -2,14 +2,14 @@ import { createClient } from '@sanity/client'
 import { createImageUrlBuilder } from '@sanity/image-url'
 import type { SanityImageSource } from '@sanity/image-url'
 
-const token = import.meta.env.VITE_SANITY_TOKEN
-
+// Public read only, deliberately without a token: Vite inlines every VITE_*
+// variable into the public bundle, so a token here would be readable by
+// anyone. Write access belongs in studio/scripts (SANITY_WRITE_TOKEN).
 export const sanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID || '5f1udd5l',
   dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
-  useCdn: !token,
-  ...(token ? { token } : {}),
+  useCdn: true,
 })
 
 const builder = createImageUrlBuilder(sanityClient)

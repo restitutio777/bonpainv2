@@ -6,6 +6,40 @@ import { useCart } from '../context/CartContext'
 import { isOrderable } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 import { orderEndpoint } from '../lib/orderApi'
+import { suggestEmail } from '../lib/emailTypos'
+
+const FIELD_LABELS: Record<string, string> = {
+  nom: 'le nom',
+  prenom: 'le prénom',
+  email: "l'adresse e-mail",
+  tel: 'le numéro de téléphone',
+  remarques: 'les remarques',
+  jour: 'le jour de retrait',
+  date: 'la date de retrait',
+}
+
+/** What the customer reads when /api/order did not take the order. */
+function orderErrorMessage(status: number, data: { error?: string; field?: string; domain?: string } | null, phone: string) {
+  const call = `Réessayez dans quelques minutes ou appelez-nous au ${phone}.`
+  switch (data?.error) {
+    case 'email_domain':
+      return `L'adresse e-mail semble incorrecte : le domaine « ${data.domain} » n'existe pas. Vérifiez l'orthographe (par exemple gmail.com et non gmail.col).`
+    case 'links':
+      return 'Merci de ne pas indiquer de lien ou d’adresse web dans le nom, le prénom ou les remarques.'
+    case 'invalid':
+      return data.field && FIELD_LABELS[data.field]
+        ? `Merci de vérifier ${FIELD_LABELS[data.field]}.`
+        : 'Certaines informations semblent incorrectes. Merci de vérifier le formulaire.'
+    case 'products_changed':
+      return 'Notre liste de pains vient de changer. Rechargez la page et refaites votre commande.'
+    case 'rate_limited':
+      return `Trop de commandes envoyées en peu de temps. ${call}`
+    case 'daily_limit':
+      return `Nous ne pouvons plus prendre de commande en ligne aujourd’hui. Appelez-nous au ${phone}.`
+  }
+  if (status === 429) return `Trop de commandes envoyées en peu de temps. ${call}`
+  return `Votre commande n'a pas pu être transmise. ${call}`
+}
 
 export default function OrderForm() {
   useScrollAnimation()
@@ -69,8 +103,12 @@ export default function OrderForm() {
 
   const [submitting, setSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [confirmationSent, setConfirmationSent] = useState(true)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [emailSuggestion, setEmailSuggestion] = useState<string | null>(null)
   const [expandedInfoId, setExpandedInfoId] = useState<string | null>(null)
+
+  const phone = settings?.phone || '+32 493 21 09 25'
 
   useEffect(() => {
     if (submitSuccess) {
@@ -136,18 +174,18 @@ export default function OrderForm() {
           total: totalVal,
         }),
       })
-      if (res.ok) {
+      // Success only on the API's own answer: a host without the function
+      // answers 200 with index.html, which must not read as "order sent".
+      const data = await res.json().catch(() => null)
+      if (res.ok && data?.ok === true) {
+        setConfirmationSent(data.confirmation !== 'failed')
         setSubmitSuccess(true)
         clearCart()
-      } else if (res.status === 429) {
-        setSubmitError(
-          'Trop de commandes envoyées depuis cet appareil. Merci de réessayer plus tard ou de nous appeler.'
-        )
       } else {
-        setSubmitError('Une erreur est survenue. Veuillez réessayer.')
+        setSubmitError(orderErrorMessage(res.status, data, phone))
       }
     } catch {
-      setSubmitError('Erreur de connexion. Veuillez réessayer.')
+      setSubmitError(`Erreur de connexion. Vérifiez votre connexion internet et réessayez, ou appelez-nous au ${phone}.`)
     } finally {
       setSubmitting(false)
     }
@@ -155,6 +193,8 @@ export default function OrderForm() {
 
   const resetForm = () => {
     setSubmitSuccess(false)
+    setConfirmationSent(true)
+    setEmailSuggestion(null)
     setNom('')
     setPrenom('')
     setEmail('')
@@ -240,12 +280,32 @@ export default function OrderForm() {
               <h3 className="font-display text-2xl font-normal mb-3" style={{ color: '#2D1F14' }}>
                 Merci pour votre commande !
               </h3>
-              <p
-                className="text-sm leading-[1.8] mb-8"
-                style={{ color: '#6E4D32', maxWidth: '420px', margin: '0 auto 2rem' }}
-              >
-                Benjamin a bien reçu votre commande. Vous recevrez une confirmation par email.
-              </p>
+              {confirmationSent ? (
+                <p
+                  className="text-sm leading-[1.8] mb-8"
+                  style={{ color: '#6E4D32', maxWidth: '440px', margin: '0 auto 2rem' }}
+                >
+                  Benjamin a bien reçu votre commande. La confirmation vient de partir à{' '}
+                  <strong style={{ color: '#2D1F14', overflowWrap: 'anywhere' }}>{email}</strong>. Si elle
+                  n&rsquo;arrive pas dans les minutes qui suivent, regardez dans vos courriers indésirables
+                  (spam).
+                </p>
+              ) : (
+                <p
+                  role="alert"
+                  className="text-sm leading-[1.8] mb-8"
+                  style={{ color: '#6E4D32', maxWidth: '440px', margin: '0 auto 2rem' }}
+                >
+                  Benjamin a bien reçu votre commande, mais l&rsquo;e-mail de confirmation n&rsquo;a pas pu
+                  être envoyé à{' '}
+                  <strong style={{ color: '#2D1F14', overflowWrap: 'anywhere' }}>{email}</strong>. Si cette
+                  adresse est incorrecte, appelez-nous au{' '}
+                  <a href={`tel:${phone.replace(/\s/g, '')}`} style={{ color: '#A67C52' }}>
+                    {phone}
+                  </a>{' '}
+                  pour confirmer votre commande.
+                </p>
+              )}
               <button
                 type="button"
                 onClick={resetForm}
@@ -445,12 +505,36 @@ export default function OrderForm() {
                       required
                       placeholder="votre@email.be"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                        setEmailSuggestion(null)
+                      }}
                       className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
                       style={inputStyle}
                       onFocus={handleFocus}
-                      onBlur={handleBlur}
+                      onBlur={(e) => {
+                        handleBlur(e)
+                        setEmailSuggestion(suggestEmail(email))
+                      }}
+                      aria-describedby={emailSuggestion ? 'email-suggestion' : undefined}
                     />
+                    {emailSuggestion && (
+                      <p id="email-suggestion" role="status" className="text-xs leading-[1.6]" style={{ color: '#6E4D32' }}>
+                        Vouliez-vous dire{' '}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEmail(emailSuggestion)
+                            setEmailSuggestion(null)
+                          }}
+                          className="font-semibold underline underline-offset-2"
+                          style={{ color: '#A67C52', overflowWrap: 'anywhere' }}
+                        >
+                          {emailSuggestion}
+                        </button>{' '}
+                        ?
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-1.5">
