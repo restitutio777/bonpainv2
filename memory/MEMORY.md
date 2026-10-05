@@ -7,11 +7,11 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 
 ## Aktueller Stand (2026-10-05)
 - Live auf bonpainfaitmain.be ist **v1** (Infomaniak, Apache). v2 läuft nur auf https://bonpainv2.vercel.app (Push auf `main` = Production-Deploy dort).
-- Bestellweg nach den v1-Vorfällen vom 05.10.2026 geprüft und abgesichert, Branch `claude/bestellweg-absichern` (noch nicht in `main`). Befund und Verhalten: PROJECT.md → „Bestellweg". Lokal 26 Fälle gegen Mock-Resend/Mock-Upstash grün, Formular im Browser geprüft.
+- Bestellweg nach den v1-Vorfällen vom 05.10.2026 geprüft und abgesichert, **seit 2026-10-05 in `main` und live auf bonpainv2.vercel.app** (Merge `9b05260`). Befund und Verhalten: PROJECT.md → „Bestellweg". Lokal 27 Fälle gegen Mock-Resend/Mock-Upstash grün, Formular im Browser geprüft.
 - Mail-DNS für Resend steht in der Infomaniak-Zone (`resend._domainkey`, `send` MX/SPF, AWS eu-west-1). DMARC `p=reject`, kein `rua`.
 - Mailtest 2026-10-05 über Preview an mail-tester.com: 10/10, Absender `orders@bonpainfaitmain.be`, SPF/DKIM (`s=resend`)/DMARC pass.
 - `CRON_SECRET` gesetzt und deployt (2026-10-05), `/api/keepalive` → 401 von außen.
-- Resend-Konto: Team **intuitivmedia**, Tarif **Free**, Domain bonpainfaitmain.be verifiziert. Webhook am 2026-10-05 angelegt (`3d90ed39-9e8e-44ed-9c8f-af370b456d2c`): `https://bonpainv2.vercel.app/api/resend-webhook`, Events bounced/complained/failed/suppressed, enabled. Route existiert in Production erst nach dem Merge (bis dahin 404).
+- Resend-Konto: Team **intuitivmedia**, Tarif **Free**, Domain bonpainfaitmain.be verifiziert. Webhook am 2026-10-05 angelegt (`3d90ed39-9e8e-44ed-9c8f-af370b456d2c`): `https://bonpainv2.vercel.app/api/resend-webhook`, Events bounced/complained/failed/suppressed. `RESEND_WEBHOOK_SECRET` in Vercel (Production). Live geprüft: Testbestellung über Preview an `bounced@resend.dev` → zwei `email.bounced` an Production zugestellt, Signatur ok, 204 (Test → keine Meldung an Benjamin). Der Meldungsversand an Benjamin selbst ist nur lokal mit Mock geprüft.
 - Datenschutzseite/Impressum nennen jetzt Vercel, Resend, Upstash, Google (Gmail, Fonts), Sanity; Freigabe durch Betreiber steht aus.
 
 ## Entscheidungen (mit Grund)
@@ -25,8 +25,8 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Tippfehler-Hinweis im Formular ist nur ein Vorschlag; abgelehnt wird nur eine Domain, die es per DNS sicher nicht gibt.
 
 ## Offene Aufgaben
-- Merge `claude/bestellweg-absichern` → `main` (Production) nach Freigabe.
-- `RESEND_WEBHOOK_SECRET` (Production, Sensitive) in Vercel eintragen: Wert = Signing Secret des Webhooks in Resend (Copy-Button). Wirkt erst nach Merge + Deploy.
+- Branch `claude/fonts-selbst-hosten` (andere Session) noch nicht in `main`; beim Merge Konflikte in memory/MEMORY.md und PROJECT.md: beide Seiten behalten.
+- Nach dem Domain-Umzug: Webhook-URL in Resend auf `https://bonpainfaitmain.be/api/resend-webhook` ändern.
 - Upstash-Region klären, ggf. Funktionsregion nach EU (`vercel.json` `regions`) und Datenschutztext anpassen.
 - Google Fonts selbst hosten, dann Absatz in [Confidentialite.tsx](../src/components/legal/Confidentialite.tsx) streichen.
 - Cramique und Épeautre sésame fehlen in Sanity (v1 hat beide) — Preise beim Bäcker erfragen.
