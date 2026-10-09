@@ -38,7 +38,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
+        // App shell only. Photos come from /assets/ (hashed, immutable) or
+        // from the Sanity CDN and are cached when they are actually shown;
+        // precaching them made every first visit download all of them.
+        globPatterns: ['**/*.{js,css,html,svg,woff2}', 'bonpainfaitmain-logo.webp'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cdn\.sanity\.io\/.*/i,

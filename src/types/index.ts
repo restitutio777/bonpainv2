@@ -91,6 +91,7 @@ export interface SiteContent {
   heroSubtitle: string | null
   heroCtaPrimary: string
   heroCtaSecondary: string | null
+  /** Plain asset URL without parameters; Hero builds the srcset. */
   heroImage: string | null
   aboutLabel: string | null
   aboutTitle: string

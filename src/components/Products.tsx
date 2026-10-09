@@ -4,10 +4,28 @@ import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
 import { getProductStatus } from '../lib/productStatus'
 import { urlFor } from '../lib/sanity'
+import fallbackImg from '../assets/mood/baguettes-800.webp'
+import type { SanityImageSource } from '@sanity/image-url'
 
 // Local file, not a hotlinked stock photo: a product without a picture should
 // still show the bakery's own bread, and not depend on a third-party host.
-const FALLBACK_IMG = '/BAEKEREI_564_1.webp'
+const FALLBACK_IMG = fallbackImg
+
+// Cards are 4:3 and at most 355 px wide (three columns in a 1200 px
+// container), full width on phones. Sanity delivers AVIF/WebP in the width the
+// browser picks; nothing wider than 1000 px is ever needed.
+const CARD_WIDTHS = [400, 600, 800, 1000]
+const CARD_SIZES = '(min-width: 1280px) 355px, (min-width: 1024px) 29vw, (min-width: 768px) 46vw, 92vw'
+
+function cardUrl(image: SanityImageSource, width: number) {
+  return urlFor(image)
+    .width(width)
+    .height(Math.round(width * 0.75))
+    .fit('crop')
+    .auto('format')
+    .quality(75)
+    .url()
+}
 
 interface ProductsProps {
   onOpenModal: (id: string) => void
@@ -102,18 +120,18 @@ export default function Products({ onOpenModal }: ProductsProps) {
             >
               <div className="overflow-hidden relative" style={{ aspectRatio: '4/3' }}>
                 <img
-                  src={
+                  src={product.image ? cardUrl(product.image, 800) : FALLBACK_IMG}
+                  srcSet={
                     product.image
-                      ? urlFor(product.image)
-                          .width(800)
-                          .height(600)
-                          .fit('crop')
-                          .auto('format')
-                          .quality(75)
-                          .url()
-                      : FALLBACK_IMG
+                      ? CARD_WIDTHS.map((w) => `${cardUrl(product.image!, w)} ${w}w`).join(', ')
+                      : undefined
                   }
+                  sizes={CARD_SIZES}
                   alt={product.imageAlt || product.name}
+                  width={800}
+                  height={600}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700"
                   style={{
                     transform: 'scale(1)',

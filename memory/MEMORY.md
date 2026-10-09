@@ -19,6 +19,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Schriften selbst gehostet (seit 2026-10-05 in `main`). Keine Requests mehr an Google, alle 11 genutzten Schnitte pixelidentisch zu vorher (Canvas-Vergleich). Details: CLAUDE.md → „Schriften".
 - Alle Arbeitsbranches (`claude/bestellweg-absichern`, `claude/fonts-selbst-hosten`) sind in `main`.
 - **2026-10-09:** Funktionen laufen in `fra1` (Frankfurt), Upstash liegt in AWS eu-central-1 (gemessen, siehe PROJECT.md → „Funktionsregion"). Datenschutzseite nennt Frankfurt für Vercel-Funktion und Upstash. `siteContent.orderTitle` korrigiert (Skript `studio/scripts/fix-order-title.mjs`), Fotoleitfaden lädt nichts mehr von Google (Schriften eingebettet).
+- **2026-10-09:** Bilder optimiert (Regeln: CLAUDE.md → „Bilder"). Produktkarten laden lazy mit `srcset` (400–1000 px), Hero als `<img>` mit `srcset` statt CSS-Hintergrund, die drei About-Fotos liegen neu kodiert in `src/assets/mood/` (800/1200 px, je 26–115 KB statt 138–188 KB), Precache 1164 → 521 KiB.
 - **2026-10-09:** Pain bûcheron ist aus dem Sortiment und aus beiden Seiten entfernt (Sanity `product-bucheron` `isActive: false`; v1 live auf `44fd7ee`). Produktfotos sind aufgenommen (220 CR3, in ACR entwickelt), Auswahl in Bridge mit Sternen markiert (5 = Produkt, 4 = Mood, 3 = Alternative), Durchsicht durch Betreiber steht aus.
 
 ## Entscheidungen (mit Grund)
@@ -36,7 +37,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 ## Offene Aufgaben
 - **Go-live erst, wenn die Produktfotos fertig sind** (Entscheidung Betreiber 2026-10-05): dann Domain-Umzug nach Checkliste in PROJECT.md und danach Webhook-URL in Resend auf `https://bonpainfaitmain.be/api/resend-webhook` ändern.
 - Cramique und Épeautre sésame fehlen in Sanity (v1 hat beide) — Preise beim Bäcker erfragen. Cramique ist fotografiert (in der Schachtel). Brötchen sind fotografiert, aber kein Produkt in Sanity: klären, ob Produkt oder nur Mood.
-- Alle heutigen Produktbilder in Sanity außer Panettone sind KI-generiert (1408x768 PNG) und werden durch die echten Fotos ersetzt.
+- Alle heutigen Produktbilder in Sanity außer Panettone sind KI-generiert (1408x768) und werden durch die echten Fotos ersetzt.
 - Domain-Umzug nach Checkliste in PROJECT.md; danach Infomaniak aufräumen (Gerätepasswort, `/private/bonpainfaitmain.be/`, alte Site) — jeweils nach Freigabe.
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
 - Sanity-Entwürfe, die der Betreiber im Studio selbst verwerfen muss (Claude löscht nicht endgültig): (1) `drafts.0620e271-37a6-4460-9dbb-033622918a79` „Pain au seigle", leer, keine Referenzen, gehört nicht zu `product-pain-seigle`. (2) `drafts.siteSettings` vom 2026-05-07: enthält noch die Platzhalter-Partnerläden (Epicerie du Village, Bio-Laden Eifel, Ferme-Fromagerie). **Nicht veröffentlichen**, sonst überschreibt er die echten Partnerläden; im Studio „Änderungen verwerfen".

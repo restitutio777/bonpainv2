@@ -1,6 +1,12 @@
 import { ShoppingBag } from 'lucide-react'
 import WheatIcon from './WheatIcon'
 import { useSanity } from '../context/SanityContext'
+import { sanitySrcSet } from '../lib/sanity'
+import heroFallback from '../assets/mood/couronne-1200.webp'
+
+// The photo sits under a dark gradient, so q=70 is enough. Phones get 640 to
+// 1280 px instead of the full-size file.
+const HERO_WIDTHS = [640, 960, 1280, 1920, 2400]
 
 export default function Hero() {
   const { content } = useSanity()
@@ -14,9 +20,7 @@ export default function Hero() {
   const ctaPrimary = content?.heroCtaPrimary || 'Commander maintenant'
   const ctaSecondary = content?.heroCtaSecondary || 'Voir nos pains'
 
-  const bgStyle = content?.heroImage
-    ? `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('${content.heroImage}') center/cover no-repeat`
-    : `linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%), url('/BAEKEREI_346_1.webp') center/cover no-repeat`
+  const heroUrl = content?.heroImage
 
   return (
     <section
@@ -25,11 +29,26 @@ export default function Hero() {
     >
       <div
         className="absolute inset-0 scale-105"
-        style={{
-          background: bgStyle,
-          animation: 'fadeIn 1.5s ease forwards',
-        }}
-      />
+        style={{ animation: 'fadeIn 1.5s ease forwards' }}
+      >
+        <img
+          src={heroUrl ? `${heroUrl}?w=1280&auto=format&fit=max&q=70` : heroFallback}
+          srcSet={heroUrl ? sanitySrcSet(heroUrl, HERO_WIDTHS, 70) : undefined}
+          sizes="100vw"
+          alt=""
+          decoding="async"
+          // React 18 does not know the camelCase prop yet.
+          {...{ fetchpriority: 'high' }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(45,31,20,0.65) 0%, rgba(45,31,20,0.72) 50%, rgba(45,31,20,0.88) 100%)',
+          }}
+        />
+      </div>
 
       <div className="relative z-10 text-center text-white max-w-[800px] px-6">
         <div

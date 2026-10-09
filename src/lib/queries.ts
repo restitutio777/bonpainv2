@@ -66,7 +66,7 @@ export const SITE_CONTENT_QUERY = `*[_type == "siteContent"][0] {
   heroSubtitle,
   heroCtaPrimary,
   heroCtaSecondary,
-  "heroImage": heroImage.asset->url + "?w=1920&auto=format&fit=max&q=75",
+  "heroImage": heroImage.asset->url,
   aboutLabel,
   aboutTitle,
   aboutTitleAccent,

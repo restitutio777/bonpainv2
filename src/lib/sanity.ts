@@ -23,3 +23,18 @@ const builder = createImageUrlBuilder(sanityClient)
 export function urlFor(source: SanityImageSource) {
   return builder.image(source)
 }
+
+/**
+ * srcset for a plain cdn.sanity.io asset URL (asset->url in a query). Sanity
+ * resizes and picks AVIF/WebP per browser. Widths beyond the original (its
+ * size is part of the file name) are dropped, so no candidate promises more
+ * pixels than the file has.
+ */
+export function sanitySrcSet(assetUrl: string, widths: number[], quality = 75) {
+  const original = Number(assetUrl.match(/-(\d+)x\d+\.\w+$/)?.[1]) || Infinity
+  const list = widths.filter((w) => w < original)
+  if (list.length < widths.length) list.push(original)
+  return list
+    .map((w) => `${assetUrl}?w=${w}&auto=format&fit=max&q=${quality} ${w}w`)
+    .join(', ')
+}

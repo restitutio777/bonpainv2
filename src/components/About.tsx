@@ -1,24 +1,36 @@
 import { useEffect } from 'react'
 import { useSanity } from '../context/SanityContext'
+import couronne800 from '../assets/mood/couronne-800.webp'
+import couronne1200 from '../assets/mood/couronne-1200.webp'
+import couronneJpg from '../assets/mood/couronne.jpg'
+import enseigne800 from '../assets/mood/enseigne-800.webp'
+import enseigne1200 from '../assets/mood/enseigne-1200.webp'
+import baguettes800 from '../assets/mood/baguettes-800.webp'
+import baguettes1200 from '../assets/mood/baguettes-1200.webp'
+import baguettesJpg from '../assets/mood/baguettes.jpg'
 
 type Mood = { webp: string; jpg: string; alt: string }
+
+// The column is 480 px wide on desktop and the full width on phones.
+const MOOD_SIZES = '(min-width: 1100px) 480px, (min-width: 1024px) 44vw, 92vw'
 
 // Trois photos réelles de la boulangerie, dans l'ordre du récit :
 // artisanat (Baraque Michel) → l'enseigne (Sourbrodt) → le pain d'aujourd'hui.
 const MOOD: Mood[] = [
   {
-    webp: '/BAEKEREI_346_1.webp',
-    jpg: '/BAEKEREI_346_1.JPG',
+    webp: `${couronne800} 800w, ${couronne1200} 1200w`,
+    jpg: couronneJpg,
     alt: 'Benjamin présente une couronne de pain au levain, tout juste sortie du four',
   },
   {
-    webp: '/bon-pain-fait-main-boulangerie.webp',
+    webp: `${enseigne800} 800w, ${enseigne1200} 1200w`,
+    // Stays in public/: index.html uses it as og:image.
     jpg: '/bon-pain-fait-main-boulangerie.jpg',
     alt: "L'enseigne « Bon Pain Fait Main, artisan boulanger », entourée de vigne",
   },
   {
-    webp: '/BAEKEREI_564_1.webp',
-    jpg: '/BAEKEREI_564_1.JPG',
+    webp: `${baguettes800} 800w, ${baguettes1200} 1200w`,
+    jpg: baguettesJpg,
     alt: 'Baguettes tradition dorées, alignées sur la grille à la sortie du four',
   },
 ]
@@ -136,11 +148,14 @@ export default function About() {
                     style={{ aspectRatio: '4 / 3', boxShadow: '0 16px 48px rgba(45,31,20,0.12)' }}
                   >
                     <picture>
-                      <source srcSet={ch.img.webp} type="image/webp" />
+                      <source srcSet={ch.img.webp} sizes={MOOD_SIZES} type="image/webp" />
                       <img
                         src={ch.img.jpg}
                         alt={ch.img.alt}
+                        width={1200}
+                        height={900}
                         loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     </picture>
