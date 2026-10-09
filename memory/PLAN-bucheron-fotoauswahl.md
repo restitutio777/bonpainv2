@@ -4,15 +4,11 @@ Vom Betreiber am 2026-10-09 freigegeben. Ausführung in der nächsten Session.
 
 ## Stand 2026-10-09 (hier weitermachen)
 
-Erledigt, **nichts davon ist live sichtbar**:
-- v2: `FALLBACK_BREADS` ohne Bûcheron, Zeile im Fotoleitfaden entfernt, Skript `studio/scripts/deactivate-bucheron.mjs` angelegt (noch **nicht** ausgeführt). Build grün, committet und gepusht.
-- v1: Bûcheron aus `src/utils/constants.ts` entfernt, `npx vite build` grün (Haupt-Chunk `index-C0PXtxsJ.js` ohne „Pain bûcheron"), committet und gepusht. **Nicht per FTPS deployt**, live ist weiter `ca9e512`.
+**Teil A erledigt und live (2026-10-09):**
+- v2: `product-bucheron` in Sanity `isActive: false` (Skript ausgeführt), bonpainv2.vercel.app zeigt Bûcheron nirgends mehr.
+- v1: Commit `44fd7ee` per FTPS deployt, Haupt-Chunk `index-C0PXtxsJ.js` live byte-identisch, Bestellformular ohne Bûcheron.
 
-Offen, in dieser Reihenfolge:
-1. **A1:** `set -a; . ./.env; set +a; node studio/scripts/deactivate-bucheron.mjs` im v2-Root, dann auf bonpainv2.vercel.app prüfen.
-2. **A2:** in `../bonpain-v1` neu bauen und per `lftp` spiegeln (Aufruf unten), Haupt-Chunk live prüfen, v1-Memory nachziehen.
-3. **Teil B** komplett (Sicherung, Vorschauen, Sichtung, Sterne, Tabelle).
-4. Teil C erst nach Durchsicht durch den Betreiber.
+Offen: **Teil B** (Sicherung, Vorschauen, Sichtung, Sterne, Tabelle), danach Teil C erst nach Durchsicht durch den Betreiber.
 
 Voraussetzungen für Teil B: lokale Session (keine Cloud-Session), SSD `EXTREME_SSD` angeschlossen, Bridge 2026 mit dem Ordner `BONPAIN_2-0` offen.
 

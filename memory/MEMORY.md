@@ -3,7 +3,7 @@
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
 ## Nächste Session: hier starten
-Freigegebener Plan: [PLAN-bucheron-fotoauswahl.md](PLAN-bucheron-fotoauswahl.md). Ohne Rückfrage dort beim Abschnitt „Stand" weitermachen: erst Pain bûcheron in Sanity ausblenden und v1 deployen, dann die Fotoauswahl in Bridge (5 Sterne = Produktbild je Sorte, 4 Sterne = Mood). Nur lokal möglich: die 220 CR3 vom Shooting am 2026-10-09 liegen auf `/Volumes/EXTREME_SSD/BONPAIN_2-0`.
+Freigegebener Plan: [PLAN-bucheron-fotoauswahl.md](PLAN-bucheron-fotoauswahl.md). Ohne Rückfrage dort beim Abschnitt „Stand" weitermachen: Teil A (Bûcheron) ist erledigt, offen ist die Fotoauswahl in Bridge (5 Sterne = Produktbild je Sorte, 4 Sterne = Mood). Nur lokal möglich: die 220 CR3 vom Shooting am 2026-10-09 liegen auf `/Volumes/EXTREME_SSD/BONPAIN_2-0`.
 
 ## Projektziel
 Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbrodt): Vite + React, Sanity (Projekt `5f1udd5l`, Dataset `production`), Vercel-Projekt `bonpainv2` (Team `bolteds-projects`), Bestellformular → `api/order.ts` → Resend + Upstash Redis. Soll in ein bis zwei Monaten die Live-Seite bonpainfaitmain.be (v1, Repo `bonpain-v1`, PHP bei Infomaniak) ablösen.
@@ -18,7 +18,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Datenschutzseite/Impressum nennen jetzt Vercel, Resend, Upstash, Google (nur Gmail), Sanity; Freigabe durch Betreiber steht aus.
 - Schriften selbst gehostet (seit 2026-10-05 in `main`). Keine Requests mehr an Google, alle 11 genutzten Schnitte pixelidentisch zu vorher (Canvas-Vergleich). Details: CLAUDE.md → „Schriften".
 - Alle Arbeitsbranches (`claude/bestellweg-absichern`, `claude/fonts-selbst-hosten`) sind in `main`.
-- **2026-10-09:** Pain bûcheron fällt aus dem Sortiment. Code in v1 und v2 vorbereitet und gepusht, aber Sanity (`product-bucheron` ist noch `isActive: true`) und der v1-Live-Stand sind unverändert. Produktfotos sind aufgenommen (220 CR3, in ACR entwickelt), Auswahl steht aus.
+- **2026-10-09:** Pain bûcheron ist aus dem Sortiment und aus beiden Seiten entfernt (Sanity `product-bucheron` `isActive: false`; v1 live auf `44fd7ee`). Produktfotos sind aufgenommen (220 CR3, in ACR entwickelt), Auswahl steht aus.
 
 ## Entscheidungen (mit Grund)
 - **Bäcker-Mail vor Kundenbestätigung, nacheinander.** Vorher parallel: bei gescheiterter Bäcker-Mail bekam der Kunde trotzdem „bien reçu". Kosten: ~0,3 s mehr.
