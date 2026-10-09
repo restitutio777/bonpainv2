@@ -57,12 +57,15 @@ export default function Confidentialite() {
         </p>
       </Section>
 
-      {/* Facts checked 2026-10-05: Vercel functions run in iad1 (deployment
-          "regions"), Resend sends through AWS eu-west-1 (MX of
-          send.bonpainfaitmain.be), Vercel and Upstash state EU-U.S. DPF
-          certification in their privacy policies, Resend's DPA incorporates
-          the EU SCCs and states DPF compliance. Fonts are self-hosted
-          (src/fonts) since 2026-10-05, so Google only appears here for Gmail.
+      {/* Facts checked 2026-10-05, regions 2026-10-09: Vercel functions run
+          in fra1 (vercel.json "regions"; before that iad1), the Upstash
+          database sits in AWS eu-central-1 (measured from a fra1 function:
+          host resolves to eu-central-1, PING 2.5 ms), Resend sends through
+          AWS eu-west-1 (MX of send.bonpainfaitmain.be), Vercel and Upstash
+          state EU-U.S. DPF certification in their privacy policies, Resend's
+          DPA incorporates the EU SCCs and states DPF compliance. Fonts are
+          self-hosted (src/fonts) since 2026-10-05, so Google only appears here
+          for Gmail.
           Update this section when the function region or the mail provider
           changes, or when the site starts loading anything from a provider
           not listed here. */}
@@ -72,13 +75,13 @@ export default function Confidentialite() {
         </p>
         <ul className="mt-3 space-y-2 list-disc list-inside">
           <li>
-            <strong style={{ color: '#2D1F14' }}>Vercel Inc.</strong> (440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis) — hébergement du site et traitement du formulaire de commande, dans un centre de données aux États-Unis. Vercel Web Analytics compte les visites de façon anonyme, sans cookies.
+            <strong style={{ color: '#2D1F14' }}>Vercel Inc.</strong> (440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis) — hébergement du site et traitement du formulaire de commande, dans un centre de données à Francfort (Allemagne). Vercel Web Analytics compte les visites de façon anonyme, sans cookies.
           </li>
           <li>
             <strong style={{ color: '#2D1F14' }}>Resend</strong> (Plus Five Five, Inc., États-Unis) — envoi de la commande à la boulangerie et de l'e-mail de confirmation. L'envoi passe par des serveurs situés en Irlande.
           </li>
           <li>
-            <strong style={{ color: '#2D1F14' }}>Upstash</strong> (États-Unis) — enregistrement temporaire des commandes pour établir la liste de chaque jour de retrait.
+            <strong style={{ color: '#2D1F14' }}>Upstash</strong> (États-Unis) — enregistrement temporaire des commandes pour établir la liste de chaque jour de retrait, sur des serveurs situés à Francfort (Allemagne).
           </li>
           <li>
             <strong style={{ color: '#2D1F14' }}>Google</strong> — la boîte e-mail de la boulangerie (Gmail), où arrivent les commandes.
