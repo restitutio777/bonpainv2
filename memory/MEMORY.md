@@ -18,6 +18,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Datenschutzseite/Impressum nennen jetzt Vercel, Resend, Upstash, Google (nur Gmail), Sanity; Freigabe durch Betreiber steht aus.
 - Schriften selbst gehostet (seit 2026-10-05 in `main`). Keine Requests mehr an Google, alle 11 genutzten Schnitte pixelidentisch zu vorher (Canvas-Vergleich). Details: CLAUDE.md → „Schriften".
 - Alle Arbeitsbranches (`claude/bestellweg-absichern`, `claude/fonts-selbst-hosten`) sind in `main`.
+- **2026-10-09:** Funktionen laufen in `fra1` (Frankfurt), Upstash liegt in AWS eu-central-1 (gemessen, siehe PROJECT.md → „Funktionsregion"). Datenschutzseite nennt Frankfurt für Vercel-Funktion und Upstash. `siteContent.orderTitle` korrigiert (Skript `studio/scripts/fix-order-title.mjs`), Fotoleitfaden lädt nichts mehr von Google (Schriften eingebettet).
 - **2026-10-09:** Pain bûcheron ist aus dem Sortiment und aus beiden Seiten entfernt (Sanity `product-bucheron` `isActive: false`; v1 live auf `44fd7ee`). Produktfotos sind aufgenommen (220 CR3, in ACR entwickelt), Auswahl in Bridge mit Sternen markiert (5 = Produkt, 4 = Mood, 3 = Alternative), Durchsicht durch Betreiber steht aus.
 
 ## Entscheidungen (mit Grund)
@@ -26,6 +27,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - **Keine Erfolgsmeldung ohne echte Zustellung an Resend.** Fehlende Konfiguration = 503, gescheiterte Bestätigung wird dem Kunden angezeigt. Lehre aus v1 (`mail()` lieferte `true`, Mails kamen nicht an).
 - **Produktnamen werden serverseitig gegen Sanity geprüft, Preise nicht.** Der Kunde kann die Seite mit einem alten Preis offen haben; ein Preisabgleich würde echte Bestellungen ablehnen. Namen reichen, um Freitext/Links in der Bestätigung zu verhindern. Total wird aus den Zeilen gerechnet.
 - **Schriften: dieselben Bytes wie von Google, aus `src/fonts/` statt `public/`.** Pixelidentisch statt „fast gleich" (eine statische Kursiv-Instanz wäre 15 KB kleiner gewesen, driftete aber 0,3 px pro Zeile). `src/` → Vite hasht, `/assets/` ist in `vercel.json` immutable, Workbox precacht. Preload nur für die zwei aufrechten Dateien (above the fold).
+- **Funktionsregion `fra1` statt `iad1`.** Upstash liegt in Frankfurt; aus den USA ging jeder Redis-Aufruf über den Atlantik, und die Bestelldaten verließen ohne Not die EU.
 - **Limits fail-open.** Ein Redis-Ausfall darf keine Bestellung kosten; die Payload-Prüfungen greifen trotzdem.
 - **Preview isoliert** (`preview:`-Präfix, `[TEST]`, Bäcker-Mail an Testadresse), weil Preview und Production dieselben Env-Vars und denselben Redis-Store haben.
 - **Bounce-Meldung per Resend-Webhook statt Dashboard-Kontrolle**, weil niemand ins Dashboard schaut. Nur `kind=confirmation` löst eine Mail aus (keine Schleifen).
@@ -33,20 +35,20 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 
 ## Offene Aufgaben
 - **Go-live erst, wenn die Produktfotos fertig sind** (Entscheidung Betreiber 2026-10-05): dann Domain-Umzug nach Checkliste in PROJECT.md und danach Webhook-URL in Resend auf `https://bonpainfaitmain.be/api/resend-webhook` ändern.
-- Upstash-Region klären, ggf. Funktionsregion nach EU (`vercel.json` `regions`) und Datenschutztext anpassen.
-- Sanity `siteContent.orderTitle` = „Passez votre commande" + `orderTitleAccent` = „commande" → Seite zeigt „commande commande". `orderTitle` auf „Passez votre" setzen (Sanity-Schreibzugriff, vorher fragen).
-- [docs/fotoleitfaden.html](../docs/fotoleitfaden.html) lädt noch Google Fonts (nicht Teil der Website, aber wer sie öffnet, schickt seine IP an Google).
 - Cramique und Épeautre sésame fehlen in Sanity (v1 hat beide) — Preise beim Bäcker erfragen. Cramique ist fotografiert (in der Schachtel). Brötchen sind fotografiert, aber kein Produkt in Sanity: klären, ob Produkt oder nur Mood.
 - Alle heutigen Produktbilder in Sanity außer Panettone sind KI-generiert (1408x768 PNG) und werden durch die echten Fotos ersetzt.
 - Domain-Umzug nach Checkliste in PROJECT.md; danach Infomaniak aufräumen (Gerätepasswort, `/private/bonpainfaitmain.be/`, alte Site) — jeweils nach Freigabe.
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
-- In Sanity liegt ein leerer Entwurf `drafts.0620e271-37a6-4460-9dbb-033622918a79` „Pain au seigle" (kein Bild, kein Preis, gehört nicht zu `product-pain-seigle`). Vermutlich versehentlich im Studio angelegt; Löschen nur nach Rückfrage.
+- Sanity-Entwürfe, die der Betreiber im Studio selbst verwerfen muss (Claude löscht nicht endgültig): (1) `drafts.0620e271-37a6-4460-9dbb-033622918a79` „Pain au seigle", leer, keine Referenzen, gehört nicht zu `product-pain-seigle`. (2) `drafts.siteSettings` vom 2026-05-07: enthält noch die Platzhalter-Partnerläden (Epicerie du Village, Bio-Laden Eifel, Ferme-Fromagerie). **Nicht veröffentlichen**, sonst überschreibt er die echten Partnerläden; im Studio „Änderungen verwerfen".
+- Datenschutzseite: Sätze zu Frankfurt (Vercel, Upstash) am 2026-10-09 geändert, gehört zur ausstehenden Freigabe der Rechtstexte.
 - Baker-Seite (Studio): Fotos für Épeautre sans sésame, Seigle, Rustik, Fagnard.
 
 ## Stolpersteine
 - Vor Rückfragen an den Betreiber zu Vercel: Env-Vars/Deployments selbst per Vercel-MCP prüfen (`filter_project_envs`, `list_deployments`). Er will nicht nach Dingen gefragt werden, die dort schon stehen.
 - Neue Env-Vars wirken erst nach einem neuen Deployment (Redeploy).
 - Vercel-Env-Vars sind `sensitive`: Werte über API/MCP nicht lesbar, nur Namen und Ziele. Absenderadresse lässt sich nur per Mail-Header belegen.
+- Vercel-Preview während des Builds antwortet mit **200** und einer „Deployment is building"-Seite: beim Warten den Inhalt prüfen, nicht den Statuscode. Zwei Pushes kurz hintereinander auf denselben Branch → das ältere Preview wird `CANCELED`.
+- Vercel-MCP: Store-Details (`get_storage_stores_by_id`) und Integrationsliste liefern 404/403; die Upstash-Region ist nur per Messung aus einer Funktion zu ermitteln.
 - Vercel Hobby: Runtime-Logs 1 Stunde. Wer Fehler nachweisen will, muss innerhalb der Stunde schauen.
 - Upstash Free archiviert bei Inaktivität → täglicher Cron `/api/keepalive` (05:00 UTC).
 - `npm ci` vor lokalen Tests: Root-`node_modules` fehlt in frischen Checkouts.
