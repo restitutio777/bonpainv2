@@ -8,7 +8,7 @@ Vom Betreiber am 2026-10-09 freigegeben. Ausführung in der nächsten Session.
 - v2: `product-bucheron` in Sanity `isActive: false` (Skript ausgeführt), bonpainv2.vercel.app zeigt Bûcheron nirgends mehr.
 - v1: Commit `44fd7ee` per FTPS deployt, Haupt-Chunk `index-C0PXtxsJ.js` live byte-identisch, Bestellformular ohne Bûcheron.
 
-Offen: **Teil B** (Sicherung, Vorschauen, Sichtung, Sterne, Tabelle), danach Teil C erst nach Durchsicht durch den Betreiber.
+**Teil B erledigt (2026-10-09), wartet auf Durchsicht durch den Betreiber.** Ergebnis unten unter „Ergebnis Teil B". Danach Teil C.
 
 Voraussetzungen für Teil B: lokale Session (keine Cloud-Session), SSD `EXTREME_SSD` angeschlossen, Bridge 2026 mit dem Ordner `BONPAIN_2-0` offen.
 
@@ -60,6 +60,38 @@ Nur Sidecars werden angefasst, keine CR3, keine `.acr`.
 6. **Übergabe:** Tabelle Dateinummer → vermutete Sorte → Begründung in einem Satz, dazu die Alternativen je Sorte.
 
 **Unsicherheit:** Seigle, Rustik, Fagnard und die beiden Épeautre kann ich am Bild nicht sicher unterscheiden. Die Zuordnung in der Tabelle ist an diesen Stellen ein Vorschlag und wird als solcher gekennzeichnet; die Sorte bestätigt der Betreiber bei der Durchsicht.
+
+## Ergebnis Teil B (2026-10-09)
+
+Sterne in den Sidecars von `/Volumes/EXTREME_SSD/BONPAIN_2-0` gesetzt: **5 = Produktbild (13), 4 = Mood (12), 3 = Alternative oder Serie ohne sichere Sorte (14)**. Stufe 3 ist gegenüber dem Plan neu, damit Ausweichbilder und nicht zuordenbare Brote in Bridge mit einem Filter ab 3 Sternen sichtbar sind. Nur `xmp:Rating` geändert (Diff gegen Sicherung geprüft), CR3 und `.acr` unberührt. Sicherung der 220 Original-Sidecars lag nur im Session-Scratchpad. Bridge-Screenshot fehlt (Zugriff abgelehnt); exiftool liest die Werte. Zeigt Bridge keine Sterne: Werkzeuge → Cache → Cache für Ordner leeren.
+
+Methode: eingebettete Kamera-JPEGs (ohne ACR, Farbe nicht beurteilbar), Schärfe je Serie per Laplace-Varianz gemessen, Finalisten in 100 %-Ausschnitten geprüft.
+
+Das Shooting zeigt dieselben Brote in zwei Lichtsitzungen (hell 121–174, dunkel 025–068). Die Sorte ist nur bei Baguette, Cramique, Tarte, Viennoiserie, Brötchen sicher; bei den Broten ist die Zuordnung ein **Vorschlag**.
+
+| Sorte | 5 Sterne | Sicherheit | Begründung | Alternativen |
+|---|---|---|---|---|
+| Baguette | 075 | sicher | Stapel auf Gitter, Kruste scharf, verträgt den 4:3-Beschnitt | 113 (einzeln, ganz im Bild, wird bei 4:3 an den Enden knapp), 155, 178 |
+| Pain aux noix | 132 | wahrscheinlich | Anschnitt mit Nüssen und Trockenfrucht, 3/4-Ansicht | 134 (Krume frontal), 135 |
+| Pain au seigle | 031 | Vorschlag | runder Laib mit gerissener, bemehlter Kruste (typisch Roggen) | 029 |
+| Le Rustik | 057 | Vorschlag | rustikal aufgerissene Kruste, schärfstes Bild der Serie | 153 (helle Sitzung) |
+| Le Fagnard | 101 | Vorschlag | großer flacher Laib mit Rautenschnitt, ganz von oben | 099 (angeschnitten) |
+| Pain gris au levain | 144 | Vorschlag | ovaler Laib mit Rauten- und Streifenschnitt | 143, 049–052 |
+| Pain au petit épeautre | 169 | Vorschlag | Kastenlaib mit Ohr, goldene aufgebrochene Kruste | 046 (dunkle Sitzung) |
+| Épeautre (sans sésame) | 128 | Vorschlag | glatter Kastenlaib ohne Belag | 130 |
+| Cramique | 095 | sicher | in der Schachtel, Rosinen scharf | 198 (dunkel, Stimmung) |
+| Tarte du jour | 192 | sicher | Heidelbeere, Nahaufnahme, nicht ganz im Bild | 090 (gedeckte Tarte, ganz im Bild, 4 Sterne) |
+| Croissant | 187 | sicher | Spirale scharf (188 wirkt besser, ist dort aber unscharf) | — |
+| Pain au chocolat | 185 | sicher | Blätterung scharf, Schokolade sichtbar | 186 |
+| Brötchen | 207 | sicher | Sesambrötchen in Reihe, vorderes scharf | 205 (Kürbiskern, 3 Sterne) |
+
+**Brot-Serien ohne Sorte (3 Sterne):** 139 Kastenlaib mit Sonnenblumenkernen (auch 035–041, 114–117), 162 ovaler Laib mit Ohr und Flocken (auch 042–043), 053 runder Laib mit Dreiecksschnitt, 066 Kastenlaib mit Mehlflächen, 172 hoher Kastenlaib mit Mehlstreifen. Möglich, dass eine davon die richtige Sorte für eine Zeile oben ist.
+
+**Mood (4 Sterne):** 001 Brotkiste mit Händen, 017 Laibe im Gitterwagen, 023 Krusten-Nahaufnahme, 033 Bäcker am Ofen (Rücken), 069 Verkauf, 070 Bäcker mit Leinentuch, 079 Auslage, 121 Einschneiden, 156 Baguettes in den Ofen, 210 Blech mit Croissants, 217 Laibe im Holzregal, dazu 090 (Tarte).
+
+**Nicht im Sortiment, aber fotografiert:** Lütticher Waffeln (102–110), Cookies (081–085), Nusstörtchen (086/087, 193), Plunder mit Vanille (118/119, 175–177), Feuilleté aux pommes (077). Nicht markiert.
+
+**Fragen an den Betreiber/Bäcker:** Welche Serie ist welche Sorte (vor allem Seigle, Rustik, Fagnard, Gris, beide Épeautre)? Gibt es Sonnenblumen-Kastenbrot als eigene Sorte? Brötchen als Produkt oder nur Mood?
 
 ## Teil C: Einbau in v2 (erst nach Durchsicht, eigener Schritt)
 

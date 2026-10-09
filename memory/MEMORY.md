@@ -3,7 +3,7 @@
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
 ## Nächste Session: hier starten
-Freigegebener Plan: [PLAN-bucheron-fotoauswahl.md](PLAN-bucheron-fotoauswahl.md). Ohne Rückfrage dort beim Abschnitt „Stand" weitermachen: Teil A (Bûcheron) ist erledigt, offen ist die Fotoauswahl in Bridge (5 Sterne = Produktbild je Sorte, 4 Sterne = Mood). Nur lokal möglich: die 220 CR3 vom Shooting am 2026-10-09 liegen auf `/Volumes/EXTREME_SSD/BONPAIN_2-0`.
+Plan: [PLAN-bucheron-fotoauswahl.md](PLAN-bucheron-fotoauswahl.md). Teil A (Bûcheron) und Teil B (Sterne in Bridge) sind erledigt. Es wartet die **Durchsicht der Fotoauswahl durch den Betreiber** (Tabelle „Ergebnis Teil B"; Sortenzuordnung der Brote ist nur ein Vorschlag). Danach Teil C (Export aus ACR durch den Betreiber, Upload nach Sanity). Die 220 CR3 liegen nur lokal auf `/Volumes/EXTREME_SSD/BONPAIN_2-0`.
 
 ## Projektziel
 Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbrodt): Vite + React, Sanity (Projekt `5f1udd5l`, Dataset `production`), Vercel-Projekt `bonpainv2` (Team `bolteds-projects`), Bestellformular → `api/order.ts` → Resend + Upstash Redis. Soll in ein bis zwei Monaten die Live-Seite bonpainfaitmain.be (v1, Repo `bonpain-v1`, PHP bei Infomaniak) ablösen.
@@ -18,7 +18,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Datenschutzseite/Impressum nennen jetzt Vercel, Resend, Upstash, Google (nur Gmail), Sanity; Freigabe durch Betreiber steht aus.
 - Schriften selbst gehostet (seit 2026-10-05 in `main`). Keine Requests mehr an Google, alle 11 genutzten Schnitte pixelidentisch zu vorher (Canvas-Vergleich). Details: CLAUDE.md → „Schriften".
 - Alle Arbeitsbranches (`claude/bestellweg-absichern`, `claude/fonts-selbst-hosten`) sind in `main`.
-- **2026-10-09:** Pain bûcheron ist aus dem Sortiment und aus beiden Seiten entfernt (Sanity `product-bucheron` `isActive: false`; v1 live auf `44fd7ee`). Produktfotos sind aufgenommen (220 CR3, in ACR entwickelt), Auswahl steht aus.
+- **2026-10-09:** Pain bûcheron ist aus dem Sortiment und aus beiden Seiten entfernt (Sanity `product-bucheron` `isActive: false`; v1 live auf `44fd7ee`). Produktfotos sind aufgenommen (220 CR3, in ACR entwickelt), Auswahl in Bridge mit Sternen markiert (5 = Produkt, 4 = Mood, 3 = Alternative), Durchsicht durch Betreiber steht aus.
 
 ## Entscheidungen (mit Grund)
 - **Bäcker-Mail vor Kundenbestätigung, nacheinander.** Vorher parallel: bei gescheiterter Bäcker-Mail bekam der Kunde trotzdem „bien reçu". Kosten: ~0,3 s mehr.
@@ -40,6 +40,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - Alle heutigen Produktbilder in Sanity außer Panettone sind KI-generiert (1408x768 PNG) und werden durch die echten Fotos ersetzt.
 - Domain-Umzug nach Checkliste in PROJECT.md; danach Infomaniak aufräumen (Gerätepasswort, `/private/bonpainfaitmain.be/`, alte Site) — jeweils nach Freigabe.
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
+- In Sanity liegt ein leerer Entwurf `drafts.0620e271-37a6-4460-9dbb-033622918a79` „Pain au seigle" (kein Bild, kein Preis, gehört nicht zu `product-pain-seigle`). Vermutlich versehentlich im Studio angelegt; Löschen nur nach Rückfrage.
 - Baker-Seite (Studio): Fotos für Épeautre sans sésame, Seigle, Rustik, Fagnard.
 
 ## Stolpersteine
