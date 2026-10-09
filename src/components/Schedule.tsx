@@ -13,7 +13,6 @@ const FALLBACK_BREADS = [
   'Épeautre (sans sésame)',
   'Le Rustik',
   'Pain au seigle',
-  'Pain bûcheron',
   'Baguette',
   'Tarte du jour',
 ]
