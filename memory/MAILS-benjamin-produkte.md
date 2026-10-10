@@ -33,13 +33,23 @@ Sicher ohne Rückfrage: Baguette 074–076, 154, 178, 179, 219; Croissant 182, 1
 
 ## Mail 1
 
-Betreff: Les photos – tu peux mettre les noms ?
+Galerie: picdrop, https://www.picdrop.com/intuitivefotografie/qg4fAoKjJr. Benjamin kommentiert direkt am Bild (Bild öffnen → gelber Button unten links „Kommentar hinzufügen", Ansicht Betreiber), Lieblingsbild mit grüner Fahne (Farbmarkierung „gut"). Dateinamen sind dafür egal. Gastansicht ohne Login nicht geprüft.
+
+Betreff: Les photos du shooting – tu peux mettre les noms ?
 
 Salut Benjamin,
 
-Les photos sont en ligne : [LIEN GALERIE]
+Voici les photos du shooting : https://www.picdrop.com/intuitivefotografie/qg4fAoKjJr
 
-Tu peux écrire le nom du produit en commentaire sous les photos ? Une photo par produit suffit. Et si une photo te plaît particulièrement, dis-le.
+Pour le site, j'ai besoin du nom de chaque produit. Le plus simple :
+
+1. Clique sur une photo pour l'ouvrir en grand.
+2. En bas à gauche, clique sur le bouton jaune « Commentaire » et écris le nom du produit.
+3. Avec la flèche à droite, tu passes à la photo suivante.
+
+Un commentaire par produit suffit, pas besoin de le faire pour toutes les photos.
+
+Si une photo te plaît particulièrement, clique sur le petit drapeau en bas et choisis le vert.
 
 Merci !
 Philippe
@@ -50,7 +60,9 @@ Betreff: Prix et poids pour le site
 
 Salut Benjamin,
 
-Encore une petite chose pour le site : pour chaque produit, le prix, le poids, deux ou trois mots sur ce qu'il y a dedans, et les allergènes (à part le gluten). Tu peux aussi l'écrire directement sous les photos.
+Merci pour les noms ! Encore une petite chose : pour chaque produit, le prix, le poids, deux ou trois mots sur ce qu'il y a dedans, et les allergènes (à part le gluten).
+
+Tu peux me répondre par mail ou l'écrire en commentaire sous la photo, comme pour les noms.
 
 Merci !
 Philippe
