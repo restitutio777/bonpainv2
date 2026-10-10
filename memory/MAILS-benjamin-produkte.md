@@ -2,7 +2,7 @@
 
 Galerie: 137 JPEGs (2400x1600, aus ACR exportiert) in `/Volumes/EXTREME_SSD/BONPAIN_2-0/GALLRY`, Dateinummern = CR3-Nummern. Der Betreiber stellt sie online; die Nummern müssen in der Galerie sichtbar sein, sonst funktioniert Mail 1 nicht.
 
-Stand: beide Mails entworfen, noch nicht verschickt. Mail 1 zuerst, Mail 2 danach.
+Stand: beide Mails entworfen, noch nicht verschickt. Mail 1 zuerst, Mail 2 danach. Betreiber will sie kurz und ohne Listen: Benjamin kennt seine Brote und kommentiert direkt in der Galerie. Der Serienschlüssel unten ist nur unsere Hilfe zum Zuordnen, nicht für Benjamin.
 
 ## Schlüssel zu Mail 1 (Serien, gleiche Brote aus beiden Lichtsitzungen zusammengefasst)
 
@@ -33,73 +33,24 @@ Sicher ohne Rückfrage: Baguette 074–076, 154, 178, 179, 219; Croissant 182, 1
 
 ## Mail 1
 
-Betreff: Site – juste les noms de tes pains (5 minutes)
+Betreff: Les photos – tu peux mettre les noms ?
 
 Salut Benjamin,
 
-Les photos du shooting sont en ligne : [LIEN GALERIE]
-Chaque photo a un numéro.
+Les photos sont en ligne : [LIEN GALERIE]
 
-Pour l'instant, j'ai besoin d'une seule chose : le nom de chaque pain. Réponds simplement par lettre, par exemple « A = Pain gris, B = Seigle ». Si deux lettres sont le même pain, écris « D = C ».
-
-Les pains
-A – ovale, carrés et rayures : 144, 146, 050 (aussi dans les caisses : 001, 009, 217)
-B – rond, croûte craquelée très farinée : 028, 031, 025
-C – rond, croûte rustique éclatée : 057, 059, 151
-D – rond, entaille en forme de feuille : 053, 055, 149
-E – ovale, flanc blanc fariné : 042, 162, 166
-F – pain moulé, dessus éclaté : 169, 170, 159, 044
-G – pain moulé, coins farinés : 063, 066, 068
-H – pain moulé, graines sur le dessus : 035, 037, 114, 137
-I – pain moulé lisse, sans décor : 128, 129, 130
-J – pain coupé, fruits secs et noix : 131, 133
-K – grand pain plat, losanges : 101, 099
-L – pain long rustique (ce n'est pas la baguette ?) : 112
-
-Les autres produits : le nom, et « oui » ou « non » pour le site
-M – tarte couverte au sucre : 088, 089, 191
-N – tarte aux myrtilles : 192 (c'est la « tarte du jour » ?)
-O – tartelettes : 086, 193
-P – cookies : 081, 194
-Q – gaufres : 102, 106
-R – viennoiserie en spirale à la crème : 119
-S – petits pains sésame : 199, 207 / potiron : 203, 209
-T – feuilleté aux pommes : 077 (juste oui ou non)
-
-Déjà clair pour moi : baguette, croissant, pain au chocolat, cramique.
-
-Si tu as une photo préférée pour un produit, ajoute son numéro. Sinon, je choisis.
+Tu peux écrire le nom du produit en commentaire sous les photos ? Une photo par produit suffit. Et si une photo te plaît particulièrement, dis-le.
 
 Merci !
 Philippe
 
 ## Mail 2
 
-Betreff: Site – prix, poids et descriptions
+Betreff: Prix et poids pour le site
 
 Salut Benjamin,
 
-Voici ce qui est aujourd'hui sur le nouveau site. Corrige seulement ce qui ne va pas et remplis les « ? ». Pas besoin de belles phrases : j'écris les textes et je te les montre avant de les mettre en ligne.
-
-Par produit : prix · poids · ce qu'il y a dedans · allergènes à part le gluten (lait, œufs, noix, sésame…). Les clients commandent en ligne, donc les allergènes doivent être visibles sur le site avant la commande.
-
-Baguette – 2,50 € – ? g – « Croustillante, alvéolée, au levain naturel »
-Pain gris au levain – 4,50 € – ? g – « Farine semi-complète, mie tendre et goûteuse »
-Pain aux noix – 5,50 € – ? g – « Noix torréfiées, idéal avec du fromage »
-Épeautre (sans sésame) – 5,70 € – ? g – ?
-Épeautre sésame – ? € – ? g – ? (pas encore sur le nouveau site)
-Pain au petit épeautre – 6,00 € – ? g – « Au levain, farine Futur Envi. Doux, légèrement noisetté, riche en nutriments. »
-Pain au seigle – 5,70 € – ? g – ?
-Le Rustik – 5,70 € – ? g – ?
-Le Fagnard – 5,70 € – ? g – ?
-Cramique – ? € – ? g – ? (pas encore sur le nouveau site)
-Croissant – 2,00 € – « Pur beurre, feuilleté à la main »
-Pain au chocolat – 2,00 € – « Pur beurre, chocolat noir belge »
-Tarte du jour – 6,00 € – une part ou une tarte entière ? pour combien de personnes ? – « Tarte salée ou sucrée, selon l'inspiration »
-Bases de pizza – 5,00 € – combien par paquet ? – « Pré-cuit, fermenté 12h, base tomate-parmesan »
-Panettone – 18,00 € – ? g – « Panettone artisanal au levain, oranges confites maison »
-
-Et pour les produits où tu as répondu « oui » dans ma première mail : prix et poids aussi.
+Encore une petite chose pour le site : pour chaque produit, le prix, le poids, deux ou trois mots sur ce qu'il y a dedans, et les allergènes (à part le gluten). Tu peux aussi l'écrire directement sous les photos.
 
 Merci !
 Philippe
