@@ -3,7 +3,7 @@
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
 ## Nächste Session: hier starten
-Plan: [PLAN-bucheron-fotoauswahl.md](PLAN-bucheron-fotoauswahl.md). Teil A (Bûcheron) und Teil B (Sterne in Bridge) sind erledigt. Es wartet die **Durchsicht der Fotoauswahl durch den Betreiber** (Tabelle „Ergebnis Teil B"; Sortenzuordnung der Brote ist nur ein Vorschlag). Danach Teil C (Export aus ACR durch den Betreiber, Upload nach Sanity). Die 220 CR3 liegen nur lokal auf `/Volumes/EXTREME_SSD/BONPAIN_2-0`.
+**2026-10-10:** Betreiber hat 137 Bilder als JPEG exportiert (`/Volumes/EXTREME_SSD/BONPAIN_2-0/GALLRY`) und stellt sie in eine Galerie für Benjamin. Zwei Mails an Benjamin entworfen (noch nicht verschickt): Mail 1 Namen je Brotserie (Buchstaben A–T), Mail 2 Preise/Gewicht/Beschreibung/Allergene. Entwürfe und **Schlüssel Buchstabe → Bildnummern**: [MAILS-benjamin-produkte.md](MAILS-benjamin-produkte.md). Mit Benjamins Antwort dort die Sorten eintragen, dann Teil C aus [PLAN-bucheron-fotoauswahl.md](PLAN-bucheron-fotoauswahl.md) (Upload nach Sanity, Cramique anlegen). Die Sternvergabe aus Teil B ist durch die eigene Auswahl des Betreibers überholt.
 
 ## Projektziel
 Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbrodt): Vite + React, Sanity (Projekt `5f1udd5l`, Dataset `production`), Vercel-Projekt `bonpainv2` (Team `bolteds-projects`), Bestellformular → `api/order.ts` → Resend + Upstash Redis. Soll in ein bis zwei Monaten die Live-Seite bonpainfaitmain.be (v1, Repo `bonpain-v1`, PHP bei Infomaniak) ablösen.
