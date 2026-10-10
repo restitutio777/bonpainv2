@@ -34,3 +34,9 @@ Der Betreiber arbeitet in diesem und anderen Projekten mal lokal, mal als Cloud-
 - Am Session-Start `git pull` — auf dem neuesten Stand beginnen.
 - Am Ende jeder Arbeitsphase / vor Sessionende alles committen und pushen. Nichts Wichtiges nur uncommitted lokal liegen lassen.
 - Cloud-Sessions sehen NUR den Git-Stand: keine uncommitteten Änderungen, NICHT das lokale Auto-Memory unter `~/.claude/`. Was die andere Seite wissen muss, gehört committet in versionierte Dateien (CLAUDE.md, ggf. `memory/`, Docs, Code).
+
+## Setup / Erste Schritte
+
+Dieses Projekt wurde lokal aufgeräumt (2026-10-09) — node_modules und Build-Caches wurden gelöscht, um Speicherplatz zu sparen.
+
+WICHTIG: Prüfe zu Beginn jeder Session, ob node_modules/ existiert. Falls nicht, zuerst installieren (package-lock.json → npm install, pnpm-lock.yaml → pnpm install, yarn.lock → yarn install), bevor Dev-Server, Build oder Tests laufen. Sanity-Studio-Unterordner brauchen einen separaten Install.

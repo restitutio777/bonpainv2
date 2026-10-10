@@ -1,17 +1,20 @@
 /**
- * Cramique und Épeautre sésame anlegen (Oktober 2026).
+ * Fehlende Brote anlegen (Oktober 2026).
  *
- * v1 führt beide Brote, v2 hatte sie noch nicht. Der Betreiber will die
- * vollständige Liste. Preis vorläufig 6 € (Vorgabe Betreiber), bis Benjamin
- * die echten Preise nennt. sortOrder passt in die Zehnerschritte aus
- * set-product-order-2026-10.mjs: Épeautre sésame direkt nach Épeautre (70),
+ * v1 führt Cramique und Épeautre sésame, v2 hatte sie noch nicht. Dazu das
+ * Brot mit Trockenfrüchten und Nüssen, das Benjamin am 10.10.2026 in der
+ * Galerie beschrieben hat (Bild 133). Der Betreiber will die vollständige
+ * Liste. Preis vorläufig 6 € (Vorgabe Betreiber), bis Benjamin die echten
+ * Preise nennt; der Name „Pain aux fruits secs" ist ebenfalls vorläufig.
+ * sortOrder passt in die Zehnerschritte aus set-product-order-2026-10.mjs:
+ * Fruits secs nach Pain aux noix (40), Épeautre sésame nach Épeautre (70),
  * Cramique nach der Baguette (80), vor der Tarte (90).
  *
  * createIfNotExists: ein zweiter Lauf ändert nichts, auch nicht an Werten,
  * die inzwischen im Studio angepasst wurden.
  *
  * Usage:
- *   SANITY_WRITE_TOKEN=xxxxx node studio/scripts/add-cramique-epeautre-sesame.mjs
+ *   SANITY_WRITE_TOKEN=xxxxx node studio/scripts/add-products-2026-10.mjs
  */
 import { createClient } from '@sanity/client'
 
@@ -41,6 +44,15 @@ const base = {
 }
 
 const DOCS = [
+  {
+    ...base,
+    _id: 'product-pain-fruits-secs',
+    name: 'Pain aux fruits secs',
+    slug: { _type: 'slug', current: 'pain-aux-fruits-secs' },
+    description: 'Froment demi-complet au levain, noisettes, raisins secs, noix de cajou et graines de courge',
+    price: 6,
+    sortOrder: 45,
+  },
   {
     ...base,
     _id: 'product-epeautre-sesame',

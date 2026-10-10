@@ -36,7 +36,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 
 ## Offene Aufgaben
 - **Go-live erst, wenn die Produktfotos fertig sind** (Entscheidung Betreiber 2026-10-05): dann Domain-Umzug nach Checkliste in PROJECT.md und danach Webhook-URL in Resend auf `https://bonpainfaitmain.be/api/resend-webhook` ändern.
-- Cramique (`product-cramique`, sortOrder 85) und Épeautre sésame (`product-epeautre-sesame`, 75) seit 2026-10-10 in Sanity und live (Skript `studio/scripts/add-cramique-epeautre-sesame.mjs`), **Preis vorläufig 6 €** (Vorgabe Betreiber): echte Preise bei Benjamin erfragen und im Studio eintragen. Beide noch ohne Foto (Fallback-Bild). Cramique ist fotografiert (in der Schachtel). Brötchen sind fotografiert, aber kein Produkt in Sanity: klären, ob Produkt oder nur Mood.
+- **Neue Brote seit 2026-10-10 in Sanity und live** (Skript `studio/scripts/add-products-2026-10.mjs`, `createIfNotExists`): Cramique (`product-cramique`, sortOrder 85), Épeautre sésame (`product-epeautre-sesame`, 75), Pain aux fruits secs (`product-pain-fruits-secs`, 45, Benjamins Bild 133, **Name vorläufig**). **Preis überall vorläufig 6 €** (Vorgabe Betreiber): echte Preise und den Namen bei Benjamin erfragen und im Studio eintragen. Alle drei noch ohne Foto (Fallback-Bild). Pain burger (Bild 206) ist nicht angelegt.
 - Alle heutigen Produktbilder in Sanity außer Panettone sind KI-generiert (1408x768) und werden durch die echten Fotos ersetzt.
 - Domain-Umzug nach Checkliste in PROJECT.md; danach Infomaniak aufräumen (Gerätepasswort, `/private/bonpainfaitmain.be/`, alte Site) — jeweils nach Freigabe.
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
@@ -56,3 +56,4 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - In zsh splittet `for q in "A b"; set -- $q` nicht an Leerzeichen → bei dig-Schleifen `for t n in …` nutzen.
 - Rechtstexte (Datenschutz, Impressum, CGV) nur mit Freigabe des Betreibers live schalten.
 - `className="not-italic italic"` auf den Akzentwörtern der Überschriften: in Tailwind 3 gewinnt `not-italic` (steht später im CSS), die Wörter sind also nicht kursiv. Kursiv sind nur „sur commande" (Schedule), das Schlusszitat (About) und „(infos)" im Formular.
+- Änderungen in Sanity erscheinen auf der Seite erst nach bis zu ~60 s: `apicdn` cacht jede Abfrage (`s-maxage=60`). Nicht vorher als Fehler werten.
