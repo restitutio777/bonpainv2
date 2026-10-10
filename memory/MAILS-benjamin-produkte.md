@@ -33,7 +33,7 @@ Sicher ohne Rückfrage: Baguette 074–076, 154, 178, 179, 219; Croissant 182, 1
 
 ## Mail 1
 
-Galerie: picdrop, https://www.picdrop.com/intuitivefotografie/qg4fAoKjJr. Benjamin kommentiert direkt am Bild (Bild öffnen → gelber Button unten links „Kommentar hinzufügen", Ansicht Betreiber), Lieblingsbild mit grüner Fahne (Farbmarkierung „gut"). Dateinamen sind dafür egal. Gastansicht ohne Login nicht geprüft.
+Galerie: picdrop, https://www.picdrop.com/intuitivefotografie/qg4fAoKjJr. Benjamin kommentiert direkt am Bild (Bild öffnen → gelber Button unten links „Kommentar hinzufügen", Ansicht Betreiber), Lieblingsbild mit grüner Fahne (Farbmarkierung „gut"). Seit 2026-10-10 zeigt die Galerie nur noch die Nummer (z. B. 219) unter dem Bild; Mail 1 bietet deshalb zusätzlich Antwort per Mail an. Gastansicht ohne Login nicht geprüft.
 
 Betreff: Les photos du shooting – tu peux mettre les noms ?
 
@@ -48,6 +48,8 @@ Pour le site, j'ai besoin du nom de chaque produit. Le plus simple :
 3. Avec la flèche à droite, tu passes à la photo suivante.
 
 Un commentaire par produit suffit, pas besoin de le faire pour toutes les photos.
+
+Si c'est plus simple pour toi, réponds juste à ce mail avec le numéro sous la photo et le nom, par exemple « 219 baguette ».
 
 Si une photo te plaît particulièrement, clique sur le petit drapeau en bas et choisis le vert.
 
