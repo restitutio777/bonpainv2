@@ -31,6 +31,23 @@ Stand: beide Mails entworfen, noch nicht verschickt. Mail 1 zuerst, Mail 2 danac
 
 Sicher ohne Rückfrage: Baguette 074–076, 154, 178, 179, 219; Croissant 182, 183, 189; Pain au chocolat 186, 197; beides 210, 211; Cramique 094, 095, 198. Mood/Prozess: 004, 008 (Teig), 033, 156, 158 (Ofen), 069 (Laden), 070–073 (Leinentuch), 079, 080 (Auslage), 120, 121–124 (Einschneiden), 180, 181 (Gärkörbe).
 
+## Antworten Benjamin in der Galerie (2026-10-10, 18:47–18:59 UTC)
+
+8 Kommentare, alle ausgelesen über `GET /api/content/intuitivefotografie:qg4fAoKjJr/files/<key>` (Feld `comments`, eingeloggt im eingebauten Browser). Keine Likes. In den Dateidaten steht kein Fahnen-Feld; dass keine grüne Fahne gesetzt ist, ist also wahrscheinlich, aber nicht sicher belegt. **Er hat Zutaten geschrieben, keine Produktnamen** (außer „Pain burger").
+
+| Bild | Serie | Kommentar (wörtlich gekürzt) | Folgerung |
+|---|---|---|---|
+| 144 | A | Froment ½ complet, levain de seigle, sel | passt zu Pain gris („farine semi-complète") |
+| 218 | A (Regal) | Froment, levain de seigle, sel | gleicher Schnitt wie 144, aber ohne „½ complet": dasselbe Brot oder ein zweites? |
+| 150 | D | Froment, levain de seigle, noix, sel | **Pain aux noix** (nicht J, wie in Teil B vermutet) |
+| 133 | J | Froment ½ complet, levain, noisettes, raisins secs, noix de cajou, graines de courge | Früchte-Nuss-Brot, kein Gegenstück in Sanity |
+| 151 | C | Froment ½ complet, levain, sel | Name offen (Rustik vermutet) |
+| 161 | F | Épeautre, levain, sel | Épeautre, aber welches: petit épeautre oder Épeautre sans sésame? |
+| 167 | E | Froment ½ complet, levain, lin, tournesol | Name offen |
+| 206 | S | Pain burger | Sesambrötchen = Pain burger, kein Produkt in Sanity |
+
+Ohne Kommentar: B (031), G (066), H (137), I (128), K (101), L (112), Tartes M (089) und N (192), Cramique, Törtchen, Cookies, Waffeln, Plunder.
+
 ## Mail 1
 
 Galerie: picdrop, https://www.picdrop.com/intuitivefotografie/qg4fAoKjJr. Benjamin kommentiert direkt am Bild (Bild öffnen → gelber Button unten links „Kommentar hinzufügen", Ansicht Betreiber), Lieblingsbild mit grüner Fahne (Farbmarkierung „gut"). Seit 2026-10-10 zeigt die Galerie nur noch die Nummer (z. B. 219) unter dem Bild; Mail 1 bietet deshalb zusätzlich Antwort per Mail an. Gastansicht ohne Login nicht geprüft.
