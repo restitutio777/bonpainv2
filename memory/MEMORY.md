@@ -36,7 +36,7 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 
 ## Offene Aufgaben
 - **Go-live erst, wenn die Produktfotos fertig sind** (Entscheidung Betreiber 2026-10-05): dann Domain-Umzug nach Checkliste in PROJECT.md und danach Webhook-URL in Resend auf `https://bonpainfaitmain.be/api/resend-webhook` ändern.
-- Cramique und Épeautre sésame fehlen in Sanity (v1 hat beide) — Preise beim Bäcker erfragen. Cramique ist fotografiert (in der Schachtel). Brötchen sind fotografiert, aber kein Produkt in Sanity: klären, ob Produkt oder nur Mood.
+- Cramique (`product-cramique`, sortOrder 85) und Épeautre sésame (`product-epeautre-sesame`, 75) seit 2026-10-10 in Sanity und live (Skript `studio/scripts/add-cramique-epeautre-sesame.mjs`), **Preis vorläufig 6 €** (Vorgabe Betreiber): echte Preise bei Benjamin erfragen und im Studio eintragen. Beide noch ohne Foto (Fallback-Bild). Cramique ist fotografiert (in der Schachtel). Brötchen sind fotografiert, aber kein Produkt in Sanity: klären, ob Produkt oder nur Mood.
 - Alle heutigen Produktbilder in Sanity außer Panettone sind KI-generiert (1408x768) und werden durch die echten Fotos ersetzt.
 - Domain-Umzug nach Checkliste in PROJECT.md; danach Infomaniak aufräumen (Gerätepasswort, `/private/bonpainfaitmain.be/`, alte Site) — jeweils nach Freigabe.
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
