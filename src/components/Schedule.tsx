@@ -42,6 +42,7 @@ export default function Schedule() {
   useScrollAnimation()
   const { schedule, products, settings } = useSanity()
   const orderLeadDays = settings?.orderLeadDays || 2
+  const facebookUrl = settings?.facebookUrl
 
   // Only products the baker currently sells: hidden ones are already filtered
   // out by the query, out-of-season ones by getProductStatus.
@@ -163,6 +164,39 @@ export default function Schedule() {
             ))}
           </div>
         </div>
+
+        {facebookUrl && (
+          <a
+            href={facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="animate-on-scroll flex items-center justify-center gap-3 mb-12 px-6 py-4 rounded-xl text-base no-underline transition-colors duration-200"
+            style={{ background: 'white', border: '1px dashed #D4BFA5', color: '#6E4D32' }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={18}
+              height={18}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="flex-shrink-0"
+              style={{ color: '#A67C52' }}
+              aria-hidden="true"
+            >
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+            <span>
+              Pain du moment, nouveautés, fermetures exceptionnelles :{' '}
+              <span className="font-semibold underline underline-offset-4" style={{ color: '#A67C52' }}>
+                suivez-nous sur Facebook
+              </span>
+            </span>
+          </a>
+        )}
 
         <div className="animate-on-scroll">
           <div
