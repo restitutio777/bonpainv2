@@ -31,35 +31,26 @@ Stand: beide Mails entworfen, noch nicht verschickt. Mail 1 zuerst, Mail 2 danac
 
 Sicher ohne Rückfrage: Baguette 074–076, 154, 178, 179, 219; Croissant 182, 183, 189; Pain au chocolat 186, 197; beides 210, 211; Cramique 094, 095, 198. Mood/Prozess: 004, 008 (Teig), 033, 156, 158 (Ofen), 069 (Laden), 070–073 (Leinentuch), 079, 080 (Auslage), 120, 121–124 (Einschneiden), 180, 181 (Gärkörbe).
 
-## Antworten Benjamin in der Galerie (2026-10-10, 18:47–18:59 UTC)
+## Antworten Benjamin in der Galerie (2026-10-10 abends und 2026-10-11 morgens)
 
-8 Kommentare, alle ausgelesen über `GET /api/content/intuitivefotografie:qg4fAoKjJr/files/<key>` (Feld `comments`, eingeloggt im eingebauten Browser). Keine Likes. In den Dateidaten steht kein Fahnen-Feld; dass keine grüne Fahne gesetzt ist, ist also wahrscheinlich, aber nicht sicher belegt. **Er hat Zutaten geschrieben, keine Produktnamen** (außer „Pain burger").
+Ausgelesen über `GET /api/content/intuitivefotografie:qg4fAoKjJr/files/<key>` (Feld `comments`, eingeloggt im eingebauten Browser). **Benjamin schreibt den Produktnamen (meist mit Gewicht) ins Namensfeld `author`, die Zutaten in `text`.** Beide Felder lesen; die erste Auswertung hatte nur `text` gelesen und fälschlich „keine Namen" gemeldet. Keine Likes.
 
-| Bild | Serie | Kommentar (wörtlich gekürzt) | Folgerung |
-|---|---|---|---|
-| 144 | A | Froment ½ complet, levain de seigle, sel | passt zu Pain gris („farine semi-complète") |
-| 218 | A (Regal) | Froment, levain de seigle, sel | gleicher Schnitt wie 144, aber ohne „½ complet": dasselbe Brot oder ein zweites? |
-| 150 | D | Froment, levain de seigle, noix, sel | **Pain aux noix** (nicht J, wie in Teil B vermutet) |
-| 133 | J | Froment ½ complet, levain, noisettes, raisins secs, noix de cajou, graines de courge | Früchte-Nuss-Brot, kein Gegenstück in Sanity |
-| 151 | C | Froment ½ complet, levain, sel | Name offen (Rustik vermutet) |
-| 161 | F | Épeautre, levain, sel | Épeautre, aber welches: petit épeautre oder Épeautre sans sésame? |
-| 167 | E | Froment ½ complet, levain, lin, tournesol | Name offen |
-| 206 | S | Pain burger | Sesambrötchen = Pain burger, kein Produkt in Sanity |
+| Bild | Serie | Name (`author`) | Zutaten (`text`) | Sanity |
+|---|---|---|---|---|
+| 144, 218 | A | Pain gris au levain 600g / Gris levain 600g | Froment ½ complet, levain de seigle, sel | Pain gris au levain |
+| 029 | B | Pain aux seigle 600g | Seigle, levain, sel, miel | Pain au seigle |
+| 059, 151 | C | Pain Rustik 800g | Froment ½ complet, levain, sel | Le Rustik |
+| 150 | D | Pain aux noix 600g | Froment, levain de seigle, noix, sel | Pain aux noix |
+| 167 | E | Rustik aux lin et tournesol | Froment ½ complet, levain, lin, tournesol | **fehlt** |
+| 161 | F | Pain épeautre 600g | Épeautre, levain, sel | Épeautre (sans sésame) |
+| 142 | H | Pain Fagnard 600g | Froment ½ complet, levain de seigle, sel, tournesol | Le Fagnard (**nicht K**, wie in Teil B vermutet) |
+| 128 | I | Pain aux petit épeautre 600g | Petit épeautre (engrain), levain, sel | Pain au petit épeautre (**nicht** Épeautre sans sésame, wie in Teil B) |
+| 133 | J | Pain aux fruits | Froment ½ complet, levain, noisettes, raisins secs, cajou, courge | Pain aux fruits secs (Name in Sanity vorläufig) |
+| 098 | K | Pain blanc à la coupe | Froment blanc, levain, levure, sel | **fehlt** |
+| 083 | P | Cookie chocolat cacahuète salé | Froment, beurre, œuf, chocolat, cacahuète salée, avoine | **fehlt** |
+| 206 | S | Bun | Pain burger | **fehlt** |
 
-Ohne Kommentar: B (031), G (066), H (137), I (128), K (101), L (112), Tartes M (089) und N (192), Cramique, Törtchen, Cookies, Waffeln, Plunder.
-
-### Zweite Runde (2026-10-11, 06:45–06:56 UTC), 6 Kommentare, wieder Zutaten statt Namen
-
-| Bild | Serie | Kommentar | Folgerung |
-|---|---|---|---|
-| 029 | B | Seigle, levain, sel, miel | **Pain au seigle** (Vermutung bestätigt; Honig als Zutat neu) |
-| 059 | C | Froment ½ complet, levain, sel | wie 151, Serie C einheitlich; Name weiter offen |
-| 098 | K | Froment blanc, levain, levure, sel | weißes Brot mit Hefe; ob das Le Fagnard ist, offen |
-| 128 | I | Petit épeautre (engrain), levain, sel | **Pain au petit épeautre**. Damit ist F (161, „Épeautre") das Épeautre sans sésame: **F und I sind gegenüber Teil B vertauscht** |
-| 142 | H | Froment ½ complet, levain de seigle, sel, tournesol | Sonnenblumen-Kastenbrot, kein Gegenstück in Sanity |
-| 083 | P | Froment, beurre, œuf, chocolat, cacahuète salée, flocons d'avoine | Cookies, kein Produkt in Sanity |
-
-Weiterhin ohne Kommentar: G (066), L (112), Tartes M (089) und N (192), Törtchen O, Waffeln Q, Plunder R, Kürbiskernbrötchen. Ohne Namen bleiben: A, C, E, H, K (Zuordnung zu Gris/Rustik/Fagnard nur über Zutaten möglich, nicht sicher).
+Ohne Kommentar: G (066), L (112), Tartes M (089) und N (192), Törtchen O, Waffeln Q, Plunder R, Kürbiskernbrötchen, Épeautre sésame (kein Bild zugeordnet).
 
 ## Mail 1
 
