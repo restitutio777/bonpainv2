@@ -173,7 +173,10 @@ export default function Products({ onOpenModal }: ProductsProps) {
                     className="font-display text-xl font-semibold"
                     style={{ color: '#A67C52' }}
                   >
-                    € {product.price.toFixed(2).replace('.', ',')}
+                    {/* Counter-only items without a known price are stored as 0. */}
+                    {product.price > 0
+                      ? `€ ${product.price.toFixed(2).replace('.', ',')}`
+                      : 'Prix en magasin'}
                   </span>
                   {product.orderInForm !== false && (
                   <button

@@ -45,7 +45,10 @@ export default function Schedule() {
 
   // Only products the baker currently sells: hidden ones are already filtered
   // out by the query, out-of-season ones by getProductStatus.
-  const available = products.filter((p) => getProductStatus(p).available)
+  // Counter-only items (cookies, waffles, …) are not part of the order lists.
+  const available = products.filter(
+    (p) => p.orderInForm !== false && getProductStatus(p).available
+  )
   const cmsBreads = available
     .filter((p) => p.category !== 'viennoiserie')
     .map((p) => p.name)

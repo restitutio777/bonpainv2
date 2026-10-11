@@ -3,8 +3,9 @@ import { useSanity } from '../context/SanityContext'
 import couronne800 from '../assets/mood/couronne-800.webp'
 import couronne1200 from '../assets/mood/couronne-1200.webp'
 import couronneJpg from '../assets/mood/couronne.jpg'
-import enseigne800 from '../assets/mood/enseigne-800.webp'
-import enseigne1200 from '../assets/mood/enseigne-1200.webp'
+import nadia800 from '../assets/mood/nadia-800.webp'
+import nadia1200 from '../assets/mood/nadia-1200.webp'
+import nadiaJpg from '../assets/mood/nadia.jpg'
 import baguettes800 from '../assets/mood/baguettes-800.webp'
 import baguettes1200 from '../assets/mood/baguettes-1200.webp'
 import baguettesJpg from '../assets/mood/baguettes.jpg'
@@ -15,7 +16,7 @@ type Mood = { webp: string; jpg: string; alt: string }
 const MOOD_SIZES = '(min-width: 1100px) 480px, (min-width: 1024px) 44vw, 92vw'
 
 // Trois photos réelles de la boulangerie, dans l'ordre du récit :
-// artisanat (Baraque Michel) → l'enseigne (Sourbrodt) → le pain d'aujourd'hui.
+// artisanat (Baraque Michel) → la boutique à Sourbrodt → le pain d'aujourd'hui.
 const MOOD: Mood[] = [
   {
     webp: `${couronne800} 800w, ${couronne1200} 1200w`,
@@ -23,10 +24,9 @@ const MOOD: Mood[] = [
     alt: 'Benjamin présente une couronne de pain au levain, tout juste sortie du four',
   },
   {
-    webp: `${enseigne800} 800w, ${enseigne1200} 1200w`,
-    // Stays in public/: index.html uses it as og:image.
-    jpg: '/bon-pain-fait-main-boulangerie.jpg',
-    alt: "L'enseigne « Bon Pain Fait Main, artisan boulanger », entourée de vigne",
+    webp: `${nadia800} 800w, ${nadia1200} 1200w`,
+    jpg: nadiaJpg,
+    alt: 'Nadia derrière le comptoir de la boulangerie à Sourbrodt, entre les viennoiseries et les étagères de pains',
   },
   {
     webp: `${baguettes800} 800w, ${baguettes1200} 1200w`,
