@@ -17,6 +17,11 @@ const FALLBACK_IMG = fallbackImg
 const CARD_WIDTHS = [400, 600, 800, 1000]
 const CARD_SIZES = '(min-width: 1280px) 355px, (min-width: 1024px) 29vw, (min-width: 768px) 46vw, 92vw'
 
+// Slight zoom on every card photo: the shots have paper edges and tray rims at
+// the border that read as clutter in the small 4:3 frame.
+const IMG_ZOOM = 1.08
+const IMG_ZOOM_HOVER = 1.13
+
 function cardUrl(image: SanityImageSource, width: number) {
   return urlFor(image)
     .width(width)
@@ -96,7 +101,6 @@ export default function Products({ onOpenModal }: ProductsProps) {
               style={{
                 transitionDelay: `${(i % 3) * 0.1}s`,
                 boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
-                opacity: unavailable ? 0.78 : 1,
               }}
               onClick={() => {
                 if (product.hasModal) onOpenModal(product._id)
@@ -107,7 +111,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 card.style.transform = 'translateY(-6px)'
                 card.style.boxShadow = '0 8px 32px rgba(45,31,20,0.1)'
                 const img = card.querySelector('img')
-                if (img) img.style.transform = 'scale(1.05)'
+                if (img) img.style.transform = `scale(${IMG_ZOOM_HOVER})`
               }}
               onMouseLeave={(e) => {
                 if (!product.hasModal) return
@@ -115,7 +119,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 card.style.transform = 'translateY(0)'
                 card.style.boxShadow = '0 1px 3px rgba(45,31,20,0.06)'
                 const img = card.querySelector('img')
-                if (img) img.style.transform = 'scale(1)'
+                if (img) img.style.transform = `scale(${IMG_ZOOM})`
               }}
             >
               <div className="overflow-hidden relative" style={{ aspectRatio: '4/3' }}>
@@ -133,18 +137,19 @@ export default function Products({ onOpenModal }: ProductsProps) {
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700"
-                  style={{
-                    transform: 'scale(1)',
-                    filter: unavailable ? 'grayscale(40%)' : 'none',
-                  }}
+                  style={{ transform: `scale(${IMG_ZOOM})` }}
                 />
                 {status.badge && (
                   <div
-                    className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide"
+                    className={`absolute px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide whitespace-nowrap ${
+                      status.kind === 'unavailable'
+                        ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
+                        : 'top-3 right-3'
+                    }`}
                     style={{
                       background:
                         status.kind === 'unavailable'
-                          ? 'rgba(150,40,40,0.85)'
+                          ? 'rgba(178,34,34,0.92)'
                           : 'rgba(45,31,20,0.75)',
                       backdropFilter: 'blur(8px)',
                       color: '#F5EDE3',
