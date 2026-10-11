@@ -50,7 +50,23 @@ Ausgelesen über `GET /api/content/intuitivefotografie:qg4fAoKjJr/files/<key>` (
 | 083 | P | Cookie chocolat cacahuète salé | Froment, beurre, œuf, chocolat, cacahuète salée, avoine | **fehlt** |
 | 206 | S | Bun | Pain burger | **fehlt** |
 
-Ohne Kommentar: G (066), L (112), Tartes M (089) und N (192), Törtchen O, Waffeln Q, Plunder R, Kürbiskernbrötchen, Épeautre sésame (kein Bild zugeordnet).
+Rest nach Augenschein zugeordnet (2026-10-11, Kontaktbogen aller 137 Bilder):
+
+| Bilder | Produkt |
+|---|---|
+| 074–076, 112, 154, 178, 179, 219 | Baguette (112 = einzelne Baguette, war „L") |
+| 063, 065, 066, 068 (G) | Épeautre sésame, per Ausschluss: einziger Laib ohne Namen, Sesam auf dem Foto nicht sicher erkennbar |
+| 094, 095, 198 | Cramique |
+| 088, 089, 091, 191 (M), 192 (N, Heidelbeere) | Tarte du jour |
+| 086, 087, 193 (O) | Tartelettes |
+| 081, 083, 085, 194 (P) | Cookie chocolat cacahuète salé |
+| 102–107 (Q) | Gaufres |
+| 119 (R) | Viennoiserie, Spirale mit Crème pâtissière |
+| 199–202, 206–208 | Bun (Sesam) |
+| 203–205, 209 | Brötchen mit Kürbiskernen |
+| 077 (T) | Feuilleté aux pommes |
+| 182, 183, 189 / 186, 197 / 210, 211 | Croissant / Pain au chocolat / beide |
+| 120 | Bases de pizza (Teigplatten, Ersatz) |
 
 ## Mail 1
 
