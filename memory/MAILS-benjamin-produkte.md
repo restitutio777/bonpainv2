@@ -48,6 +48,19 @@ Sicher ohne Rückfrage: Baguette 074–076, 154, 178, 179, 219; Croissant 182, 1
 
 Ohne Kommentar: B (031), G (066), H (137), I (128), K (101), L (112), Tartes M (089) und N (192), Cramique, Törtchen, Cookies, Waffeln, Plunder.
 
+### Zweite Runde (2026-10-11, 06:45–06:56 UTC), 6 Kommentare, wieder Zutaten statt Namen
+
+| Bild | Serie | Kommentar | Folgerung |
+|---|---|---|---|
+| 029 | B | Seigle, levain, sel, miel | **Pain au seigle** (Vermutung bestätigt; Honig als Zutat neu) |
+| 059 | C | Froment ½ complet, levain, sel | wie 151, Serie C einheitlich; Name weiter offen |
+| 098 | K | Froment blanc, levain, levure, sel | weißes Brot mit Hefe; ob das Le Fagnard ist, offen |
+| 128 | I | Petit épeautre (engrain), levain, sel | **Pain au petit épeautre**. Damit ist F (161, „Épeautre") das Épeautre sans sésame: **F und I sind gegenüber Teil B vertauscht** |
+| 142 | H | Froment ½ complet, levain de seigle, sel, tournesol | Sonnenblumen-Kastenbrot, kein Gegenstück in Sanity |
+| 083 | P | Froment, beurre, œuf, chocolat, cacahuète salée, flocons d'avoine | Cookies, kein Produkt in Sanity |
+
+Weiterhin ohne Kommentar: G (066), L (112), Tartes M (089) und N (192), Törtchen O, Waffeln Q, Plunder R, Kürbiskernbrötchen. Ohne Namen bleiben: A, C, E, H, K (Zuordnung zu Gris/Rustik/Fagnard nur über Zutaten möglich, nicht sicher).
+
 ## Mail 1
 
 Galerie: picdrop, https://www.picdrop.com/intuitivefotografie/qg4fAoKjJr. Benjamin kommentiert direkt am Bild (Bild öffnen → gelber Button unten links „Kommentar hinzufügen", Ansicht Betreiber), Lieblingsbild mit grüner Fahne (Farbmarkierung „gut"). Seit 2026-10-10 zeigt die Galerie nur noch die Nummer (z. B. 219) unter dem Bild; Mail 1 bietet deshalb zusätzlich Antwort per Mail an. Gastansicht ohne Login nicht geprüft.
