@@ -8,7 +8,9 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 **Benjamins erstes Feedback (2026-10-12, mündlich über Betreiber)**
 - Seite gefällt ihm sehr. Er schreibt **pro Brot eine ausführlichere Beschreibung** (nicht zu lang, aber vollständig), Termin offen. Achtung: Feld `description` ist auf 140 Zeichen begrenzt (Studio blockiert Längeres) → Limit anheben oder `modalBodyFr` (Fiche détaillée) nutzen; am einfachsten: er schickt Text, Claude spielt per Skript ein.
 - **Preise: unentschieden, eher keine** (Preisvergleicher vs. Transparenz). v1 zeigt keine Preise. Ohne Preise betrifft es Karten, Warenkorb, Bestätigung, Digest („Total caisse") und das Zeilenformat in `api/order.ts` (`— €x,xx` ist Pflicht). Rechtsfrage Preisangabepflicht (RL 98/6/EG, belg. Recht) nicht geklärt.
-- Fragt, ob die **Sammelbestellung mit mehreren Adressen end-to-end getestet** ist: nein, nur lokal gegen Mocks (2026-10-05) und eine einzelne Preview-Bestellung (Bounce-Test). Vorschlag: Test auf Preview mit mehreren Adressen.
+- Fragt, ob die **Sammelbestellung mit mehreren Adressen end-to-end getestet** ist: bis dahin nur lokal gegen Mocks. **2026-10-12 auf Preview getestet** (Branch `claude/test-sammelbestellung`, leerer Commit): 4 Bestellungen übers echte Formular an `intuitivmedia+test1..4@gmail.com`, Fr 16.10. (3 Bestellungen, erwartet 3× Pain gris, 5× Croissant, 2× Baguette, 1× Fagnard, 1× Noix, Total caisse 39,70 €) und Sa 17.10. (1× Seigle, 5,70 €). Alle 4 → 200, Bestätigung verschickt. Inhalt der Mails prüft der Betreiber im Postfach.
+- Die Mail mit den Vorteilen v2 hat der Betreiber vor dem Feedback geschickt; das Feedback berücksichtigt sie schon.
+- Preise: Betreiber will sie nicht betonen, aber rechtlich unangreifbar bleiben → Vorschlag: Preise je Produkt bleiben, optisch zurückgenommen.
 - Bestellfrist (2 Kalendertage, `siteSettings.orderLeadDays`, ab 0:00 Uhr) findet er in Ordnung.
 
 **Produkte (Sanity)**
