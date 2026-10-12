@@ -5,6 +5,12 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 ## Nächste Session: hier starten (Stand 2026-10-12)
 **Fotos und Produktangaben sind eingebaut und live auf bonpainv2.vercel.app. Es wartet die Durchsicht durch Benjamin** (Namen, Preise). Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (Französisch, kurz, kein Roboterton).
 
+**Benjamins erstes Feedback (2026-10-12, mündlich über Betreiber)**
+- Seite gefällt ihm sehr. Er schreibt **pro Brot eine ausführlichere Beschreibung** (nicht zu lang, aber vollständig), Termin offen. Achtung: Feld `description` ist auf 140 Zeichen begrenzt (Studio blockiert Längeres) → Limit anheben oder `modalBodyFr` (Fiche détaillée) nutzen; am einfachsten: er schickt Text, Claude spielt per Skript ein.
+- **Preise: unentschieden, eher keine** (Preisvergleicher vs. Transparenz). v1 zeigt keine Preise. Ohne Preise betrifft es Karten, Warenkorb, Bestätigung, Digest („Total caisse") und das Zeilenformat in `api/order.ts` (`— €x,xx` ist Pflicht). Rechtsfrage Preisangabepflicht (RL 98/6/EG, belg. Recht) nicht geklärt.
+- Fragt, ob die **Sammelbestellung mit mehreren Adressen end-to-end getestet** ist: nein, nur lokal gegen Mocks (2026-10-05) und eine einzelne Preview-Bestellung (Bounce-Test). Vorschlag: Test auf Preview mit mehreren Adressen.
+- Bestellfrist (2 Kalendertage, `siteSettings.orderLeadDays`, ab 0:00 Uhr) findet er in Ordnung.
+
 **Produkte (Sanity)**
 - Quelle der Angaben: Benjamins picdrop-Kommentare. **Produktname + Gewicht stehen im Namensfeld `author`, Zutaten im Text** (beide lesen). Zuordnung aller 137 Bilder: [MAILS-benjamin-produkte.md](MAILS-benjamin-produkte.md) → „Antworten Benjamin".
 - Galerie-Export: `/Volumes/EXTREME_SSD/BONPAIN_2-0/GALLRY` (2400x1600 JPEG, Dateinummer = CR3-Nummer).
