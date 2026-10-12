@@ -120,7 +120,8 @@ export default function PWAInstallPrompt() {
         clearTimeout(fallback)
         timer = setTimeout(show, 6000)
       },
-      { threshold: 0.25 }
+      // The section is many screens tall: any part of it in the upper 60 % of the screen counts.
+      { threshold: 0, rootMargin: '0px 0px -40% 0px' }
     )
     if (products) observer.observe(products)
     return () => {
