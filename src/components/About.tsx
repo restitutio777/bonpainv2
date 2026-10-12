@@ -1,32 +1,55 @@
 import { useEffect } from 'react'
 import { useSanity } from '../context/SanityContext'
-import couronne800 from '../assets/mood/couronne-800.webp'
-import couronne1200 from '../assets/mood/couronne-1200.webp'
-import couronneJpg from '../assets/mood/couronne.jpg'
-import nadia800 from '../assets/mood/nadia-800.webp'
-import nadia1200 from '../assets/mood/nadia-1200.webp'
-import nadiaJpg from '../assets/mood/nadia.jpg'
+import four800 from '../assets/mood/four-800.webp'
+import four1200 from '../assets/mood/four-1200.webp'
+import fourJpg from '../assets/mood/four.jpg'
+import lin800 from '../assets/mood/lin-800.webp'
+import lin1200 from '../assets/mood/lin-1200.webp'
+import linJpg from '../assets/mood/lin.jpg'
 import baguettes800 from '../assets/mood/baguettes-800.webp'
 import baguettes1200 from '../assets/mood/baguettes-1200.webp'
 import baguettesJpg from '../assets/mood/baguettes.jpg'
+
+// Small tiles from the shoot (09.10.2026), shown as a grid below the chapters.
+const FOURNIL_FILES = import.meta.glob('../assets/fournil/*.webp', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string>
+const fournil = (n: string) => ({
+  src: FOURNIL_FILES[`../assets/fournil/${n}-800.webp`],
+  srcSet: `${FOURNIL_FILES[`../assets/fournil/${n}-400.webp`]} 400w, ${FOURNIL_FILES[`../assets/fournil/${n}-800.webp`]} 800w`,
+})
+const FOURNIL = [
+  { ...fournil('121'), alt: 'Benjamin grigne les pâtons avant la cuisson' },
+  { ...fournil('180'), alt: 'Pâtons au repos dans les bannetons' },
+  { ...fournil('004'), alt: 'Pâte au levain pendant la fermentation' },
+  { ...fournil('033'), alt: 'Benjamin devant le four, les pains en cuisson' },
+  { ...fournil('069'), alt: 'Nadia au comptoir de la boulangerie à Sourbrodt' },
+  { ...fournil('079'), alt: 'Vitrine de tartes, viennoiseries et gaufres' },
+  { ...fournil('210'), alt: 'Croissants et pains au chocolat à la sortie du four' },
+  { ...fournil('017'), alt: 'Pains au levain sur la grille du chariot' },
+]
+// Two columns on phones, four from 640 px in a 1100 px container.
+const FOURNIL_SIZES = '(min-width: 1100px) 260px, (min-width: 640px) 23vw, 46vw'
 
 type Mood = { webp: string; jpg: string; alt: string }
 
 // The column is 480 px wide on desktop and the full width on phones.
 const MOOD_SIZES = '(min-width: 1100px) 480px, (min-width: 1024px) 44vw, 92vw'
 
-// Trois photos réelles de la boulangerie, dans l'ordre du récit :
-// artisanat (Baraque Michel) → la boutique à Sourbrodt → le pain d'aujourd'hui.
+// Trois photos, dans l'ordre du récit : Benjamin au four → Benjamin au
+// fournil → le pain d'aujourd'hui. Nadia et le reste du fournil sont dans la
+// petite grille plus bas.
 const MOOD: Mood[] = [
   {
-    webp: `${couronne800} 800w, ${couronne1200} 1200w`,
-    jpg: couronneJpg,
-    alt: 'Benjamin présente une couronne de pain au levain, tout juste sortie du four',
+    webp: `${four800} 800w, ${four1200} 1200w`,
+    jpg: fourJpg,
+    alt: 'Benjamin enfourne les baguettes à la pelle dans le four à soles',
   },
   {
-    webp: `${nadia800} 800w, ${nadia1200} 1200w`,
-    jpg: nadiaJpg,
-    alt: 'Nadia derrière le comptoir de la boulangerie à Sourbrodt, entre les viennoiseries et les étagères de pains',
+    webp: `${lin800} 800w, ${lin1200} 1200w`,
+    jpg: linJpg,
+    alt: 'Benjamin au fournil, il prépare la couche en lin pour les pâtons',
   },
   {
     webp: `${baguettes800} 800w, ${baguettes1200} 1200w`,
@@ -181,6 +204,37 @@ export default function About() {
               </div>
             )
           })}
+        </div>
+
+        {/* Petite grille : le fournil au quotidien */}
+        <div className="animate-on-scroll mt-16 lg:mt-28">
+          <div
+            className="text-xs font-semibold uppercase tracking-[0.15em] mb-5 text-center"
+            style={{ color: '#A67C52' }}
+          >
+            Au fournil
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {FOURNIL.map((img) => (
+              <div
+                key={img.src}
+                className="overflow-hidden rounded-xl"
+                style={{ aspectRatio: '4 / 3', background: '#F0E8DD' }}
+              >
+                <img
+                  src={img.src}
+                  srcSet={img.srcSet}
+                  sizes={FOURNIL_SIZES}
+                  alt={img.alt}
+                  width={800}
+                  height={600}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Citation de clôture */}
