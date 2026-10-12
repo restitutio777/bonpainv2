@@ -379,6 +379,7 @@ export default function Subscription() {
                               checked={coming}
                               disabled={!editable}
                               onChange={() => toggleSkip(d.date)}
+                              aria-label={`Je viens le ${dateFr(d.date)}`}
                               className="w-4 h-4"
                               style={{ accentColor: '#A67C52' }}
                             />
