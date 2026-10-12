@@ -3,7 +3,7 @@
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
 ## Nächste Session: hier starten (Stand 2026-10-12, abends)
-**Benjamin hat die Seite gesehen und ist sehr zufrieden. Sein Feedback ist umgesetzt und live auf bonpainv2.vercel.app. Es wartet: seine Beschreibungstexte pro Brot.** Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (kurz, kein Roboterton; Sprache nach Wunsch des Betreibers: bisher Französisch, die Antwort auf das Feedback am 2026-10-12 auf Deutsch, Benjamin versteht beides).
+**Benjamin hat die Seite gesehen und ist sehr zufrieden. Sein Feedback ist umgesetzt und live auf bonpainv2.vercel.app. Neu seit 2026-10-12 abends: Abo („commandes régulières“) und PWA-Installation, beides live. Es wartet: seine Beschreibungstexte pro Brot; Benjamin kennt die Abo-Funktion noch nicht.** Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (kurz, kein Roboterton; Sprache nach Wunsch des Betreibers: bisher Französisch, die Antwort auf das Feedback am 2026-10-12 auf Deutsch, Benjamin versteht beides).
 
 **Benjamins Feedback 2026-10-12 und was daraus wurde**
 - **Beschreibungen:** Er schreibt pro Brot ein paar Sätze (Termin offen). Feld `description` ist jetzt `text`, bis 320 Zeichen, Studio deployt. Am einfachsten: er schickt die Texte per Mail, Claude spielt sie per Skript ein (`SANITY_WRITE_TOKEN`, Muster `studio/scripts/set-product-image.mjs`). Karten richten die Preiszeile unten aus, längere Texte sind also kein Layoutproblem.
@@ -14,6 +14,18 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 - Antwortmail an Benjamin (Deutsch) ist entworfen, Versand durch Betreiber.
 - **Panne 2026-10-12 ~20:39 UTC:** 4 Testbestellungen (Frist Test, 1 Baguette, Di 13.10.) gingen an die noch alte Production → 4 Bäcker-Mails „Mardi 13/10/2026 … Commandes“ an Benjamin, Key `orders:2026-10-13` in Production-Redis (läuft nach 60 Tagen ab, Dienstag wird jetzt abgelehnt). Entwarnung steht als P.S. im Mailentwurf. Lehre: siehe Stolpersteine.
 - Studio-Deploy klappt wieder (CLI eingeloggt als intuitivmedia@gmail.com).
+
+**Abo / commandes régulières (live seit 2026-10-12, Details PROJECT.md → „Commandes régulières“)**
+- Häkchen im Formular; erste Bestellung normal, Abo ab +7 Tage, jeden gleichen Wochentag bis Widerruf. Verwaltung `/abonnement#id.token` (Kunde) bzw. `#b.id.token` (Benjamin, in seiner Tagesliste). Links per HMAC aus `SUBSCRIPTION_SECRET` (Vercel, prod+preview; nie ändern, sonst alle Links tot).
+- Cron `/api/daily` 23:00 UTC: **Liste définitive** je geschlossenem Verkaufstag (neu: Benjamin bekommt nachts eine zusätzliche Mail im Tagesverlauf, wenn Bestellungen da sind) + Urlaubsmail an betroffene Abonnenten (Urlaubsbanner aktiv + Daten). Keepalive 05:00 holt nach. Erster Lauf: Nacht 12./13.10.2026, Wirkung erst prüfbar, wenn echte Bestellungen da sind.
+- Getestet: lokal 30 Fälle (Fake-Uhr, Mocks), Preview echt: Abo-Bestellung `+test7` (Fr 16.10., Abo ab 23.10.), Änderung (2× Pain gris, 30.10. ausgesetzt, „Tranché svp“), Endliste 23.10. per `?date=`. Das Preview-Abo ist absichtlich noch aktiv (Betreiber kann den Link aus der Mail ausprobieren); Preview hat keinen Cron.
+- Rechtstexte: CGV Art. 8 neu (9 Allergènes, 10 Droit), Datenschutz ergänzt, auf Anweisung Betreiber live geschaltet; inhaltliche Freigabe der Rechtstexte insgesamt steht weiter aus.
+- Offen für Benjamin: Regel bei Nichtabholung (CGV: Bäckerei darf beenden, per Link in der Liste), ob 25.12. o. ä. per Urlaubsbanner geschlossen wird.
+
+**PWA (2026-10-12)**
+- Android/Chrome/Edge: Banner bzw. Footer-Button „Installer“ öffnet direkt den Installationsdialog des Browsers (ein Tipp + Bestätigung des Browsers, die keine Seite umgehen kann). iPhone/iPad: Safari hat keine Installations-API → Banner zeigt den Weg (Partager → « Sur l'écran d'accueil »). In-App-Browser (Facebook, Instagram) können nicht installieren → kein Banner.
+- Banner auf Handys nach 1 Bildschirm Scrollen oder 15 s, nach Schließen 30 Tage Ruhe. Neue maskable Icons + Apple-Icon ohne transparente Ecken (erzeugt mit Pillow aus `icon-512.png`, Skript lag im Scratchpad).
+- Stolperstein beim Testen: der Service Worker liefert nach einem Deploy erst die alte Version; einmal neu laden.
 
 **Produkte (Sanity)**
 - Quelle der Angaben: Benjamins picdrop-Kommentare. **Produktname + Gewicht stehen im Namensfeld `author`, Zutaten im Text** (beide lesen). Zuordnung aller 137 Bilder: [MAILS-benjamin-produkte.md](MAILS-benjamin-produkte.md) → „Antworten Benjamin".
@@ -32,8 +44,7 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 **Mit Benjamin besprochen bzw. vorbereitet (Entwürfe nur im Chat)**
 - Bitte um Durchsicht + Preise selbst im Studio (https://bonpainfaitmain.sanity.studio, Login per Google nur, wenn seine Adresse unter Members steht – **nicht geprüft**; „Publier" nötig, sonst bleibt es Entwurf).
 - Vorteile v2 vs. v1, ehrlich: v1 schickt pro Bestellung eine Textmail mit Wochentag ohne Datum, ohne Preise/Summen/Telefon; v2 schickt je Abholtag die komplette aktualisierte Liste (gleicher Betreff → ein Gmail-Verlauf, „À préparer", „Retraits", „Total caisse") und meldet nicht zugestellte Bestätigungen. Bestätigung-nur-nach-Bäcker-Mail, DNS-Prüfung der Maildomain und Limits hat **v1 seit 2026-10-05 auch**.
-- **Abo-Konzept (2026-10-12, nur besprochen, nicht gebaut):** Häkchen im normalen Formular (nicht vorausgewählt) „jede Woche am selben Tag wiederholen, bis auf Widerruf“; Bestätigungsmail mit persönlichem Link (ohne Konto) zum Pausieren/Ändern/Beenden, Frist wie `orderLeadDays`. Kernpunkt Technik: der Digest geht heute nur bei neuer Bestellung raus → für Abos braucht es eine **Endliste zum Bestellschluss per täglichem Cron** (Abos als solche markiert). Benjamin beendet ein Abo per Link in seiner Liste (kein Studio-Login). Rechtstexte: CGV-Abschnitt „Commandes régulières“ (Laufzeit, Widerruf, Änderungsfrist, Preise am Abholtag, Nichtabholung, Urlaub, Ende durch Bäcker) + Datenschutz (Speicherung bis Widerruf statt 60 Tage). Offen bei Benjamin: Nichtabholung, Urlaub (Abos aussetzen + Mail?), nur wöchentlich?
-- Erweiterungsideen (nicht gebaut): **Abo/Dauerbestellung** (Favorit des Betreibers: Kunde legt einmal fest, gilt bis Widerruf, erscheint automatisch in der Tagesliste, Pause bei Urlaub; offen: was bei Nichtabholung), Endliste zum Bestellschluss (wegen langer Teigführung), Erinnerung an Kunden am Vortag (sprengt ggf. Resend Free 100/Tag). Leitlinie Betreiber: pragmatisch, nichts, wofür sie sich regelmäßig ins Studio einloggen müssen.
+- Erweiterungsideen (nicht gebaut): Erinnerung an Kunden am Vortag (sprengt ggf. Resend Free 100/Tag). Leitlinie Betreiber: pragmatisch, nichts, wofür sie sich regelmäßig ins Studio einloggen müssen.
 
 ## Projektziel
 Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbrodt): Vite + React, Sanity (Projekt `5f1udd5l`, Dataset `production`), Vercel-Projekt `bonpainv2` (Team `bolteds-projects`), Bestellformular → `api/order.ts` → Resend + Upstash Redis. Soll in ein bis zwei Monaten die Live-Seite bonpainfaitmain.be (v1, Repo `bonpain-v1`, PHP bei Infomaniak) ablösen.
