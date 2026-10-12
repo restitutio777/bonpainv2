@@ -1,8 +1,9 @@
 // Vercel Serverless Function — receives orders from the OrderForm.
 //
 // Flow per request:
-//   1. Check the payload: field formats, product names against Sanity, and
-//      that the customer's email domain exists. Apply the abuse limits.
+//   1. Check the payload: field formats, product names and the order lead
+//      time against Sanity, and that the customer's email domain exists.
+//      Apply the abuse limits.
 //   2. Store the order in Upstash Redis under `orders:{pickupDateISO}` and
 //      read back ALL orders for that pickup day.
 //   3. Send Benjamin a DIGEST email with aggregate counts + per-customer
@@ -458,22 +459,53 @@ function checkPayload(raw: unknown): { order: OrderPayload; lines: ItemLine[] } 
 
 const SANITY_PROJECT = process.env.VITE_SANITY_PROJECT_ID || '5f1udd5l'
 const SANITY_DATASET = process.env.VITE_SANITY_DATASET || 'production'
-const PRODUCT_NAMES_URL =
+const SANITY_FACTS_URL =
   `https://${SANITY_PROJECT}.apicdn.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}` +
-  `?query=${encodeURIComponent('*[_type == "product"].name')}`
+  `?query=${encodeURIComponent(
+    '{"names": *[_type == "product"].name, "leadDays": *[_type == "siteSettings"][0].orderLeadDays}'
+  )}`
 
-/** Product names as the form shows them (same public CDN), or null when Sanity is unreachable. */
-async function productNames(): Promise<Set<string> | null> {
+/**
+ * Product names and order lead time as the form sees them (same public CDN),
+ * or null when Sanity is unreachable.
+ */
+async function sanityFacts(): Promise<{ names: Set<string>; leadDays: number } | null> {
   try {
-    const res = await fetch(PRODUCT_NAMES_URL, { signal: AbortSignal.timeout(3000) })
+    const res = await fetch(SANITY_FACTS_URL, { signal: AbortSignal.timeout(3000) })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const { result } = (await res.json()) as { result?: unknown }
-    if (!Array.isArray(result)) throw new Error('unexpected response')
-    return new Set(result.filter((n): n is string => typeof n === 'string'))
+    const { result } = (await res.json()) as { result?: { names?: unknown; leadDays?: unknown } }
+    if (!result || !Array.isArray(result.names)) throw new Error('unexpected response')
+    const lead = result.leadDays
+    return {
+      names: new Set(result.names.filter((n): n is string => typeof n === 'string')),
+      // Same default as the form (`orderLeadDays || 2`).
+      leadDays: typeof lead === 'number' && lead > 0 ? Math.floor(lead) : 2,
+    }
   } catch (e) {
-    console.error('[order] product list unavailable, checking the item format only', e)
+    console.error('[order] Sanity unavailable, checking the item format only, no lead time', e)
     return null
   }
+}
+
+/**
+ * Earliest pickup date the form offers, YYYY-MM-DD: today in Belgium plus the
+ * lead time. The form enforces the same rule; this catches requests that
+ * skip the form.
+ */
+function earliestPickup(leadDays: number): string {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Brussels',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+      .formatToParts(new Date())
+      .map((p) => [p.type, p.value])
+  )
+  const d = new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + leadDays)
+  return d.toISOString().slice(0, 10)
 }
 
 const DNS_NO_SUCH = new Set(['ENOTFOUND', 'ENODATA'])
@@ -599,12 +631,15 @@ export default async function handler(req: Req, res: Res) {
   }
 
   const domain = order.customer.email.split('@')[1].toLowerCase()
-  const [domainOk, names] = await Promise.all([mailDomainExists(domain), productNames()])
+  const [domainOk, sanity] = await Promise.all([mailDomainExists(domain), sanityFacts()])
   if (!domainOk) {
     return res.status(400).json({ error: 'email_domain', domain })
   }
+  if (sanity && order.pickup.date < earliestPickup(sanity.leadDays)) {
+    return res.status(400).json({ error: 'too_soon', leadDays: sanity.leadDays })
+  }
   for (const line of lines) {
-    if (names ? !names.has(line.name) : !ITEM_NAME_FALLBACK.test(line.name)) {
+    if (sanity ? !sanity.names.has(line.name) : !ITEM_NAME_FALLBACK.test(line.name)) {
       // A product renamed in the studio while the customer had the page open.
       return res.status(409).json({ error: 'products_changed' })
     }

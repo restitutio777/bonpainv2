@@ -40,12 +40,13 @@ export default defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Description courte',
+      title: 'Description',
       description:
-        'Une phrase qui décrit le produit (max. 140 caractères). Apparaît sous le nom dans la liste.',
-      type: 'string',
+        'Quelques phrases sur le pain : goût, farines, poids (max. 320 caractères). Apparaît sous la photo.',
+      type: 'text',
+      rows: 4,
       group: 'basics',
-      validation: (R) => R.max(140),
+      validation: (R) => R.max(320),
     }),
     defineField({
       name: 'price',

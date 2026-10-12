@@ -90,13 +90,13 @@ Deploy:    GitHub-Push → main → Vercel auto-deploy
 
 Nach den Fehlern auf v1 (05.10.2026: Bestätigungen kamen nicht an, Protokoll im Web-Verzeichnis, keine Tippfehler-Erkennung, kein Missbrauchsschutz) abgesichert. Ablauf in [api/order.ts](api/order.ts):
 
-1. Prüfen: Feldformate, Produktnamen gegen Sanity (öffentliches CDN; ohne Sanity nur Zeichensatz), Wochentag passt zum Datum, E-Mail-Domain existiert (DNS: MX/A/AAAA; nur ein sicheres „gibt es nicht" lehnt ab). Keine Links in Name/Vorname/Remarques. Total wird serverseitig aus den Zeilen gerechnet.
+1. Prüfen: Feldformate, Produktnamen gegen Sanity (öffentliches CDN; ohne Sanity nur Zeichensatz), Wochentag passt zum Datum, Abholdatum frühestens heute (Belgien) + `orderLeadDays` (sonst `too_soon`; ohne Sanity keine Prüfung), E-Mail-Domain existiert (DNS: MX/A/AAAA; nur ein sicheres „gibt es nicht" lehnt ab). Keine Links in Name/Vorname/Remarques. Total wird serverseitig aus den Zeilen gerechnet.
 2. Limits (Redis, Keys gehasht, ohne Redis offen): 6/h je IP, 5/Tag je Adresse, 40 Bestellungen/Tag gesamt (Resend Free = 100 Mails/Tag, 2 pro Bestellung).
 3. Bäcker-Mail **zuerst**. Scheitert sie → 502, Bestellung wird aus Redis wieder entfernt, keine Bestätigung an den Kunden.
 4. Dann Bestätigung. Scheitert sie → 200 mit `confirmation: 'failed'`, das Formular sagt das dem Kunden und nennt die Telefonnummer.
 5. Fehlt die Resend-Konfiguration → 503 (früher: stilles 200).
 
-Antwortcodes für das Formular: `invalid`+`field`, `links`, `email_domain`+`domain`, `products_changed` (409), `rate_limited`/`daily_limit` (429), `delivery_failed` (502), `not_configured` (503).
+Antwortcodes für das Formular: `invalid`+`field`, `links`, `email_domain`+`domain`, `too_soon`+`leadDays`, `products_changed` (409), `rate_limited`/`daily_limit` (429), `delivery_failed` (502), `not_configured` (503).
 
 **Zustellung nach dem Versand:** [api/resend-webhook.ts](api/resend-webhook.ts) meldet Benjamin per Mail, wenn eine Bestätigung bounced, als Spam markiert, gesperrt oder fehlgeschlagen ist (Mails sind mit `kind=order|confirmation|notice` getaggt; nur `confirmation` löst eine Meldung aus → keine Schleife). **Einrichtung steht aus**, siehe Offen.
 

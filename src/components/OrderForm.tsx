@@ -19,7 +19,11 @@ const FIELD_LABELS: Record<string, string> = {
 }
 
 /** What the customer reads when /api/order did not take the order. */
-function orderErrorMessage(status: number, data: { error?: string; field?: string; domain?: string } | null, phone: string) {
+function orderErrorMessage(
+  status: number,
+  data: { error?: string; field?: string; domain?: string; leadDays?: number } | null,
+  phone: string
+) {
   const call = `Réessayez dans quelques minutes ou appelez-nous au ${phone}.`
   switch (data?.error) {
     case 'email_domain':
@@ -30,6 +34,8 @@ function orderErrorMessage(status: number, data: { error?: string; field?: strin
       return data.field && FIELD_LABELS[data.field]
         ? `Merci de vérifier ${FIELD_LABELS[data.field]}.`
         : 'Certaines informations semblent incorrectes. Merci de vérifier le formulaire.'
+    case 'too_soon':
+      return `Merci de prévoir au moins ${data.leadDays ?? 2} jours entre la commande et le retrait. Choisissez une date plus tardive ou appelez-nous au ${phone}.`
     case 'products_changed':
       return 'Notre liste de pains vient de changer. Rechargez la page et refaites votre commande.'
     case 'rate_limited':

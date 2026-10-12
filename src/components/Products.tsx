@@ -97,7 +97,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
             return (
             <div
               key={product._id}
-              className={`animate-on-scroll bg-white rounded-xl overflow-hidden group transition-all duration-400 ${product.hasModal ? 'cursor-pointer' : ''}`}
+              className={`animate-on-scroll bg-white rounded-xl overflow-hidden group transition-all duration-400 flex flex-col ${product.hasModal ? 'cursor-pointer' : ''}`}
               style={{
                 transitionDelay: `${(i % 3) * 0.1}s`,
                 boxShadow: '0 1px 3px rgba(45,31,20,0.06)',
@@ -160,24 +160,25 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 )}
               </div>
 
-              <div className="p-6">
+              {/* Column so the price row sits at the bottom of every card in a
+                  row, however long each description is. */}
+              <div className="p-6 flex-1 flex flex-col">
                 <h3
                   className="font-display text-2xl font-medium mb-1.5"
                   style={{ color: '#2D1F14' }}
                 >
                   {product.name}
                 </h3>
-                <p className="text-base leading-[1.5]" style={{ color: '#8B7A6B' }}>
+                <p className="text-base leading-[1.5] mb-4" style={{ color: '#8B7A6B' }}>
                   {product.description}
                 </p>
                 <div
-                  className="flex items-center justify-between mt-4 pt-4"
+                  className="flex items-center justify-between mt-auto pt-4"
                   style={{ borderTop: '1px solid #F5EDE3' }}
                 >
-                  <span
-                    className="font-display text-xl font-semibold"
-                    style={{ color: '#A67C52' }}
-                  >
+                  {/* The price is required by law but deliberately quiet:
+                      the bread and its description lead, not the number. */}
+                  <span className="text-sm" style={{ color: '#8B7A6B' }}>
                     {/* Counter-only items without a known price are stored as 0. */}
                     {product.price > 0
                       ? `€ ${product.price.toFixed(2).replace('.', ',')}`
