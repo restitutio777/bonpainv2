@@ -2,20 +2,18 @@
 
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
-## Nächste Session: hier starten (Stand 2026-10-12)
-**Fotos und Produktangaben sind eingebaut und live auf bonpainv2.vercel.app. Es wartet die Durchsicht durch Benjamin** (Namen, Preise). Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (Französisch, kurz, kein Roboterton).
+## Nächste Session: hier starten (Stand 2026-10-12, abends)
+**Benjamin hat die Seite gesehen und ist sehr zufrieden. Sein Feedback ist umgesetzt und live auf bonpainv2.vercel.app. Es wartet: seine Beschreibungstexte pro Brot.** Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (kurz, kein Roboterton; Sprache nach Wunsch des Betreibers: bisher Französisch, die Antwort auf das Feedback am 2026-10-12 auf Deutsch, Benjamin versteht beides).
 
-**Benjamins erstes Feedback (2026-10-12, mündlich über Betreiber)**
-- Seite gefällt ihm sehr. Er schreibt **pro Brot eine ausführlichere Beschreibung** (nicht zu lang, aber vollständig), Termin offen. Achtung: Feld `description` ist auf 140 Zeichen begrenzt (Studio blockiert Längeres) → Limit anheben oder `modalBodyFr` (Fiche détaillée) nutzen; am einfachsten: er schickt Text, Claude spielt per Skript ein.
-- **Preise: unentschieden, eher keine** (Preisvergleicher vs. Transparenz). v1 zeigt keine Preise. Ohne Preise betrifft es Karten, Warenkorb, Bestätigung, Digest („Total caisse") und das Zeilenformat in `api/order.ts` (`— €x,xx` ist Pflicht). Rechtsfrage Preisangabepflicht (RL 98/6/EG, belg. Recht) nicht geklärt.
-- Fragt, ob die **Sammelbestellung mit mehreren Adressen end-to-end getestet** ist: bis dahin nur lokal gegen Mocks. **2026-10-12 auf Preview getestet** (Branch `claude/test-sammelbestellung`, leerer Commit): 4 Bestellungen übers echte Formular an `intuitivmedia+test1..4@gmail.com`, Fr 16.10. (3 Bestellungen, erwartet 3× Pain gris, 5× Croissant, 2× Baguette, 1× Fagnard, 1× Noix, Total caisse 39,70 €) und Sa 17.10. (1× Seigle, 5,70 €). Alle 4 → 200, Bestätigung verschickt. Inhalt der Mails prüft der Betreiber im Postfach.
-- Die Mail mit den Vorteilen v2 hat der Betreiber vor dem Feedback geschickt; das Feedback berücksichtigt sie schon.
-- **Umgesetzt 2026-10-12 (`7da7d17`, live auf vercel.app):** Preis auf den Karten klein und gedeckt (Pflicht bleibt erfüllt), Preiszeile unten bündig; Studio-Feld `description` mehrzeilig bis 320 Zeichen; `api/order` lehnt Abholdatum vor heute (Belgien) + `orderLeadDays` mit `too_soon` ab. Preview: 13.10. → 400, 14.10. → 200.
-- **Studio deployt 2026-10-12** (nach `npx sanity login` des Betreibers): Beschreibung bis 320 Zeichen und `partnerStore.salesDays` sind jetzt im gehosteten Studio.
+**Benjamins Feedback 2026-10-12 und was daraus wurde**
+- **Beschreibungen:** Er schreibt pro Brot ein paar Sätze (Termin offen). Feld `description` ist jetzt `text`, bis 320 Zeichen, Studio deployt. Am einfachsten: er schickt die Texte per Mail, Claude spielt sie per Skript ein (`SANITY_WRITE_TOKEN`, Muster `studio/scripts/set-product-image.mjs`). Karten richten die Preiszeile unten aus, längere Texte sind also kein Layoutproblem.
+- **Preise:** Benjamin wollte eher keine (Preisvergleicher). Betreiber: nicht betonen, aber unangreifbar. Entscheidung: Preise bleiben (Preisangabe-RL 98/6/EG, Gesamtpreis vor Bestellung RL 2011/83/EU), auf den Karten klein und grau (`text-sm`, `#8B7A6B`). Belgischen Gesetzestext nicht verifiziert, kein Rechtsrat.
+- **Sammelbestellung:** Am 2026-10-12 auf Preview end-to-end getestet, 4 Bestellungen übers echte Formular an `intuitivmedia+test1..4@gmail.com` (Fr 16.10.: 3 Bestellungen, erwartet 3× Pain gris, 5× Croissant, 2× Baguette, 1× Fagnard, 1× Noix, Total caisse 39,70 €; Sa 17.10.: 1× Seigle, 5,70 €). Alle → 200. **Ob die Mails inhaltlich stimmen, hat der Betreiber noch nicht bestätigt.**
+- **Bestellfrist:** 2 Kalendertage ab 0:00 Uhr (`siteSettings.orderLeadDays`), Benjamin findet das gut. Seit 2026-10-12 prüft auch `api/order` (heute in Belgien + Frist, sonst 400 `too_soon`; ohne Sanity keine Prüfung).
 - Bestätigungsmail endet mit „À vendredi,“ (Abholtag) statt „À bientôt au fournil,“ (Wunsch Betreiber).
-- **Panne 2026-10-12 ~20:39 UTC:** Beim Warten auf den Production-Deploy 4× eine Testbestellung (Frist Test, 1 Baguette, Abholung Di 13.10.) an die alte Production geschickt → angenommen, 4 Bäcker-Mails „Mardi 13/10/2026 … Commandes" an Benjamin, Key `orders:2026-10-13` in Production-Redis (läuft nach 60 Tagen ab). Betreiber informiert, Entwarnung an Benjamin entworfen.
-- Preise: Betreiber will sie nicht betonen, aber rechtlich unangreifbar bleiben → Vorschlag: Preise je Produkt bleiben, optisch zurückgenommen.
-- Bestellfrist (2 Kalendertage, `siteSettings.orderLeadDays`, ab 0:00 Uhr) findet er in Ordnung.
+- Antwortmail an Benjamin (Deutsch) ist entworfen, Versand durch Betreiber.
+- **Panne 2026-10-12 ~20:39 UTC:** 4 Testbestellungen (Frist Test, 1 Baguette, Di 13.10.) gingen an die noch alte Production → 4 Bäcker-Mails „Mardi 13/10/2026 … Commandes“ an Benjamin, Key `orders:2026-10-13` in Production-Redis (läuft nach 60 Tagen ab, Dienstag wird jetzt abgelehnt). Entwarnung steht als P.S. im Mailentwurf. Lehre: siehe Stolpersteine.
+- Studio-Deploy klappt wieder (CLI eingeloggt als intuitivmedia@gmail.com).
 
 **Produkte (Sanity)**
 - Quelle der Angaben: Benjamins picdrop-Kommentare. **Produktname + Gewicht stehen im Namensfeld `author`, Zutaten im Text** (beide lesen). Zuordnung aller 137 Bilder: [MAILS-benjamin-produkte.md](MAILS-benjamin-produkte.md) → „Antworten Benjamin".
@@ -67,7 +65,8 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 
 ## Offene Aufgaben
 - **Go-live erst, wenn die Produktfotos fertig sind** (Entscheidung Betreiber 2026-10-05): dann Domain-Umzug nach Checkliste in PROJECT.md und danach Webhook-URL in Resend auf `https://bonpainfaitmain.be/api/resend-webhook` ändern.
-- **Preise von Benjamin:** alle Produkte mit vorläufig 6 € (Pain aux fruits, Petit épeautre, Épeautre sésame, Cramique, Tarte, Rustik lin, Pain blanc) und Thekenware mit Preis 0. Gewicht fehlt bei Pain aux fruits, Rustik lin, Pain blanc. Benjamin trägt evtl. selbst ein (Cookie hat er am 2026-10-11 auf 2 € gesetzt).
+- **Preise von Benjamin:** alle Produkte mit vorläufig 6 € (Pain aux fruits, Petit épeautre, Épeautre sésame, Cramique, Tarte, Rustik lin, Pain blanc) und Thekenware mit Preis 0. Gewicht fehlt bei Pain aux fruits, Rustik lin, Pain blanc. Benjamin trägt evtl. selbst ein (Cookie hat er am 2026-10-11 auf 2 € gesetzt). Preise bleiben sichtbar (siehe oben).
+- **Beschreibungstexte von Benjamin** einspielen, sobald sie da sind (bis 320 Zeichen je Brot).
 - **Go-live-Entscheidung:** Fotos sind fertig; nach Benjamins Durchsicht Domain-Umzug.
 - Domain-Umzug nach Checkliste in PROJECT.md; danach Infomaniak aufräumen (Gerätepasswort, `/private/bonpainfaitmain.be/`, alte Site) — jeweils nach Freigabe.
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
