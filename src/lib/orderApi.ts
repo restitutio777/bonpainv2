@@ -3,11 +3,14 @@
 // /api/order hits the SPA fallback: the POST returns index.html with 200 and
 // the order is silently lost. Post to the Vercel deployment directly unless
 // the site is already running on it.
-const VERCEL_ORDER_ENDPOINT = 'https://bonpainv2.vercel.app/api/order'
+const VERCEL_API = 'https://bonpainv2.vercel.app/api'
 
-export function orderEndpoint(): string {
+function apiEndpoint(name: 'order' | 'subscription'): string {
   const host = window.location.hostname
   const hasLocalApi =
     host.endsWith('.vercel.app') || host === 'localhost' || host === '127.0.0.1'
-  return hasLocalApi ? '/api/order' : VERCEL_ORDER_ENDPOINT
+  return hasLocalApi ? `/api/${name}` : `${VERCEL_API}/${name}`
 }
+
+export const orderEndpoint = () => apiEndpoint('order')
+export const subscriptionEndpoint = () => apiEndpoint('subscription')

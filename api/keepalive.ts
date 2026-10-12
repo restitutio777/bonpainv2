@@ -7,8 +7,12 @@
 // the database counted as active.
 //
 // Scheduled in vercel.json (crons). Vercel Hobby runs daily crons.
+//
+// It also repeats the nightly run of api/daily.ts (final lists, vacation
+// notices). That run is idempotent, so this only sends what the night missed.
 
 import { Redis } from '@upstash/redis'
+import { runDaily } from '../server/daily.js'
 
 type Req = { headers?: Record<string, string | string[] | undefined> }
 type Res = {
@@ -35,7 +39,16 @@ export default async function handler(req: Req, res: Res) {
     await redis.set('keepalive:last', stamp)
     const readBack = await redis.get<string>('keepalive:last')
     console.log('[keepalive] ok', readBack)
-    return res.status(200).json({ ok: true, at: readBack })
+
+    // Catch-up for the nightly run. Its failure must not hide the ping result.
+    let catchUp: unknown = null
+    try {
+      catchUp = await runDaily()
+      console.log('[keepalive] daily catch-up', JSON.stringify(catchUp))
+    } catch (e) {
+      console.error('[keepalive] daily catch-up failed', e)
+    }
+    return res.status(200).json({ ok: true, at: readBack, catchUp })
   } catch (e) {
     // Loud on purpose: if this starts failing, the digest is next.
     console.error('[keepalive] Redis ping failed', e)

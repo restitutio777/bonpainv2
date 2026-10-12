@@ -38,7 +38,7 @@ export default function CGV() {
   const hours = cmsHours.length > 0 ? cmsHours : FALLBACK_HOURS;
 
   return (
-    <LegalLayout title="Conditions Générales de Vente" description="Conditions générales de vente de Bon Pain Fait Main — commandes, retrait, prix et annulations pour la boulangerie artisanale à Waimes.">
+    <LegalLayout title="Conditions Générales de Vente" description="Conditions générales de vente de Bon Pain Fait Main — commandes, commandes régulières, retrait, prix et annulations pour la boulangerie artisanale à Waimes.">
       <p className="text-sm leading-[1.9] mb-10" style={{ color: '#6E4D32' }}>
         Les présentes conditions générales de vente régissent les commandes passées auprès de Bon pain fait main — Benjamin Ramakers.
       </p>
@@ -98,13 +98,42 @@ export default function CGV() {
         </p>
       </Section>
 
-      <Section title="8. Allergènes">
+      <Section title="8. Commandes régulières">
+        <p>
+          Lors d'une commande en ligne, vous pouvez cocher « Répéter cette commande chaque semaine ». La même commande est alors préparée <strong style={{ color: '#2D1F14' }}>chaque semaine, le même jour, jusqu'à ce que vous l'arrêtiez</strong>. Il n'y a ni durée minimale, ni frais, ni paiement à l'avance.
+        </p>
+        <ul className="mt-3 space-y-2 list-disc list-inside">
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Confirmation et lien personnel.</strong> L'e-mail de confirmation contient un lien personnel. Il permet à tout moment de changer les quantités, de sauter une semaine, de modifier la remarque ou d'arrêter la commande régulière. Gardez ce lien pour vous : toute personne qui le possède peut modifier la commande.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Délai.</strong> Une modification ou un arrêt vaut pour les retraits situés au moins {orderLeadDays} jours plus tard, comme pour une commande. Une commande déjà transmise à la boulangerie reste prévue ; elle peut être annulée par téléphone dans les conditions de l'article 7.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Prix et paiement.</strong> Chaque retrait est payé sur place, au prix affiché sur le site le jour du retrait. Si un prix change, vous pouvez modifier ou arrêter votre commande régulière à tout moment.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Produits indisponibles.</strong> Un produit hors saison ou retiré de l'assortiment n'est pas préparé ni facturé ce jour-là ; le reste de la commande est maintenu.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Fermetures et congés.</strong> Pendant une fermeture annoncée sur le site, les commandes régulières sont suspendues automatiquement. Vous en êtes informé par e-mail et la commande reprend d'elle-même ensuite.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Fin par la boulangerie.</strong> Bon pain fait main peut mettre fin à une commande régulière, notamment lorsqu'une commande n'est pas retirée sans avoir été annulée, ou si le jour de vente ou l'assortiment change. Vous en êtes informé par e-mail.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Données.</strong> Les informations de la commande régulière sont conservées tant qu'elle est active, puis effacées 60 jours après son arrêt (voir la politique de confidentialité).
+          </li>
+        </ul>
+      </Section>
+
+      <Section title="9. Allergènes">
         <p>
           Nos produits contiennent du gluten, des œufs, du beurre et d'autres allergènes potentiels. Pour toute demande spécifique liée à des allergies, veuillez nous contacter avant de passer commande. Nos produits sont fabriqués dans un atelier non certifié sans gluten.
         </p>
       </Section>
 
-      <Section title="9. Droit applicable et litiges">
+      <Section title="10. Droit applicable et litiges">
         <p>
           Les présentes CGV sont soumises au droit belge. En cas de litige, une solution amiable sera recherchée en priorité. À défaut, les tribunaux de l'arrondissement de Liège seront compétents.
         </p>

@@ -12,8 +12,9 @@
 //   Events  email.bounced, email.complained, email.failed, email.suppressed
 //   Then copy the signing secret into the Vercel env var RESEND_WEBHOOK_SECRET.
 //
-// Only mails tagged kind=confirmation (set in api/order.ts) trigger a notice,
-// so a notice that bounces itself can never start a loop.
+// Only mails tagged kind=confirmation (api/order.ts) or kind=subscription
+// (regular orders: changes, end, vacation notices) trigger a notice, so a
+// notice that bounces itself can never start a loop.
 
 import { Resend } from 'resend'
 import type { WebhookEventPayload } from 'resend'
@@ -39,8 +40,25 @@ function reasonOf(type: string, data: EmailEventData): string {
   return ''
 }
 
-function buildNotice(type: string, data: EmailEventData) {
+function buildNotice(type: string, data: EmailEventData, kind: string) {
   const to = data.to.join(', ')
+  if (kind === 'subscription') {
+    // Change, end or vacation notice about a regular order.
+    return {
+      subject: `⚠ E-mail sur une commande régulière non délivré — ${to}`,
+      text: [
+        `L'e-mail envoyé à ${to} au sujet de sa commande régulière n'est pas arrivé.`,
+        ``,
+        `Objet : ${data.subject}`,
+        type === 'email.complained' ? `Le destinataire l'a signalé comme spam.` : `Raison : ${reasonOf(type, data)}`,
+        ``,
+        `Si l'objet parle de congés, ce client ne sait peut-être pas que sa commande est suspendue.`,
+        `Si un numéro de téléphone figure dans la liste du jour, appelez-le.`,
+        ``,
+        `(Message automatique du site bonpainfaitmain.be)`,
+      ].join('\n'),
+    }
+  }
   if (type === 'email.complained') {
     return {
       subject: `⚠ Confirmation signalée comme spam — ${to}`,
@@ -110,7 +128,7 @@ export default {
     console.warn('[resend-webhook]', event.type, `kind=${kind}`)
 
     // Baker mails and the notices themselves: logged above, never mailed about.
-    if (kind !== 'confirmation') return new Response(null, { status: 204 })
+    if (kind !== 'confirmation' && kind !== 'subscription') return new Response(null, { status: 204 })
 
     // Test orders from preview deployments ("[TEST] " subject, see
     // api/order.ts) report to the same production webhook. Their notices
@@ -123,7 +141,7 @@ export default {
       return new Response(null, { status: 204 })
     }
 
-    const notice = buildNotice(event.type, data)
+    const notice = buildNotice(event.type, data, kind)
     try {
       const { error } = await resend.emails.send({
         from,

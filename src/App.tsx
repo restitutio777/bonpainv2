@@ -18,6 +18,7 @@ import PWAInstallPrompt from './components/PWAInstallPrompt'
 import MentionsLegales from './components/legal/MentionsLegales'
 import Confidentialite from './components/legal/Confidentialite'
 import CGV from './components/legal/CGV'
+import Subscription from './components/Subscription'
 
 function usePath() {
   const [path, setPath] = useState(window.location.pathname)
@@ -48,6 +49,7 @@ function AppContent() {
   if (path === '/mentions-legales') return <MentionsLegales />
   if (path === '/confidentialite') return <Confidentialite />
   if (path === '/cgv') return <CGV />
+  if (path === '/abonnement') return <Subscription />
 
   const modalProduct = products.find((p) => p._id === activeModal)
 

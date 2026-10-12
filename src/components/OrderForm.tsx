@@ -19,11 +19,18 @@ const FIELD_LABELS: Record<string, string> = {
 }
 
 /** What the customer reads when /api/order did not take the order. */
-function orderErrorMessage(
-  status: number,
-  data: { error?: string; field?: string; domain?: string; leadDays?: number } | null,
-  phone: string
-) {
+type OrderError = {
+  error?: string
+  field?: string
+  domain?: string
+  leadDays?: number
+  jour?: string
+  product?: string
+}
+
+const UNTICK = 'décochez « Répéter cette commande chaque semaine »'
+
+function orderErrorMessage(status: number, data: OrderError | null, phone: string) {
   const call = `Réessayez dans quelques minutes ou appelez-nous au ${phone}.`
   switch (data?.error) {
     case 'email_domain':
@@ -36,6 +43,13 @@ function orderErrorMessage(
         : 'Certaines informations semblent incorrectes. Merci de vérifier le formulaire.'
     case 'too_soon':
       return `Merci de prévoir au moins ${data.leadDays ?? 2} jours entre la commande et le retrait. Choisissez une date plus tardive ou appelez-nous au ${phone}.`
+    case 'subscription_exists':
+      return `Vous avez déjà une commande régulière le ${data.jour ?? 'même jour'}. Pour la modifier, utilisez le lien reçu par e-mail, ou ${UNTICK} pour une commande simple.`
+    case 'saturday_only':
+      return `${data.product ?? 'Ce produit'} n'est préparé que le samedi. Retirez-le pour une commande régulière de ce jour, ou ${UNTICK}.`
+    case 'subscription_unavailable':
+    case 'subscription_full':
+      return `Les commandes régulières sont momentanément indisponibles. ${UNTICK.charAt(0).toUpperCase() + UNTICK.slice(1)} pour envoyer une commande simple, ou appelez-nous au ${phone}.`
     case 'products_changed':
       return 'Notre liste de pains vient de changer. Rechargez la page et refaites votre commande.'
     case 'rate_limited':
@@ -45,6 +59,13 @@ function orderErrorMessage(
   }
   if (status === 429) return `Trop de commandes envoyées en peu de temps. ${call}`
   return `Votre commande n'a pas pu être transmise. ${call}`
+}
+
+/** "vendredi 23 octobre" for a YYYY-MM-DD date. */
+function formatDateFr(iso: string): string {
+  return new Intl.DateTimeFormat('fr-BE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
+    new Date(`${iso}T00:00:00Z`)
+  )
 }
 
 export default function OrderForm() {
@@ -106,6 +127,8 @@ export default function OrderForm() {
   const [jour, setJour] = useState('')
   const [date, setDate] = useState('')
   const [remarques, setRemarques] = useState('')
+  const [subscribe, setSubscribe] = useState(false)
+  const [regular, setRegular] = useState<{ manageUrl: string; firstDate: string } | null>(null)
 
   const [submitting, setSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
@@ -178,6 +201,7 @@ export default function OrderForm() {
           remarques,
           items: orderLines,
           total: totalVal,
+          ...(subscribe ? { subscribe: true } : {}),
         }),
       })
       // Success only on the API's own answer: a host without the function
@@ -185,6 +209,11 @@ export default function OrderForm() {
       const data = await res.json().catch(() => null)
       if (res.ok && data?.ok === true) {
         setConfirmationSent(data.confirmation !== 'failed')
+        setRegular(
+          typeof data.manageUrl === 'string' && typeof data.firstDate === 'string'
+            ? { manageUrl: data.manageUrl, firstDate: data.firstDate }
+            : null
+        )
         setSubmitSuccess(true)
         clearCart()
       } else {
@@ -208,6 +237,8 @@ export default function OrderForm() {
     setJour('')
     setDate('')
     setRemarques('')
+    setSubscribe(false)
+    setRegular(null)
     clearCart()
   }
 
@@ -311,6 +342,28 @@ export default function OrderForm() {
                   </a>{' '}
                   pour confirmer votre commande.
                 </p>
+              )}
+              {regular && (
+                <div
+                  className="text-sm leading-[1.8] mb-8 mx-auto rounded-xl px-6 py-5"
+                  style={{ color: '#6E4D32', maxWidth: '440px', background: '#FDF8F3', border: '1px solid #E8D9C8' }}
+                >
+                  <p className="mb-3">
+                    <strong style={{ color: '#2D1F14' }}>Commande régulière enregistrée</strong> : chaque {jour}, prochain
+                    retrait le {formatDateFr(regular.firstDate)}.{' '}
+                    {confirmationSent
+                      ? 'Le lien pour la modifier ou l’arrêter est dans l’e-mail.'
+                      : 'Gardez ce lien : c’est votre accès pour la modifier ou l’arrêter.'}
+                  </p>
+                  <a
+                    href={regular.manageUrl}
+                    className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest"
+                    style={{ color: '#A67C52' }}
+                  >
+                    <ArrowRight size={14} />
+                    Gérer ma commande régulière
+                  </a>
+                </div>
               )}
               <button
                 type="button"
@@ -622,6 +675,37 @@ export default function OrderForm() {
                     onBlur={handleBlur}
                   />
                 </div>
+
+                {/* The wording mirrors CONSENT_TEXT in api/order.ts, stored with the regular order. */}
+                <label
+                  htmlFor="subscribe"
+                  className="flex items-start gap-3 mb-8 px-5 py-4 rounded-xl cursor-pointer text-sm leading-[1.6]"
+                  style={{ background: '#FBF3EC', border: '1px solid #E8D9C8', color: '#6E4D32' }}
+                >
+                  <input
+                    id="subscribe"
+                    type="checkbox"
+                    checked={subscribe}
+                    disabled={!!isDisabled}
+                    onChange={(e) => setSubscribe(e.target.checked)}
+                    className="mt-1 w-4 h-4 flex-shrink-0"
+                    style={{ accentColor: '#A67C52' }}
+                  />
+                  <span>
+                    <strong style={{ color: '#2D1F14' }}>
+                      Répéter cette commande chaque semaine
+                      {jour ? `, le ${jour}` : ', le même jour'}
+                    </strong>
+                    , jusqu&rsquo;à ce que je l&rsquo;arrête.
+                    <span className="block text-xs mt-1" style={{ color: '#8B7A6B' }}>
+                      Sans engagement, payé à chaque retrait. Vous recevez un lien pour changer les quantités, sauter
+                      une semaine ou arrêter. Suspendu automatiquement pendant nos congés.{' '}
+                      <a href="/cgv" target="_blank" rel="noopener" style={{ color: '#A67C52' }}>
+                        Conditions (CGV, art. 8)
+                      </a>
+                    </span>
+                  </span>
+                </label>
 
                 {submitError && (
                   <div

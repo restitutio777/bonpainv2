@@ -41,6 +41,7 @@ export default function Confidentialite() {
           <li>Adresse e-mail</li>
           <li>Numéro de téléphone (optionnel)</li>
           <li>Contenu de la commande et remarques éventuelles</li>
+          <li>Pour une commande régulière : le jour de retrait choisi, les semaines où vous ne venez pas, et la date à laquelle vous avez accepté la commande régulière</li>
         </ul>
       </Section>
 
@@ -50,6 +51,7 @@ export default function Confidentialite() {
         </p>
         <ul className="mt-3 space-y-1 list-disc list-inside">
           <li>Traiter et confirmer votre commande</li>
+          <li>Préparer votre commande régulière chaque semaine, vous permettre de la modifier, et vous prévenir lorsqu'elle est suspendue (congés), modifiée ou arrêtée</li>
           <li>Vous contacter en cas de question relative à votre commande</li>
         </ul>
         <p className="mt-3">
@@ -78,10 +80,10 @@ export default function Confidentialite() {
             <strong style={{ color: '#2D1F14' }}>Vercel Inc.</strong> (440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis) — hébergement du site et traitement du formulaire de commande, dans un centre de données à Francfort (Allemagne). Vercel Web Analytics compte les visites de façon anonyme, sans cookies.
           </li>
           <li>
-            <strong style={{ color: '#2D1F14' }}>Resend</strong> (Plus Five Five, Inc., États-Unis) — envoi de la commande à la boulangerie et de l'e-mail de confirmation. L'envoi passe par des serveurs situés en Irlande.
+            <strong style={{ color: '#2D1F14' }}>Resend</strong> (Plus Five Five, Inc., États-Unis) — envoi de la commande à la boulangerie, de l'e-mail de confirmation et des e-mails liés aux commandes régulières. L'envoi passe par des serveurs situés en Irlande.
           </li>
           <li>
-            <strong style={{ color: '#2D1F14' }}>Upstash</strong> (États-Unis) — enregistrement temporaire des commandes pour établir la liste de chaque jour de retrait, sur des serveurs situés à Francfort (Allemagne).
+            <strong style={{ color: '#2D1F14' }}>Upstash</strong> (États-Unis) — enregistrement des commandes et des commandes régulières pour établir la liste de chaque jour de retrait, sur des serveurs situés à Francfort (Allemagne).
           </li>
           <li>
             <strong style={{ color: '#2D1F14' }}>Google</strong> — la boîte e-mail de la boulangerie (Gmail), où arrivent les commandes.
@@ -98,6 +100,7 @@ export default function Confidentialite() {
       <Section title="Durée de conservation">
         <ul className="space-y-1 list-disc list-inside">
           <li>Liste des commandes du formulaire : effacée automatiquement 60 jours après la dernière commande pour le même jour de retrait.</li>
+          <li>Commandes régulières : conservées tant qu'elles sont actives, puis effacées automatiquement 60 jours après leur arrêt.</li>
           <li>Journaux techniques de l'hébergeur : 1 heure.</li>
           <li>E-mails de commande dans la boîte de la boulangerie : le temps nécessaire au traitement de la commande, puis pendant la durée légale de conservation comptable (7 ans pour les données de facturation).</li>
         </ul>

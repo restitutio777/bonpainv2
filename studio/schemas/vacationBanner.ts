@@ -9,14 +9,14 @@ export default defineType({
       name: 'isActive',
       title: 'Activer le bandeau',
       description:
-        "Coche cette case pour afficher un bandeau de vacances en haut de toutes les pages du site.",
+        "Coche cette case pour afficher un bandeau de vacances en haut de toutes les pages du site. Tant qu'il est actif, les commandes régulières sont suspendues pendant les dates de fermeture ci-dessous, et chaque client concerné reçoit un e-mail (une seule fois, la nuit suivante). Elles reprennent toutes seules après.",
       type: 'boolean',
       initialValue: false,
     }),
     defineField({
       name: 'startDate',
       title: 'Premier jour de fermeture',
-      description: "Date à partir de laquelle la boulangerie est fermée.",
+      description: "Date à partir de laquelle la boulangerie est fermée. Indispensable pour suspendre les commandes régulières aux bons jours (sans dates, elles sont suspendues tant que le bandeau est actif).",
       type: 'date',
     }),
     defineField({
