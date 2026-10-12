@@ -105,15 +105,15 @@ export default function PWAInstallPrompt() {
           </p>
           {mode === 'prompt' ? (
             <p className="text-xs leading-snug mt-0.5" style={{ color: '#BFA07E' }}>
-              Sur votre écran d&rsquo;accueil, pour commander en un geste.
+              Sur votre écran d&rsquo;accueil.
             </p>
           ) : (
             <p className="text-xs leading-snug mt-0.5" style={{ color: '#BFA07E' }}>
               Touchez{' '}
               <Share size={13} className="inline -mt-0.5" aria-label="Partager" style={{ color: '#FAF6F1' }} />{' '}
               <span style={{ color: '#FAF6F1' }}>Partager</span>, puis{' '}
-              <span style={{ color: '#FAF6F1' }}>« Sur l&rsquo;écran d&rsquo;accueil »</span>. Sur iPhone, Partager se
-              trouve parfois sous « ••• ».
+              <span style={{ color: '#FAF6F1' }}>«&nbsp;Sur l&rsquo;écran d&rsquo;accueil&nbsp;»</span>. Sur iPhone,
+              Partager se trouve parfois sous «&nbsp;•••&nbsp;».
             </p>
           )}
         </div>
