@@ -6,11 +6,10 @@ import fourJpg from '../assets/mood/four.jpg'
 import lin800 from '../assets/mood/lin-800.webp'
 import lin1200 from '../assets/mood/lin-1200.webp'
 import linJpg from '../assets/mood/lin.jpg'
-import baguettes800 from '../assets/mood/baguettes-800.webp'
-import baguettes1200 from '../assets/mood/baguettes-1200.webp'
-import baguettesJpg from '../assets/mood/baguettes.jpg'
 
-// Small tiles from the shoot (09.10.2026), shown as a grid below the chapters.
+// Petite série du fournil (shooting du 09.10.2026), dans l'ordre du travail :
+// pâtons au repos → grignage → pains cuits → au comptoir. Rien qui répète les
+// grandes photos (four, couche en lin) ni les cartes produits.
 const FOURNIL_FILES = import.meta.glob('../assets/fournil/*.webp', {
   eager: true,
   import: 'default',
@@ -20,14 +19,10 @@ const fournil = (n: string) => ({
   srcSet: `${FOURNIL_FILES[`../assets/fournil/${n}-400.webp`]} 400w, ${FOURNIL_FILES[`../assets/fournil/${n}-800.webp`]} 800w`,
 })
 const FOURNIL = [
-  { ...fournil('121'), alt: 'Benjamin grigne les pâtons avant la cuisson' },
   { ...fournil('180'), alt: 'Pâtons au repos dans les bannetons' },
-  { ...fournil('004'), alt: 'Pâte au levain pendant la fermentation' },
-  { ...fournil('033'), alt: 'Benjamin devant le four, les pains en cuisson' },
+  { ...fournil('121'), alt: 'Benjamin grigne les pâtons avant la cuisson' },
+  { ...fournil('017'), alt: 'Pains au levain sortis du four, sur la grille du chariot' },
   { ...fournil('069'), alt: 'Nadia au comptoir de la boulangerie à Sourbrodt' },
-  { ...fournil('079'), alt: 'Vitrine de tartes, viennoiseries et gaufres' },
-  { ...fournil('210'), alt: 'Croissants et pains au chocolat à la sortie du four' },
-  { ...fournil('017'), alt: 'Pains au levain sur la grille du chariot' },
 ]
 // Two columns on phones, four from 640 px in a 1100 px container.
 const FOURNIL_SIZES = '(min-width: 1100px) 260px, (min-width: 640px) 23vw, 46vw'
@@ -37,9 +32,8 @@ type Mood = { webp: string; jpg: string; alt: string }
 // The column is 480 px wide on desktop and the full width on phones.
 const MOOD_SIZES = '(min-width: 1100px) 480px, (min-width: 1024px) 44vw, 92vw'
 
-// Trois photos, dans l'ordre du récit : Benjamin au four → Benjamin au
-// fournil → le pain d'aujourd'hui. Nadia et le reste du fournil sont dans la
-// petite grille plus bas.
+// Deux grandes photos, dans l'ordre du récit : la Baraque Michel (Benjamin au
+// four) → l'atelier de Sourbrodt (Benjamin au fournil).
 const MOOD: Mood[] = [
   {
     webp: `${four800} 800w, ${four1200} 1200w`,
@@ -51,15 +45,11 @@ const MOOD: Mood[] = [
     jpg: linJpg,
     alt: 'Benjamin au fournil, il prépare la couche en lin pour les pâtons',
   },
-  {
-    webp: `${baguettes800} 800w, ${baguettes1200} 1200w`,
-    jpg: baguettesJpg,
-    alt: 'Baguettes tradition dorées, alignées sur la grille à la sortie du four',
-  },
 ]
 
 export default function About() {
-  const { content } = useSanity()
+  const { content, settings } = useSanity()
+  const facebookUrl = settings?.facebookUrl
 
   const label = content?.aboutLabel || 'Notre histoire'
   const title = content?.aboutTitle || 'Benjamin & Nadia,'
@@ -206,14 +196,25 @@ export default function About() {
           })}
         </div>
 
-        {/* Petite grille : le fournil au quotidien */}
-        <div className="animate-on-scroll mt-16 lg:mt-28">
-          <div
-            className="text-xs font-semibold uppercase tracking-[0.15em] mb-5 text-center"
-            style={{ color: '#A67C52' }}
-          >
-            Au fournil
+        {/* Citation de clôture */}
+        {closing && (
+          <div className="animate-on-scroll text-center max-w-[760px] mx-auto mt-16 lg:mt-28">
+            <div className="mx-auto mb-8 h-px w-16" style={{ background: '#D4BFA5' }} />
+            <p
+              className="font-display italic"
+              style={{
+                fontSize: 'clamp(1.4rem, 2.4vw, 2rem)',
+                lineHeight: 1.4,
+                color: '#2D1F14',
+                textWrap: 'balance',
+              }}
+            >
+              {closing}
+            </p>
           </div>
+        )}
+        {/* Petite série du fournil + Facebook */}
+        <div className="animate-on-scroll mt-16 lg:mt-24">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {FOURNIL.map((img) => (
               <div
@@ -235,25 +236,44 @@ export default function About() {
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Citation de clôture */}
-        {closing && (
-          <div className="animate-on-scroll text-center max-w-[760px] mx-auto mt-16 lg:mt-28">
-            <div className="mx-auto mb-8 h-px w-16" style={{ background: '#D4BFA5' }} />
-            <p
-              className="font-display italic"
-              style={{
-                fontSize: 'clamp(1.4rem, 2.4vw, 2rem)',
-                lineHeight: 1.4,
-                color: '#2D1F14',
-                textWrap: 'balance',
-              }}
-            >
-              {closing}
-            </p>
-          </div>
-        )}
+          {facebookUrl && (
+            <div className="text-center mt-10">
+              <p className="mb-5" style={{ fontSize: '1.05rem', color: '#6E4D32' }}>
+                La vie du fournil au quotidien, le pain du moment et nos nouvelles.
+              </p>
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-semibold uppercase tracking-[0.08em] no-underline transition-colors duration-200"
+                style={{ background: '#A67C52', color: 'white' }}
+                onMouseEnter={(e) => {
+                  ;(e.currentTarget as HTMLElement).style.background = '#8B6340'
+                }}
+                onMouseLeave={(e) => {
+                  ;(e.currentTarget as HTMLElement).style.background = '#A67C52'
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={18}
+                  height={18}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+                Suivez-nous sur Facebook
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   )
