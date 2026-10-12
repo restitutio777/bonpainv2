@@ -147,7 +147,7 @@ export default function PWAInstallPrompt() {
       if (e.key === 'Escape') later()
     }
     window.addEventListener('keydown', onKey)
-    primary.current?.focus()
+    primary.current?.focus({ preventScroll: true })
     return () => {
       document.body.style.overflow = overflow
       window.removeEventListener('keydown', onKey)
@@ -205,21 +205,24 @@ export default function PWAInstallPrompt() {
           </h2>
         </div>
 
-        <p className="text-[17px] leading-relaxed mb-4" style={{ color: '#4A3321' }}>
-          Ajoutez Bon Pain à l&rsquo;écran d&rsquo;accueil de votre téléphone. Une petite icône apparaît à côté de vos
-          autres applications : vous la touchez, et vous pouvez commander votre pain tout de suite.
+        <p className="text-[17px] leading-relaxed mb-5" style={{ color: '#4A3321' }}>
+          Une icône sur l&rsquo;écran d&rsquo;accueil de votre téléphone : vous la touchez, et vous commandez votre
+          pain. Plus besoin de chercher notre site.
         </p>
 
-        <ul className="space-y-2 mb-6">
-          {['Plus besoin de chercher notre site', 'Votre commande en quelques secondes', 'Gratuit, sans inscription'].map(
-            (t) => (
-              <li key={t} className="flex items-center gap-3 text-base" style={{ color: '#2D1F14' }}>
-                <Check size={20} className="flex-shrink-0" style={{ color: '#5F7F4E' }} />
-                {t}
-              </li>
-            )
-          )}
-        </ul>
+        {/* With steps to show (iPhone, Facebook) the list would push them off a small screen. */}
+        {mode === 'prompt' && (
+          <ul className="space-y-2 mb-6">
+            {['Votre commande en quelques secondes', 'Comme une application, sans store', 'Gratuit, sans inscription'].map(
+              (t) => (
+                <li key={t} className="flex items-center gap-3 text-base" style={{ color: '#2D1F14' }}>
+                  <Check size={20} className="flex-shrink-0" style={{ color: '#5F7F4E' }} />
+                  {t}
+                </li>
+              )
+            )}
+          </ul>
+        )}
 
         {mode === 'ios' && (
           <div className="rounded-2xl p-5 mb-6" style={{ background: 'white', border: '1px solid #E8D9C8' }}>
