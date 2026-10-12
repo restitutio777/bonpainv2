@@ -7,6 +7,7 @@
  *
  * Verlauf:
  *   2026-10-12  product-epeautre-sesame, Bild vom Betreiber (Sesamlaib), ersetzt 066
+ *   2026-10-12  product-croissant → 182, product-pain-chocolat → 197 (mehrere Stück im Bild, Wunsch Betreiber)
  */
 import { createReadStream } from 'node:fs'
 import { basename } from 'node:path'
