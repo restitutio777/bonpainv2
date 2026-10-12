@@ -157,7 +157,7 @@ Optional: `_dmarc` um `rua=mailto:…` ergänzen, damit Berichte über abgelehnt
 - ~~Panettone-Saison abgelaufen~~ → am 2026-08-24 auf Ostern 2027 gesetzt (12.03.–29.03.2027, `studio/scripts/set-panettone-season-2027.mjs`). Karte zeigt jetzt „Disponible dès le 12 mars".
 - ~~`siteSettings.partnerStores` enthielt Platzhalter~~ → am 2026-08-24 mit `studio/scripts/fix-partner-stores.mjs` auf die echten Partner korrigiert (Quelle: bonpainfaitmain.be).
 - Zwei Produkte der alten Site fehlen im Dataset: **Épeautre sésame** und **Cramique** (Cramique mit fertigem Beschreibungstext auf der alten Site). Preise unbekannt → beim Bäcker erfragen, dann anlegen.
-- **Studio-Deploy steht aus:** `partnerStore.salesDays` ist neu im Schema. Der lokal eingeloggte Sanity-CLI-Account hat keine Rechte an Projekt 5f1udd5l (`Forbidden … sanity.project.read`). Vor dem Deploy: `cd studio && npx sanity login` mit dem Account der Org `ovS9cwHZj`, dann `npx sanity deploy`. Die Website selbst zeigt die Verkaufstage bereits — nur im Studio ist das Feld bis dahin unsichtbar.
+- ✅ **Studio deployt (2026-10-12)**, inkl. `partnerStore.salesDays` und Beschreibung bis 320 Zeichen. Vorher fehlte der CLI-Login mit dem richtigen Konto (`npx sanity login`).
 
 
 | Wer | Was |

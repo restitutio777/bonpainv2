@@ -11,7 +11,8 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 - Fragt, ob die **Sammelbestellung mit mehreren Adressen end-to-end getestet** ist: bis dahin nur lokal gegen Mocks. **2026-10-12 auf Preview getestet** (Branch `claude/test-sammelbestellung`, leerer Commit): 4 Bestellungen übers echte Formular an `intuitivmedia+test1..4@gmail.com`, Fr 16.10. (3 Bestellungen, erwartet 3× Pain gris, 5× Croissant, 2× Baguette, 1× Fagnard, 1× Noix, Total caisse 39,70 €) und Sa 17.10. (1× Seigle, 5,70 €). Alle 4 → 200, Bestätigung verschickt. Inhalt der Mails prüft der Betreiber im Postfach.
 - Die Mail mit den Vorteilen v2 hat der Betreiber vor dem Feedback geschickt; das Feedback berücksichtigt sie schon.
 - **Umgesetzt 2026-10-12 (`7da7d17`, live auf vercel.app):** Preis auf den Karten klein und gedeckt (Pflicht bleibt erfüllt), Preiszeile unten bündig; Studio-Feld `description` mehrzeilig bis 320 Zeichen; `api/order` lehnt Abholdatum vor heute (Belgien) + `orderLeadDays` mit `too_soon` ab. Preview: 13.10. → 400, 14.10. → 200.
-- **Studio-Deploy weiter blockiert** (`Forbidden … sanity.project.read`, obwohl `users/me` = intuitivmedia@gmail.com und Projekt-API 200). Bis zum Deploy gilt im gehosteten Studio noch 140 Zeichen → Benjamins Texte per Skript einspielen (`SANITY_WRITE_TOKEN`).
+- **Studio deployt 2026-10-12** (nach `npx sanity login` des Betreibers): Beschreibung bis 320 Zeichen und `partnerStore.salesDays` sind jetzt im gehosteten Studio.
+- Bestätigungsmail endet mit „À vendredi,“ (Abholtag) statt „À bientôt au fournil,“ (Wunsch Betreiber).
 - **Panne 2026-10-12 ~20:39 UTC:** Beim Warten auf den Production-Deploy 4× eine Testbestellung (Frist Test, 1 Baguette, Abholung Di 13.10.) an die alte Production geschickt → angenommen, 4 Bäcker-Mails „Mardi 13/10/2026 … Commandes" an Benjamin, Key `orders:2026-10-13` in Production-Redis (läuft nach 60 Tagen ab). Betreiber informiert, Entwarnung an Benjamin entworfen.
 - Preise: Betreiber will sie nicht betonen, aber rechtlich unangreifbar bleiben → Vorschlag: Preise je Produkt bleiben, optisch zurückgenommen.
 - Bestellfrist (2 Kalendertage, `siteSettings.orderLeadDays`, ab 0:00 Uhr) findet er in Ordnung.
@@ -72,7 +73,6 @@ Neue Website der Bäckerei Bon Pain Fait Main (Benjamin Ramakers, Waimes/Sourbro
 - v1-Entscheidungen beim Betreiber: Aufbewahrung des alten Bestellprotokolls (Vorschlag 90 Tage), Netlify-Angabe in v1 `public/datenschutz.html` korrigieren?
 - Sanity-Entwürfe, die der Betreiber im Studio selbst verwerfen muss (Claude löscht nicht endgültig): (1) `drafts.0620e271-37a6-4460-9dbb-033622918a79` „Pain au seigle", leer, keine Referenzen, gehört nicht zu `product-pain-seigle`. (2) `drafts.siteSettings` vom 2026-05-07: enthält noch die Platzhalter-Partnerläden (Epicerie du Village, Bio-Laden Eifel, Ferme-Fromagerie). **Nicht veröffentlichen**, sonst überschreibt er die echten Partnerläden und löscht die Facebook-URL; im Studio „Änderungen verwerfen".
 - Datenschutzseite: Sätze zu Frankfurt (Vercel, Upstash) am 2026-10-09 geändert, gehört zur ausstehenden Freigabe der Rechtstexte.
-- Studio-Deploy für `partnerStore.salesDays` steht laut PROJECT.md noch aus (CLI-Login mit Account der Org `ovS9cwHZj`).
 
 ## Stolpersteine
 - **Nie gegen Production `/api/order` testen, solange der neue Deploy nicht `READY` ist** (per MCP `list_deployments` prüfen, nicht per Polling mit Testbestellung). Die alte Version nimmt die Bestellung an und mailt Benjamin. Production-Tests nur mit Payloads, die in alter UND neuer Version abgelehnt werden.

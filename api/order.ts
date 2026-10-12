@@ -276,7 +276,7 @@ function buildCustomerConfirmation(order: OrderPayload) {
     ``,
     `Pour modifier ou annuler, répondez simplement à cet email ou appelez le +32 493 21 09 25.`,
     ``,
-    `À bientôt au fournil,`,
+    `À ${pickup.jour},`, // "À vendredi,": the pickup day, already checked against WEEKDAYS
     `Benjamin & Nadia`,
   ].join('\n')
 
@@ -299,7 +299,7 @@ function buildCustomerConfirmation(order: OrderPayload) {
         Pour modifier ou annuler, répondez simplement à cet email
         ou appelez le <a href="tel:+32493210925">+32 493 21 09 25</a>.
       </p>
-      <p>À bientôt au fournil,<br>Benjamin &amp; Nadia</p>
+      <p>À ${escapeHtml(pickup.jour)},<br>Benjamin &amp; Nadia</p>
     </div>
   `
 
