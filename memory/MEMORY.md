@@ -23,9 +23,10 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 - Offen für Benjamin: Regel bei Nichtabholung (CGV: Bäckerei darf beenden, per Link in der Liste), ob 25.12. o. ä. per Urlaubsbanner geschlossen wird.
 
 **PWA (2026-10-12)**
-- Android/Chrome/Edge: Banner bzw. Footer-Button „Installer“ öffnet direkt den Installationsdialog des Browsers (ein Tipp + Bestätigung des Browsers, die keine Seite umgehen kann). iPhone/iPad: Safari hat keine Installations-API → Banner zeigt den Weg (Partager → « Sur l'écran d'accueil »). In-App-Browser (Facebook, Instagram) können nicht installieren → kein Banner.
-- Banner auf Handys nach 1 Bildschirm Scrollen oder 15 s, nach Schließen 30 Tage Ruhe. Neue maskable Icons + Apple-Icon ohne transparente Ecken (erzeugt mit Pillow aus `icon-512.png`, Skript lag im Scratchpad).
-- Stolperstein beim Testen: der Service Worker liefert nach einem Deploy erst die alte Version; einmal neu laden.
+- Vollflächige Einblendung (Bottom-Sheet, große Schrift, Grund: Brot vom Handy aus mit einem Tipp bestellen), Wunsch Betreiber: „invasiv, aber schön, auch für ältere Leute“. Erscheint auf Handys 6 s nachdem die Brote ins Bild kommen (nicht beim Tippen im Formular, Rückfall 25 s) und 2,5 s nach einer Bestellung; einmal pro Besuch; „Plus tard“ = 14 Tage Ruhe (nach Bestellung 1 Tag). Dauerhaft: Knopf „Ajouter à mon téléphone“ im Handy-Menü und Footer.
+- Android/Chrome/Edge: Knopf öffnet direkt den Installationsdialog (ein Tipp + Bestätigung des Browsers). iPhone/iPad: Safari hat keine API → 3 nummerierte Schritte (Partager → « Sur l'écran d'accueil » → Ajouter). Facebook/Instagram-Browser: erst „Ouvrir dans le navigateur“.
+- Neue maskable Icons + Apple-Icon ohne transparente Ecken (Pillow aus `icon-512.png`).
+- Testen: Service Worker liefert nach Deploy erst die alte Version (neu laden). Im ausgeblendeten Browser-Pane feuern IntersectionObserver nicht (Screenshot erzwingt Rendern) – kein Fehler der Seite.
 
 **Produkte (Sanity)**
 - Quelle der Angaben: Benjamins picdrop-Kommentare. **Produktname + Gewicht stehen im Namensfeld `author`, Zutaten im Text** (beide lesen). Zuordnung aller 137 Bilder: [MAILS-benjamin-produkte.md](MAILS-benjamin-produkte.md) → „Antworten Benjamin".
