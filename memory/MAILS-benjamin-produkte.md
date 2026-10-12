@@ -55,7 +55,7 @@ Rest nach Augenschein zugeordnet (2026-10-11, Kontaktbogen aller 137 Bilder):
 | Bilder | Produkt |
 |---|---|
 | 074–076, 112, 154, 178, 179, 219 | Baguette (112 = einzelne Baguette, war „L") |
-| 063, 065, 066, 068 (G) | Épeautre sésame, per Ausschluss: einziger Laib ohne Namen, Sesam auf dem Foto nicht sicher erkennbar |
+| 063, 065, 066, 068 (G) | **nicht** Épeautre sésame (Betreiber 2026-10-12, Sorte offen); Épeautre sésame hat ein eigenes Bild vom Betreiber |
 | 094, 095, 198 | Cramique |
 | 088, 089, 091, 191 (M), 192 (N, Heidelbeere) | Tarte du jour |
 | 086, 087, 193 (O) | Tartelettes |
