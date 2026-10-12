@@ -10,7 +10,9 @@ import { useSyncExternalStore } from 'react'
 //
 // Safari on iPhone/iPad has no such event and no API at all: installing is
 // only possible through Share → "Sur l'écran d'accueil". The best a site can
-// do there is show the way.
+// do there is show the way. The in-app browsers of Facebook and Instagram
+// (where many customers arrive) cannot install at all: the page first has to
+// be opened in the real browser.
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -35,7 +37,7 @@ if (typeof window !== 'undefined') {
   })
 }
 
-export type InstallMode = 'prompt' | 'ios' | 'none'
+export type InstallMode = 'prompt' | 'ios' | 'inapp' | 'none'
 
 export function isStandalone(): boolean {
   return (
@@ -58,7 +60,8 @@ export function isInAppBrowser(): boolean {
 function currentMode(): InstallMode {
   if (installed || isStandalone()) return 'none'
   if (deferred) return 'prompt'
-  if (isIOS() && !isInAppBrowser()) return 'ios'
+  if (isInAppBrowser()) return 'inapp'
+  if (isIOS()) return 'ios'
   return 'none'
 }
 
@@ -85,6 +88,16 @@ export async function promptInstall(): Promise<'accepted' | 'dismissed' | 'unava
   return outcome
 }
 
-// Lets any button (footer, menu) open the install banner, even after it was dismissed.
+// Asks the install overlay (PWAInstallPrompt) to open.
+//   manual  — a button the visitor pressed: always opens
+//   ordered — right after an order: opens unless closed in the last day
+export type InstallReason = 'manual' | 'ordered'
 export const OPEN_INSTALL_EVENT = 'bonpain:install'
-export const openInstall = () => window.dispatchEvent(new Event(OPEN_INSTALL_EVENT))
+export const openInstall = (reason: InstallReason = 'manual') =>
+  window.dispatchEvent(new CustomEvent<InstallReason>(OPEN_INSTALL_EVENT, { detail: reason }))
+
+/** For buttons: Chrome/Android straight to the browser's dialog (one tap), otherwise the explaining overlay. */
+export function installFromButton(mode: InstallMode) {
+  if (mode === 'prompt') void promptInstall()
+  else openInstall('manual')
+}

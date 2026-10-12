@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { ShoppingBag, Menu, X, Phone } from 'lucide-react'
+import { ShoppingBag, Menu, X, Phone, Smartphone } from 'lucide-react'
 import { useSanity } from '../context/SanityContext'
+import { installFromButton, useInstallMode } from '../lib/pwaInstall'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const installMode = useInstallMode()
   const { settings } = useSanity()
 
   const bakeryName = settings?.bakeryName || 'Bon Pain Fait Main'
@@ -148,6 +150,20 @@ export default function Nav() {
             {link.label}
           </a>
         ))}
+        {installMode !== 'none' && (
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false)
+              installFromButton(installMode)
+            }}
+            className="mt-8 inline-flex items-center justify-center gap-3 h-14 rounded-full text-base font-semibold text-white"
+            style={{ background: '#A67C52' }}
+          >
+            <Smartphone size={20} />
+            Ajouter à mon téléphone
+          </button>
+        )}
       </div>
     </>
   )

@@ -1,6 +1,6 @@
 import { Download } from 'lucide-react'
 import { useSanity } from '../context/SanityContext'
-import { openInstall, promptInstall, useInstallMode } from '../lib/pwaInstall'
+import { installFromButton, useInstallMode } from '../lib/pwaInstall'
 
 const navLinks = [
   { href: '#products', label: 'Nos pains' },
@@ -112,17 +112,17 @@ export default function Footer() {
         >
           <span>&copy; {new Date().getFullYear()} {bakeryName} — Tous droits réservés</span>
           {installMode !== 'none' && (
-            // Chrome/Android: straight to the browser's install dialog. iPhone: the how-to banner.
+            // Chrome/Android: straight to the browser's install dialog. iPhone, Facebook: the how-to overlay.
             <button
               type="button"
-              onClick={() => (installMode === 'prompt' ? promptInstall() : openInstall())}
+              onClick={() => installFromButton(installMode)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
               style={{ background: 'rgba(255,255,255,0.05)', color: '#F5EDE3' }}
               onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)')}
               onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)')}
             >
               <Download size={14} />
-              Installer l&rsquo;application
+              Ajouter à mon téléphone
             </button>
           )}
           <div className="flex gap-4">

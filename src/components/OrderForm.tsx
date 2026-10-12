@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext'
 import { isOrderable } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 import { orderEndpoint } from '../lib/orderApi'
+import { openInstall } from '../lib/pwaInstall'
 import { suggestEmail } from '../lib/emailTypos'
 
 const FIELD_LABELS: Record<string, string> = {
@@ -216,6 +217,8 @@ export default function OrderForm() {
         )
         setSubmitSuccess(true)
         clearCart()
+        // Best moment to suggest the home-screen icon: they just ordered and will again.
+        setTimeout(() => openInstall('ordered'), 2500)
       } else {
         setSubmitError(orderErrorMessage(res.status, data, phone))
       }
