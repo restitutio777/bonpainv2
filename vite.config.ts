@@ -7,10 +7,13 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
+        id: '/',
         name: 'Bon Pain Fait Main',
         short_name: 'Bon Pain',
+        lang: 'fr',
+        categories: ['food', 'shopping'],
         description: 'Pains et viennoiseries au levain, façonnés à la main par Benjamin Ramakers à Waimes.',
         theme_color: '#A67C52',
         background_color: '#FAF6F1',
@@ -29,11 +32,29 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png',
           },
+          // Full-bleed with the logo inside the safe zone: Android crops
+          // maskable icons to circles or squircles. The "any" icons above
+          // have transparent rounded corners and would be cut.
           {
-            src: '/icons/icon-512.png',
+            src: '/icons/icon-maskable-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: '/icons/icon-maskable-512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'maskable',
+          },
+        ],
+        // Long-press on the app icon (Android).
+        shortcuts: [
+          {
+            name: 'Commander',
+            short_name: 'Commander',
+            url: '/#order',
+            icons: [{ src: '/icons/icon-maskable-192.png', sizes: '192x192', type: 'image/png' }],
           },
         ],
       },

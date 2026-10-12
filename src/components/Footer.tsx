@@ -1,4 +1,6 @@
+import { Download } from 'lucide-react'
 import { useSanity } from '../context/SanityContext'
+import { openInstall, promptInstall, useInstallMode } from '../lib/pwaInstall'
 
 const navLinks = [
   { href: '#products', label: 'Nos pains' },
@@ -15,6 +17,7 @@ const legalLinks = [
 
 export default function Footer() {
   const { settings, content } = useSanity()
+  const installMode = useInstallMode()
 
   const bakeryName = settings?.bakeryName || 'Bon Pain Fait Main'
   const footerDescription = content?.footerDescription || 'Boulangerie artisanale au levain, nichée au cœur des Ardennes belges. Chaque pain est façonné à la main, sur commande.'
@@ -108,6 +111,20 @@ export default function Footer() {
           style={{ borderTop: '1px solid rgba(255,255,255,0.08)', color: '#A67C52' }}
         >
           <span>&copy; {new Date().getFullYear()} {bakeryName} — Tous droits réservés</span>
+          {installMode !== 'none' && (
+            // Chrome/Android: straight to the browser's install dialog. iPhone: the how-to banner.
+            <button
+              type="button"
+              onClick={() => (installMode === 'prompt' ? promptInstall() : openInstall())}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
+              style={{ background: 'rgba(255,255,255,0.05)', color: '#F5EDE3' }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.12)')}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)')}
+            >
+              <Download size={14} />
+              Installer l&rsquo;application
+            </button>
+          )}
           <div className="flex gap-4">
             {[
               facebookUrl && {

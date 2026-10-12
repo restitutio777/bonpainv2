@@ -104,9 +104,23 @@ Antwortcodes für das Formular: `invalid`+`field`, `links`, `email_domain`+`doma
 
 **Logs:** nur Metadaten (Datum, Zeilen, Summe). Die ganze Bestellung wird nur geloggt, wenn sie sonst verloren wäre (Bäcker-Mail gescheitert, Konfiguration fehlt). Vercel Hobby hält Runtime-Logs 1 Stunde.
 
-**Env-Vars:** `RESEND_API_KEY`, `ORDER_TO_EMAIL`, `ORDER_FROM_EMAIL` (alle `sensitive`, Werte über die API nicht lesbar), `KV_*` (Upstash-Integration), neu: `RESEND_WEBHOOK_SECRET`, optional `ORDER_TO_EMAIL_PREVIEW`. Empfohlen: `CRON_SECRET` (sonst ist `/api/keepalive` öffentlich aufrufbar).
+**Env-Vars:** `RESEND_API_KEY`, `ORDER_TO_EMAIL`, `ORDER_FROM_EMAIL` (alle `sensitive`, Werte über die API nicht lesbar), `KV_*` (Upstash-Integration), `RESEND_WEBHOOK_SECRET`, `SUBSCRIPTION_SECRET` (Abo-Links), optional `ORDER_TO_EMAIL_PREVIEW`, `SITE_URL`. Empfohlen: `CRON_SECRET` (sonst ist `/api/keepalive` öffentlich aufrufbar).
 
-**Lokal testen:** `RESEND_BASE_URL` lenkt das Resend-SDK auf einen Mock-Server, `KV_REST_API_URL` den Upstash-Client; die Funktion mit `npx esbuild api/order.ts --bundle --platform=node --format=cjs` bündeln und den Handler direkt aufrufen. So am 2026-10-05 mit 26 Fällen geprüft (Harness lag im Scratchpad, nicht im Repo).
+**Lokal testen:** `RESEND_BASE_URL` lenkt das Resend-SDK auf einen Mock-Server, `KV_REST_API_URL` den Upstash-Client; die Funktion mit `npx esbuild api/order.ts --bundle --platform=node --format=cjs` bündeln und den Handler direkt aufrufen. So am 2026-10-05 mit 26 Fällen geprüft (Harness lag im Scratchpad, nicht im Repo). Achtung: der Upstash-Client bündelt Befehle automatisch (`POST …/pipeline` mit Liste von Befehlen) und erwartet Strings base64-kodiert (außer `"OK"`); ein Mock muss beides können.
+
+## 🔁 Commandes régulières (Abo, seit 2026-10-12)
+
+Kunde hakt im Formular „Répéter cette commande chaque semaine“ an. Die Bestellung selbst ist normal; ab der Folgewoche wiederholt sie sich jeden gleichen Wochentag, bis der Kunde oder Benjamin sie beendet. Rechtlich: CGV Art. 8, Datenschutz (Speicherung bis 60 Tage nach Ende).
+
+- **Code:** gemeinsamer Servercode in [server/](server/) (Vercel macht jede Datei in `api/` zu einer Funktion; Imports mit `.js`-Endung, Paket ist ESM). [api/order.ts](api/order.ts) legt das Abo an, [api/subscription.ts](api/subscription.ts) verwaltet es, [api/daily.ts](api/daily.ts) ist der Cron, Seite [src/components/Subscription.tsx](src/components/Subscription.tsx) unter `/abonnement`.
+- **Daten (Redis):** `sub:{id}` (JSON: Kunde, Wochentag, Produkt-IDs + Mengen, ausgesetzte Termine, Zustimmungstext + Zeitpunkt), `subs:active` (Set), `final:{datum}` (Endliste verschickt), `vacnotice:{hash}` (wer über eine Schließung informiert ist). Preise, Saison, Verkaufstage und Urlaub kommen immer frisch aus Sanity.
+- **Links:** `/abonnement#{id}.{token}` (Kunde) und `#b.{id}.{token}` (Benjamin, steht in seiner Tagesliste). Token = HMAC aus `SUBSCRIPTION_SECRET` (Vercel, Production + Preview, `sensitive`). Nichts Geheimes in Redis; **Secret ändern macht alle verschickten Links ungültig.** Änderungen nur per POST (Mail-Scanner öffnen Links).
+- **Fristen:** Änderungen gelten für Termine ab heute + `orderLeadDays`; nähere Termine sind gesperrt („Commande transmise“). Beendet der Kunde ein Abo, nachdem die Endliste eines Termins raus ist, bleibt dieser Termin bestehen (Mail sagt das, Absage per Telefon nach Art. 7).
+- **Tagesliste:** Jede Bestellung schickt wie bisher die komplette Liste des Tages, jetzt inkl. fälliger Abos („Commande régulière“, Link „gérer / arrêter“, nicht lieferbare Produkte rot). **Cron `/api/daily` 23:00 UTC** (Hobby: irgendwann in der Stunde = nach Mitternacht in Belgien) schickt für jeden gerade geschlossenen Verkaufstag die **Liste définitive** in denselben Gmail-Verlauf, auch wenn nur Abos anstehen. `/api/keepalive` (05:00 UTC) holt Verpasstes nach (Marker verhindert Doppelversand). Kein Sanity → kein Versand, Nachholen um 05:00.
+- **Urlaub:** Urlaubsbanner aktiv + Daten → Abo-Termine im Zeitraum fallen aus (auch ohne „Désactiver les commandes“). Ohne Daten: ausgesetzt, solange der Banner aktiv ist. Jeder betroffene Kunde bekommt einmal pro Schließung eine Mail mit ausfallenden Terminen und Wiederbeginn (max. 30 pro Lauf, Rest am nächsten Lauf).
+- **Grenzen:** ein aktives Abo je Adresse und Wochentag, max. 150 aktive Abos, Samstagsprodukte nur im Samstags-Abo, Thekenware nie. Verwaltung: 60 Aufrufe/h je IP, 10 Änderungen/Tag je Abo.
+- **Mails:** `kind=subscription` (Änderung, Ende, Urlaub) → Bounce-Meldung an Benjamin über den Webhook.
+- **Preview:** `/api/daily?date=YYYY-MM-DD` schickt die Endliste dieses Tages sofort (nur Preview, an die Testadresse). Lokaler Harness: 30 Fälle mit Fake-Uhr (2026-10-12, Scratchpad).
 
 ## 🚚 Domain-Umzug bonpainfaitmain.be → Vercel
 
@@ -131,7 +145,7 @@ Keine CAA-Records → Vercel kann das Zertifikat ausstellen.
 
 Optional: `_dmarc` um `rua=mailto:…` ergänzen, damit Berichte über abgelehnte Mails ankommen (heute gibt es keine).
 
-**Nach dem Umzug:** Resend-Webhook auf `https://bonpainfaitmain.be/api/resend-webhook` umstellen; Testbestellung; [src/lib/orderApi.ts](src/lib/orderApi.ts) postet von bonpainfaitmain.be weiter cross-origin an bonpainv2.vercel.app (funktioniert, CORS ist freigegeben) und kann danach auf `/api/order` vereinfacht werden.
+**Nach dem Umzug:** Resend-Webhook auf `https://bonpainfaitmain.be/api/resend-webhook` umstellen; Testbestellung; prüfen, dass die Abo-Links in den Mails auf die neue Domain zeigen (`VERCEL_PROJECT_PRODUCTION_URL`, notfalls Env-Var `SITE_URL` setzen; vorher verschickte Links auf bonpainv2.vercel.app funktionieren weiter); [src/lib/orderApi.ts](src/lib/orderApi.ts) postet von bonpainfaitmain.be weiter cross-origin an bonpainv2.vercel.app (funktioniert, CORS ist freigegeben) und kann danach auf `/api/order` vereinfacht werden.
 
 **Aufräumen bei Infomaniak** (erst wenn v1 nicht mehr live ist, jeweils nach Freigabe):
 - Gerätepasswort „Site web bonpainfaitmain.be" am Postfach `info@` löschen (v1-SMTP)
