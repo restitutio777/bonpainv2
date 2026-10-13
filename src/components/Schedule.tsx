@@ -8,9 +8,9 @@ import { getProductStatus } from '../lib/productStatus'
 // baker never has to touch code to add or drop a bread.
 const FALLBACK_BREADS = [
   'Pain gris au levain',
-  'Le Fagnard',
+  'Pain fagnard',
   'Pain aux noix',
-  'Épeautre (sans sésame)',
+  'Pain d’épeautre',
   'Le Rustik',
   'Pain au seigle',
   'Baguette',
