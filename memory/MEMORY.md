@@ -38,6 +38,12 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 - Nach Augenschein benannt, von Benjamin zu prüfen: Tartelette, Torsade, Gaufre, Petit pain courge. Bilder 063–068 (Kastenlaib, bemehlt) sind keinem Produkt zugeordnet.
 - Reihenfolge (sortOrder, Zehnerschritte): schöne runde Brote zuerst, Baguette ans Ende der Brote, dann Tarte und Kleingebäck, Pizza, Panettone.
 
+**Allergene (live seit 2026-10-26)**
+- Neues Sanity-Feld `allergens` (Produkt-Schema, Gruppe „Informations principales"), als kleine graue Zeile „Allergènes : …" unter der Beschreibung ([Products.tsx](../src/components/Products.tsx)), nur wenn gesetzt. Query + Typ ergänzt. Befüllt für alle 25 aktiven Produkte mit [studio/scripts/apply-allergenes-2026-10.mjs](../studio/scripts/apply-allergenes-2026-10.mjs) (Commit `64ac2e7`, Studio neu deployt).
+- Quelle: fachliche Matrix [matrice_allergenes_boulangerie.pdf](../matrice_allergenes_boulangerie.pdf) (aus Benjamins Rezepturen) + vom Betreiber bestätigte Annahmen: Rosinen = sulfitiert, Viennoiserie/Tartes/Gaufre = gluten/lait/œufs, Cookie zusätzlich arachides, Épeautre-sésame hat Sesam. Nur EU-deklarationspflichtige Allergene (Samen/Kurkuma/Honig nicht).
+- **Offen:** finale Freigabe durch Benjamin steht aus (Arbeitsstand, live als Vorschau). Unbeantwortete Rückfrage: Soja im Pain au chocolat/Cookie (Schokolade) — aktuell nicht deklariert.
+- Parallel in eigener Session gestartet: gebrandetes Druck-PDF derselben Matrix (Bäckerei/Partner/Web-Download), Branch `allergen-pdf`.
+
 **Seite**
 - Produktkarten: Fotos per CSS 8 % gezoomt (`IMG_ZOOM` in Products.tsx, gegen Papierränder); Saison-Badge mittig, kräftig rot; nicht verfügbare Produkte nicht verblasst.
 - About: zwei große Bilder (Benjamin am Ofen 156 / am Leinentuch 070), Schlusszitat, 4er-Serie in Arbeitsreihenfolge (`src/assets/fournil/`: 180 → 121 → 017 → 069 Nadia), darunter Button „Suivez-nous sur Facebook". Betreiber will hier wenige, gute Bilder ohne Doppelungen. Hero unverändert (Betreiber zufrieden).
