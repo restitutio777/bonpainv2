@@ -39,10 +39,13 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 - Reihenfolge (sortOrder, Zehnerschritte): schöne runde Brote zuerst, Baguette ans Ende der Brote, dann Tarte und Kleingebäck, Pizza, Panettone.
 
 **Allergene (live seit 2026-10-26)**
-- Neues Sanity-Feld `allergens` (Produkt-Schema, Gruppe „Informations principales"), als kleine graue Zeile „Allergènes : …" unter der Beschreibung ([Products.tsx](../src/components/Products.tsx)), nur wenn gesetzt. Query + Typ ergänzt. Befüllt für alle 25 aktiven Produkte mit [studio/scripts/apply-allergenes-2026-10.mjs](../studio/scripts/apply-allergenes-2026-10.mjs) (Commit `64ac2e7`, Studio neu deployt).
+- Neues Sanity-Feld `allergens` (Produkt-Schema, Gruppe „Informations principales"), als Zeile mit feiner Trennlinie + kleinem Akzent-Label „ALLERGÈNES" (versal) unter der Beschreibung ([Products.tsx](../src/components/Products.tsx)), nur wenn gesetzt. Query + Typ ergänzt. Befüllt für alle 25 aktiven Produkte mit [studio/scripts/apply-allergenes-2026-10.mjs](../studio/scripts/apply-allergenes-2026-10.mjs). Studio neu deployt. Commits `64ac2e7`, `ccb376d`.
 - Quelle: fachliche Matrix [matrice_allergenes_boulangerie.pdf](../matrice_allergenes_boulangerie.pdf) (aus Benjamins Rezepturen) + vom Betreiber bestätigte Annahmen: Rosinen = sulfitiert, Viennoiserie/Tartes/Gaufre = gluten/lait/œufs, Cookie zusätzlich arachides, Épeautre-sésame hat Sesam. Nur EU-deklarationspflichtige Allergene (Samen/Kurkuma/Honig nicht).
+- Aus den Produktbeschreibungen belegte Korrekturen: Cookie + avoine (Hafer), Bun + sésame, Bases de pizza + lait (Parmesan).
+- 5 bisher leere Produkte haben Standard-Kurzbeschreibungen ([apply-descriptions-theke-2026-10.mjs](../studio/scripts/apply-descriptions-theke-2026-10.mjs)): Gaufre, Tartelette, Feuilleté aux pommes, Torsade à la crème, Petit pain courge — von Benjamin überschreibbar.
+- Pain à la coupe: Werbeaussage „fermentation longue de 24 heures" aus der Beschreibung entfernt (nur in der veröffentlichten Sanity-Version, kein Repo-Commit).
 - **Offen:** finale Freigabe durch Benjamin steht aus (Arbeitsstand, live als Vorschau). Unbeantwortete Rückfrage: Soja im Pain au chocolat/Cookie (Schokolade) — aktuell nicht deklariert.
-- Parallel in eigener Session gestartet: gebrandetes Druck-PDF derselben Matrix (Bäckerei/Partner/Web-Download), Branch `allergen-pdf`.
+- **Druck-PDF derselben Matrix** in eigener Session: PR #3 (Branch `claude/allergen-pdf-0bc49c`, `public/allergenes.pdf` + dezenter Footer-Download, Kopie auf dem Schreibtisch). **Nicht gemergt** und noch auf den Werten VOR den drei Korrekturen oben — vor dem Merge angleichen.
 
 **Seite**
 - Produktkarten: Fotos per CSS 8 % gezoomt (`IMG_ZOOM` in Products.tsx, gegen Papierränder); Saison-Badge mittig, kräftig rot; nicht verfügbare Produkte nicht verblasst.
