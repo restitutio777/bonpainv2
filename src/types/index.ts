@@ -23,6 +23,7 @@ export interface SanityProduct {
   slug: string
   category: 'bread' | 'viennoiserie' | 'specialty' | 'tart'
   description: string
+  allergens: string | null
   price: number
   /** Full Sanity image object (asset + crop + hotspot). Use urlFor() to build URLs. */
   image: SanityImageSource | null

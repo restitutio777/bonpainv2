@@ -49,6 +49,14 @@ export default defineType({
       validation: (R) => R.max(320),
     }),
     defineField({
+      name: 'allergens',
+      title: 'Allergènes',
+      description:
+        'Courte liste des allergènes (UE), affichée en petit sous la description. Préremplie à partir des recettes — à valider avant diffusion.',
+      type: 'string',
+      group: 'basics',
+    }),
+    defineField({
       name: 'price',
       title: 'Prix (€)',
       description: 'En euros. Utilisez le point pour les centimes (ex. 6.50).',

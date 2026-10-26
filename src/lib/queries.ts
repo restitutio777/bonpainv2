@@ -4,6 +4,7 @@ export const PRODUCTS_QUERY = `*[_type == "product" && isActive == true] | order
   "slug": slug.current,
   category,
   description,
+  allergens,
   price,
   image,
   "imageAlt": image.alt,
