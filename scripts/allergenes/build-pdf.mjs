@@ -48,7 +48,7 @@ const GROUPS = [
       ['Pain à la coupe', 'gluten (froment, seigle)'],
       ['Baguette', 'gluten (froment)'],
       ['Cramique', 'gluten (froment) · œufs · lait · sulfites (raisins secs)'],
-      ['Bun', 'gluten (froment)'],
+      ['Bun', 'gluten (froment) · sésame'],
       ['Petit pain aux graines de courge', 'gluten (froment)'],
     ],
   },
@@ -71,9 +71,9 @@ const GROUPS = [
   {
     title: 'Spécialités',
     items: [
-      ['Cookie chocolat cacahuète salé', 'gluten (froment) · arachides · lait · œufs'],
+      ['Cookie chocolat cacahuète salé', 'gluten (froment, avoine) · arachides · lait · œufs'],
       ['Gaufre', 'gluten (froment) · lait · œufs'],
-      ['Bases de pizza', 'gluten (froment)'],
+      ['Bases de pizza', 'gluten (froment) · lait'],
       ['Panettone', 'gluten (froment) · lait · œufs · sulfites (fruits secs)'],
     ],
   },
