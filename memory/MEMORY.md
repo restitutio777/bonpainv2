@@ -45,7 +45,7 @@ Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entsche
 - 5 bisher leere Produkte haben Standard-Kurzbeschreibungen ([apply-descriptions-theke-2026-10.mjs](../studio/scripts/apply-descriptions-theke-2026-10.mjs)): Gaufre, Tartelette, Feuilleté aux pommes, Torsade à la crème, Petit pain courge — von Benjamin überschreibbar.
 - Pain à la coupe: Werbeaussage „fermentation longue de 24 heures" aus der Beschreibung entfernt (nur in der veröffentlichten Sanity-Version, kein Repo-Commit).
 - **Offen:** finale Freigabe durch Benjamin steht aus (Arbeitsstand, live als Vorschau). Unbeantwortete Rückfrage: Soja im Pain au chocolat/Cookie (Schokolade) — aktuell nicht deklariert.
-- **Druck-PDF derselben Matrix** in eigener Session: PR #3 (Branch `claude/allergen-pdf-0bc49c`, `public/allergenes.pdf` + dezenter Footer-Download, Kopie auf dem Schreibtisch). **Nicht gemergt** und noch auf den Werten VOR den drei Korrekturen oben — vor dem Merge angleichen.
+- **Druck-PDF derselben Matrix** in eigener Session: PR #3 (Branch `claude/allergen-pdf-0bc49c`, `public/allergenes.pdf` + dezenter Footer-Download, Kopie auf dem Schreibtisch). An die Seite angeglichen (`aed5da6`): die drei Korrekturen übernommen, alle 25 gegen die Map/Seite geprüft, kein Widerspruch. Auf Anweisung des Betreibers druckfreundlich (S/W, tonerarm), Stempel „en cours de validation" + langer Disclaimer aus dem Fuß entfernt; Fuß = Stand-Datum + Kreuzkontaminationshinweis + Bitte bei Allergie zu fragen. **Nicht gemergt.**
 
 **Seite**
 - Produktkarten: Fotos per CSS 8 % gezoomt (`IMG_ZOOM` in Products.tsx, gegen Papierränder); Saison-Badge mittig, kräftig rot; nicht verfügbare Produkte nicht verblasst.
