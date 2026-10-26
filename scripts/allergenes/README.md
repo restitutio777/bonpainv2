@@ -4,6 +4,10 @@ Markengerechte, brillenfrei lesbare Allergenliste der Bäckerei Bon Pain Fait Ma
 zum Ausdrucken (Bäckerei, Partnerläden) und als dezenter Download im Footer der
 Website (Spalte „Légal").
 
+Auf Normaldrucker ausgelegt: weißer Hintergrund, dünne Linien statt Flächen, keine
+dunklen Bänder — tonersparend und in Schwarz-Weiß sauber lesbar. Das weiße
+Logo wird für den hellen Druck per CSS-Filter in Schwarz umgefärbt.
+
 ## Neu erzeugen
 
 ```bash
@@ -32,7 +36,8 @@ Versionsstand.
 
 ## Rechtlicher Rahmen
 
-Arbeitsstand, noch nicht final von Benjamin freigegeben — das Dokument weist sich
-selbst als „en cours de validation" aus, ohne Zertifizierungsaussage. Nur die 14
-deklarationspflichtigen EU-Allergene (VO (EU) 1169/2011); Samen, Kurkuma und Honig
-sind keine Allergene und stehen nicht drin.
+Arbeitsstand, noch nicht final von Benjamin freigegeben. Der Fuß bleibt bewusst
+knapp (Stand-Datum, kurzer Kreuzkontaminationshinweis, Bitte bei Allergie
+nachzufragen) — ohne Zertifizierungsaussage, aber auch ohne verunsicherndes
+„in Prüfung". Nur die 14 deklarationspflichtigen EU-Allergene (VO (EU) 1169/2011);
+Samen, Kurkuma und Honig sind keine Allergene und stehen nicht drin.

@@ -24,7 +24,6 @@ const root = resolve(here, '../..')
 // Versionsstand (sichtbar auf dem Dokument). Rezeptbasis: Matrix 19.10.2026;
 // bestätigte Annahmen des Betreibers 26.10.2026.
 const DATE_LABEL = '26 octobre 2026'
-const RECIPE_BASIS = '19 octobre 2026'
 
 // --- Produktdaten (Reihenfolge wie auf der Website, nach sortOrder) ----------
 // allergens: wortgleich zu Sanity. « · » trennt Allergene, Klammer = Getreide/
@@ -144,47 +143,51 @@ const html = `<!doctype html>
   }
   @page{size:A4;margin:0;}
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{background:#d9cdbf;}
+  html,body{background:#eceae6;}
   body{font-family:'DM Sans',-apple-system,sans-serif;color:var(--ink);
     -webkit-font-smoothing:antialiased;line-height:1.5;}
 
+  /* Weißer Hintergrund, dünne Linien statt Flächen: tonersparend und in
+     Schwarz-Weiß auf einem normalen Drucker sauber lesbar. */
   .page{
-    position:relative;width:210mm;height:297mm;background:var(--cream);
+    position:relative;width:210mm;height:297mm;background:#fff;
     margin:0 auto;overflow:hidden;
     display:flex;flex-direction:column;
   }
   .page + .page{margin-top:8mm;}
   .pad{padding:0 18mm;}
 
-  /* ---- Header band (page 1) ------------------------------------------- */
-  .masthead{background:var(--dark);color:#F4E6D1;padding:11mm 18mm 10mm;
-    text-align:center;position:relative;}
-  .masthead::after{content:'';position:absolute;left:18mm;right:18mm;bottom:5.5mm;
-    height:1px;background:rgba(201,152,94,.28);}
-  .logo{height:21mm;width:auto;display:block;margin:0 auto 4mm;}
-  .kicker{font-family:'DM Sans';font-size:9.5pt;letter-spacing:.42em;
-    text-transform:uppercase;color:#C9985E;margin-bottom:2.5mm;
-    padding-left:.42em;}
-  .doc-title{font-family:'Cormorant Garamond';font-weight:500;font-size:30pt;
-    line-height:1.05;letter-spacing:.01em;color:#F4E6D1;}
+  /* ---- Header (hell, kein dunkles Band) -------------------------------- */
+  .masthead{padding:15mm 18mm 0;text-align:center;}
+  /* das Logo ist weiß ausgelegt -> für hellen Druck in Schwarz umgefärbt */
+  .logo{height:19mm;width:auto;display:block;margin:0 auto 4mm;
+    filter:brightness(0);opacity:.88;}
+  .kicker{font-family:'DM Sans';font-size:9.5pt;letter-spacing:.4em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:2.5mm;
+    padding-left:.4em;}
+  .doc-title{font-family:'Cormorant Garamond';font-weight:600;font-size:31pt;
+    line-height:1.04;letter-spacing:.01em;color:var(--ink);}
   .doc-sub{font-family:'Cormorant Garamond';font-style:italic;font-weight:400;
-    font-size:15pt;color:#E0B888;margin-top:2mm;}
+    font-size:15pt;color:var(--muted);margin-top:1.5mm;}
+  .masthead .rule{width:26mm;height:2px;background:var(--accent);
+    margin:4.5mm auto 0;}
 
   /* ---- Intro + legend -------------------------------------------------- */
   .intro{margin:7mm 0 2mm;font-size:11.5pt;color:var(--brown);max-width:155mm;}
-  .legend{margin:4mm 0 2mm;font-size:10.5pt;color:var(--muted);
+  .legend{margin:4mm 0 2mm;font-size:10.5pt;color:var(--brown);
     border-top:1px solid var(--line);border-bottom:1px solid var(--line);
     padding:2.6mm 0;}
-  .legend b{color:var(--brown);font-weight:600;}
+  .legend b{color:var(--ink);font-weight:700;}
 
   /* ---- Groups ---------------------------------------------------------- */
   .body{flex:1;padding-top:6mm;padding-bottom:4mm;}
   .group{margin-bottom:7mm;break-inside:avoid;}
   .group:last-child{margin-bottom:0;}
-  .gtitle{font-family:'Cormorant Garamond';font-weight:600;font-size:20pt;
-    color:var(--accent);letter-spacing:.01em;margin-bottom:3mm;
+  .gtitle{font-family:'Cormorant Garamond';font-weight:700;font-size:20pt;
+    color:var(--ink);letter-spacing:.01em;margin-bottom:3mm;
     display:flex;align-items:center;gap:5mm;}
-  .gtitle::after{content:'';flex:1;height:1px;background:var(--line);}
+  .gtitle::after{content:'';flex:1;height:1.5px;background:var(--accent);
+    opacity:.55;}
 
   .items{list-style:none;}
   /* Pains: zwei Spalten, damit die 15 Brote luftig auf eine Seite passen */
@@ -205,20 +208,17 @@ const html = `<!doctype html>
   .wide .item{padding:3.1mm 0;}
 
   /* ---- Footer / legal -------------------------------------------------- */
-  .foot{margin-top:auto;background:var(--sand);padding:6mm 18mm 7mm;
-    border-top:2px solid var(--accent);}
+  .foot{margin-top:auto;padding:6mm 18mm 9mm;
+    border-top:1.5px solid var(--line);}
   .foot-grid{display:flex;justify-content:space-between;gap:12mm;
     align-items:flex-start;}
-  .legal{font-size:9.5pt;color:var(--brown);line-height:1.5;max-width:120mm;}
+  .legal{font-size:9.5pt;color:var(--brown);line-height:1.55;max-width:118mm;}
   .legal strong{color:var(--ink);font-weight:700;}
   .contact{font-size:10pt;color:var(--ink);text-align:right;line-height:1.55;
     white-space:nowrap;}
-  .contact .cn{font-family:'Cormorant Garamond';font-weight:600;font-size:15pt;
+  .contact .cn{font-family:'Cormorant Garamond';font-weight:700;font-size:15pt;
     display:block;margin-bottom:1mm;color:var(--ink);}
-  .contact .cm{color:var(--muted);}
-  .stamp{display:inline-block;margin-top:3mm;font-size:8.5pt;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);
-    border-radius:100px;padding:1.4mm 4mm;}
+  .contact .cm{color:var(--brown);}
   .pagefoot{font-size:8.5pt;color:var(--muted);text-align:center;padding:4mm 0 0;}
 
   @media print{
@@ -238,6 +238,7 @@ const html = `<!doctype html>
       <div class="kicker">Boulangerie artisanale</div>
       <h1 class="doc-title">Liste des allergènes</h1>
       <div class="doc-sub">nos pains &amp; viennoiseries</div>
+      <div class="rule"></div>
     </header>
 
     <div class="pad">
@@ -267,13 +268,10 @@ const html = `<!doctype html>
     <footer class="foot">
       <div class="foot-grid">
         <div class="legal">
-          <strong>Document de travail, état du ${DATE_LABEL}.</strong>
-          Informations établies d’après nos recettes (version du ${RECIPE_BASIS})
-          et en cours de validation. Elles ne garantissent pas l’absence d’autres
-          allergènes ni de contamination croisée (stockage, ustensiles, pétrin,
-          plan de travail, four). <strong>En cas d’allergie, parlez-nous avant
-          votre achat.</strong>
-          <span class="stamp">En cours de validation</span>
+          Informations établies d’après nos recettes, état du ${DATE_LABEL}.
+          Une contamination croisée reste possible dans notre fournil.
+          <strong>En cas d’allergie, parlez-nous avant votre achat&nbsp;:
+          nous vous renseignons volontiers.</strong>
         </div>
         <div class="contact">
           <span class="cn">Bon Pain Fait Main</span>
