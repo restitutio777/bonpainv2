@@ -13,6 +13,7 @@ const legalLinks = [
   { href: '/mentions-legales', label: 'Mentions légales' },
   { href: '/confidentialite', label: 'Confidentialité' },
   { href: '/cgv', label: 'CGV' },
+  { href: '/allergenes.pdf', label: 'Liste des allergènes', external: true },
 ]
 
 export default function Footer() {

@@ -23,3 +23,6 @@ dist-ssr
 .env
 
 .claude/
+
+# Generiertes Allergen-HTML (Build-Artefakt, siehe scripts/allergenes/README.md)
+scripts/allergenes/allergenes.html
