@@ -208,18 +208,17 @@ const html = `<!doctype html>
   .wide .item{padding:3.1mm 0;}
 
   /* ---- Footer / legal -------------------------------------------------- */
-  .foot{margin-top:auto;padding:6mm 18mm 9mm;
-    border-top:1.5px solid var(--line);}
-  .foot-grid{display:flex;justify-content:space-between;gap:12mm;
-    align-items:flex-start;}
-  .legal{font-size:9.5pt;color:var(--brown);line-height:1.55;max-width:118mm;}
+  /* zentrierter, horizontaler Abschluss statt hoher Seitenspalte */
+  .foot{margin-top:auto;padding:7mm 18mm 9mm;
+    border-top:1.5px solid var(--line);text-align:center;}
+  .foot .cn{font-family:'Cormorant Garamond';font-weight:700;font-size:16.5pt;
+    color:var(--ink);line-height:1.1;}
+  .foot .cline{margin-top:1.8mm;font-size:11pt;color:var(--ink);}
+  .foot .cline b{font-weight:700;}
+  .foot .cline .sep{color:var(--accent);margin:0 2.4mm;}
+  .legal{margin:4.5mm auto 0;max-width:165mm;font-size:9.5pt;color:var(--brown);
+    line-height:1.5;}
   .legal strong{color:var(--ink);font-weight:700;}
-  .contact{font-size:10pt;color:var(--ink);text-align:right;line-height:1.55;
-    white-space:nowrap;}
-  .contact .cn{font-family:'Cormorant Garamond';font-weight:700;font-size:15pt;
-    display:block;margin-bottom:1mm;color:var(--ink);}
-  .contact .cm{color:var(--brown);}
-  .pagefoot{font-size:8.5pt;color:var(--muted);text-align:center;padding:4mm 0 0;}
 
   @media print{
     html,body{background:#fff;}
@@ -266,22 +265,14 @@ const html = `<!doctype html>
     </div>
 
     <footer class="foot">
-      <div class="foot-grid">
-        <div class="legal">
-          Informations établies d’après nos recettes, état du ${DATE_LABEL}.
-          Une contamination croisée reste possible dans notre fournil.
-          <strong>En cas d’allergie, parlez-nous avant votre achat&nbsp;:
-          nous vous renseignons volontiers.</strong>
-        </div>
-        <div class="contact">
-          <span class="cn">Bon Pain Fait Main</span>
-          Benjamin Ramakers<br>
-          Rue de la Roer 19<br>
-          4950 Waimes<br>
-          <span class="cm">+32 493 21 09 25</span><br>
-          <span class="cm">bonpainfaitmain.be</span>
-        </div>
-      </div>
+      <div class="cn">Bon Pain Fait Main</div>
+      <div class="cline">Rue de la Roer 19, 4950 Waimes
+        <span class="sep">·</span> <b>+32 493 21 09 25</b>
+        <span class="sep">·</span> bonpainfaitmain.be</div>
+      <p class="legal">Informations établies d’après nos recettes, état du
+        ${DATE_LABEL}. Une contamination croisée reste possible dans notre fournil.
+        <strong>En cas d’allergie, parlez-nous avant votre achat&nbsp;: nous vous
+        renseignons volontiers.</strong></p>
     </footer>
   </div>
 
