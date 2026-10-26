@@ -64,11 +64,11 @@ const ALLERGENS = {
   'product-feuillete-pommes': 'gluten (froment) · lait · œufs',
   'product-torsade-creme': 'gluten (froment) · lait · œufs',
   // Spécialités / Theke
-  'product-cookie': 'gluten (froment) · arachides · lait · œufs',
+  'product-cookie': 'gluten (froment, avoine) · arachides · lait · œufs',
   'product-gaufre': 'gluten (froment) · lait · œufs',
-  'product-bun': 'gluten (froment)',
+  'product-bun': 'gluten (froment) · sésame',
   'product-petit-pain-courge': 'gluten (froment)',
-  'product-pizza': 'gluten (froment)',
+  'product-pizza': 'gluten (froment) · lait',
   'product-panettone': 'gluten (froment) · lait · œufs · sulfites (fruits secs)',
 }
 

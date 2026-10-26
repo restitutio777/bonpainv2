@@ -169,12 +169,21 @@ export default function Products({ onOpenModal }: ProductsProps) {
                 >
                   {product.name}
                 </h3>
-                <p className="text-base leading-[1.5] mb-2" style={{ color: '#8B7A6B' }}>
+                <p className="text-base leading-[1.5] mb-3" style={{ color: '#8B7A6B' }}>
                   {product.description}
                 </p>
                 {product.allergens && (
-                  <p className="text-sm leading-snug mb-4" style={{ color: '#8B7A6B' }}>
-                    <span className="font-medium">Allergènes :</span> {product.allergens}
+                  <p
+                    className="text-sm leading-snug pt-3 mb-1"
+                    style={{ color: '#6B5D4F', borderTop: '1px solid #EADFD0' }}
+                  >
+                    <span
+                      className="block font-semibold uppercase mb-0.5"
+                      style={{ color: '#A67C52', fontSize: '0.7rem', letterSpacing: '0.05em' }}
+                    >
+                      Allergènes
+                    </span>
+                    {product.allergens}
                   </p>
                 )}
                 <div
