@@ -42,7 +42,7 @@ const GROUPS = [
       ['Pain aux noix', 'gluten (froment, seigle) · fruits à coque (noix)'],
       [
         'Pain aux fruits',
-        'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (fruits secs)',
+        'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou)',
       ],
       ['Pain fagnard', 'gluten (froment, seigle)'],
       ['Pain au petit épeautre (engrain)', 'gluten (petit épeautre)'],
@@ -51,7 +51,7 @@ const GROUPS = [
       ['Pain à la coupe', 'gluten (froment, seigle)'],
       ['Baguette', 'gluten (froment)'],
       ['Cramique', 'gluten (froment) · œufs · lait'],
-      ['Bun', 'gluten (froment) · sésame · traces possibles : lait, œufs'],
+      ['Bun', 'gluten (froment) · lait · sésame'],
       ['Petit pain aux graines de courge', 'gluten (froment)'],
     ],
   },
@@ -75,8 +75,8 @@ const GROUPS = [
         'gluten (froment) · lait · œufs · selon la garniture : fruits à coque, céleri, moutarde',
       ],
       [
-        'Tartelette',
-        'gluten (froment) · lait · œufs · selon la garniture : fruits à coque',
+        'Tartelette aux noix',
+        'gluten (froment) · lait · œufs · fruits à coque (noix, noisettes, noix de cajou)',
       ],
     ],
   },
@@ -148,7 +148,7 @@ function renderGroup(g, modifier = '') {
 
 const [pains, viennois, tartes, specialites] = GROUPS
 
-const legend = `gluten · œufs · lait · fruits à coque · arachides · sésame · sulfites · soja · moutarde · céleri`
+const legend = `gluten · œufs · lait · fruits à coque · arachides · sésame · soja · moutarde · céleri`
 
 const html = `<!doctype html>
 <html lang="fr">

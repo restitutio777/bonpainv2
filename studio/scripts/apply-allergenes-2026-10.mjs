@@ -10,6 +10,11 @@
  *   - Im Zweifel deklarieren (Entscheidung Betreiber 27.10.2026): Schokolade
  *     → Spuren Soja/Schalenfrüchte, Tarte/Tartelette je nach Füllung, Bun
  *     evtl. mit Milch/Ei, Pain aux fruits Sulfite der Trockenfrüchte.
+ *     Beantwortet von Benjamin 27.10.2026: Pain aux fruits = noisettes, noix
+ *     de cajou, raisins secs (M&C NATURAL), graines de courge → keine
+ *     Sulfite. Bun = beurre, lait, levure, curcuma → lait, keine Eier.
+ *     Tartelette aux noix = noix ou noisettes, cajou, tournesol, courge,
+ *     beurre, œuf. Tarte du jour weiter offen.
  *   - Viennoiseries/Tartes/Gaufre: gluten, lait, œufs.
  *   - Cookie: zusätzlich arachides.
  *   - Épeautre-sésame: Sesam ist drin (Name + Rezeptur).
@@ -57,7 +62,7 @@ const ALLERGENS = {
     'gluten (froment) · traces possibles : soja, sésame, moutarde',
   'product-pain-noix': 'gluten (froment, seigle) · fruits à coque (noix)',
   'product-pain-fruits-secs':
-    'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (fruits secs)',
+    'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou)',
   'product-fagnard': 'gluten (froment, seigle)',
   'd0c43f74-48f6-4946-b19b-75f6e2fccb6f': 'gluten (petit épeautre)',
   'product-epeautre': 'gluten (épeautre, froment)',
@@ -68,7 +73,8 @@ const ALLERGENS = {
   // Tartes
   'product-tarte':
     'gluten (froment) · lait · œufs · selon la garniture : fruits à coque, céleri, moutarde',
-  'product-tartelette': 'gluten (froment) · lait · œufs · selon la garniture : fruits à coque',
+  'product-tartelette':
+    'gluten (froment) · lait · œufs · fruits à coque (noix, noisettes, noix de cajou)',
   // Viennoiseries
   'product-croissant': 'gluten (froment) · lait · œufs',
   'product-pain-chocolat':
@@ -79,7 +85,7 @@ const ALLERGENS = {
   'product-cookie':
     'gluten (froment, avoine) · arachides · lait · œufs · traces possibles : soja, fruits à coque',
   'product-gaufre': 'gluten (froment) · lait · œufs',
-  'product-bun': 'gluten (froment) · sésame · traces possibles : lait, œufs',
+  'product-bun': 'gluten (froment) · lait · sésame',
   'product-petit-pain-courge': 'gluten (froment)',
   'product-pizza': 'gluten (froment) · lait',
   'product-panettone': 'gluten (froment) · lait · œufs',
