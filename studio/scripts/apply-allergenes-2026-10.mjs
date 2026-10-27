@@ -3,6 +3,10 @@
  * Beschreibung. Quelle: Matrice allergènes (19.10.2026, aus Benjamins
  * Rezepturen) + bestätigte Annahmen des Betreibers (26.10.2026):
  *   - Rosinen gelten als sulfitiert → « sulfites (raisins secs) ».
+ *     Korrigiert 27.10.2026 (Mail Benjamin + Etiketten): Sultaninen M&C
+ *     « NATURAL », ohne Sulfit-Angabe; Panettone mit hausgemachten
+ *     kandierten Orangen → Cramique und Panettone ohne Sulfite. Rustik aux
+ *     graines laut Benjamin nur Weizenmehl T80 bio + Sonnenblume/Lein.
  *   - Viennoiseries/Tartes/Gaufre: gluten, lait, œufs.
  *   - Cookie: zusätzlich arachides.
  *   - Épeautre-sésame: Sesam ist drin (Name + Rezeptur).
@@ -44,7 +48,7 @@ const ALLERGENS = {
   'product-pain-gris': 'gluten (froment, seigle)',
   'product-pain-seigle': 'gluten (seigle, froment)',
   'product-rustik': 'gluten (froment, engrain)',
-  'product-rustik-lin-tournesol': 'gluten (froment, engrain)',
+  'product-rustik-lin-tournesol': 'gluten (froment)',
   'product-pain-noix': 'gluten (froment, seigle) · fruits à coque (noix)',
   'product-pain-fruits-secs':
     'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (raisins secs)',
@@ -54,7 +58,7 @@ const ALLERGENS = {
   'product-epeautre-sesame': 'gluten (épeautre, froment) · sésame',
   'product-pain-blanc-coupe': 'gluten (froment, seigle)',
   'product-baguette': 'gluten (froment)',
-  'product-cramique': 'gluten (froment) · œufs · lait · sulfites (raisins secs)',
+  'product-cramique': 'gluten (froment) · œufs · lait',
   // Tartes
   'product-tarte': 'gluten (froment) · lait · œufs',
   'product-tartelette': 'gluten (froment) · lait · œufs',
@@ -69,7 +73,7 @@ const ALLERGENS = {
   'product-bun': 'gluten (froment) · sésame',
   'product-petit-pain-courge': 'gluten (froment)',
   'product-pizza': 'gluten (froment) · lait',
-  'product-panettone': 'gluten (froment) · lait · œufs · sulfites (fruits secs)',
+  'product-panettone': 'gluten (froment) · lait · œufs',
 }
 
 const run = async () => {

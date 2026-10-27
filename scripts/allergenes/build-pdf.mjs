@@ -22,8 +22,8 @@ const here = dirname(fileURLToPath(import.meta.url))
 const root = resolve(here, '../..')
 
 // Versionsstand (sichtbar auf dem Dokument). Rezeptbasis: Matrix 19.10.2026;
-// bestätigte Annahmen des Betreibers 26.10.2026.
-const DATE_LABEL = '26 octobre 2026'
+// bestätigte Annahmen des Betreibers 26.10.2026; Korrekturen Benjamin 27.10.2026.
+const DATE_LABEL = '27 octobre 2026'
 
 // --- Produktdaten (Reihenfolge wie auf der Website, nach sortOrder) ----------
 // allergens: wortgleich zu Sanity. « · » trennt Allergene, Klammer = Getreide/
@@ -35,7 +35,7 @@ const GROUPS = [
       ['Pain gris au levain', 'gluten (froment, seigle)'],
       ['Pain au seigle', 'gluten (seigle, froment)'],
       ['Le Rustik', 'gluten (froment, engrain)'],
-      ['Rustik aux graines', 'gluten (froment, engrain)'],
+      ['Rustik aux graines', 'gluten (froment)'],
       ['Pain aux noix', 'gluten (froment, seigle) · fruits à coque (noix)'],
       [
         'Pain aux fruits',
@@ -47,7 +47,7 @@ const GROUPS = [
       ['Épeautre-sésame', 'gluten (épeautre, froment) · sésame'],
       ['Pain à la coupe', 'gluten (froment, seigle)'],
       ['Baguette', 'gluten (froment)'],
-      ['Cramique', 'gluten (froment) · œufs · lait · sulfites (raisins secs)'],
+      ['Cramique', 'gluten (froment) · œufs · lait'],
       ['Bun', 'gluten (froment) · sésame'],
       ['Petit pain aux graines de courge', 'gluten (froment)'],
     ],
@@ -74,7 +74,7 @@ const GROUPS = [
       ['Cookie chocolat cacahuète salé', 'gluten (froment, avoine) · arachides · lait · œufs'],
       ['Gaufre', 'gluten (froment) · lait · œufs'],
       ['Bases de pizza', 'gluten (froment) · lait'],
-      ['Panettone', 'gluten (froment) · lait · œufs · sulfites (fruits secs)'],
+      ['Panettone', 'gluten (froment) · lait · œufs'],
     ],
   },
 ]
