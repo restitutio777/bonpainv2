@@ -260,6 +260,23 @@ export default function Products({ onOpenModal }: ProductsProps) {
             {saturdayNotice}
           </span>
         </div>
+
+        {/* General cross-contact note: the per-product lines only list what
+            the recipe and supplier labels name. */}
+        <p className="text-sm text-center leading-snug mt-6 max-w-2xl mx-auto" style={{ color: '#8B7A6B' }}>
+          Notre fournil travaille aussi le sésame, les fruits à coque et les arachides&nbsp;:
+          des traces sont possibles dans tous nos produits. En cas d’allergie, parlez-nous
+          avant votre achat.{' '}
+          <a
+            href="/allergenes.pdf"
+            target="_blank"
+            rel="noopener"
+            className="underline underline-offset-2"
+            style={{ color: '#6E4D32' }}
+          >
+            Liste des allergènes (PDF)
+          </a>
+        </p>
       </div>
     </section>
   )

@@ -42,7 +42,7 @@ const GROUPS = [
       ['Pain aux noix', 'gluten (froment, seigle) · fruits à coque (noix)'],
       [
         'Pain aux fruits',
-        'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (raisins secs)',
+        'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (fruits secs)',
       ],
       ['Pain fagnard', 'gluten (froment, seigle)'],
       ['Pain au petit épeautre (engrain)', 'gluten (petit épeautre)'],
@@ -51,7 +51,7 @@ const GROUPS = [
       ['Pain à la coupe', 'gluten (froment, seigle)'],
       ['Baguette', 'gluten (froment)'],
       ['Cramique', 'gluten (froment) · œufs · lait'],
-      ['Bun', 'gluten (froment) · sésame'],
+      ['Bun', 'gluten (froment) · sésame · traces possibles : lait, œufs'],
       ['Petit pain aux graines de courge', 'gluten (froment)'],
     ],
   },
@@ -59,7 +59,10 @@ const GROUPS = [
     title: 'Viennoiseries',
     items: [
       ['Croissant', 'gluten (froment) · lait · œufs'],
-      ['Pain au chocolat', 'gluten (froment) · lait · œufs'],
+      [
+        'Pain au chocolat',
+        'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',
+      ],
       ['Feuilleté aux pommes', 'gluten (froment) · lait · œufs'],
       ['Torsade à la crème', 'gluten (froment) · lait · œufs'],
     ],
@@ -67,14 +70,23 @@ const GROUPS = [
   {
     title: 'Tartes',
     items: [
-      ['Tarte du jour', 'gluten (froment) · lait · œufs'],
-      ['Tartelette', 'gluten (froment) · lait · œufs'],
+      [
+        'Tarte du jour',
+        'gluten (froment) · lait · œufs · selon la garniture : fruits à coque, céleri, moutarde',
+      ],
+      [
+        'Tartelette',
+        'gluten (froment) · lait · œufs · selon la garniture : fruits à coque',
+      ],
     ],
   },
   {
     title: 'Spécialités',
     items: [
-      ['Cookie chocolat cacahuète salé', 'gluten (froment, avoine) · arachides · lait · œufs'],
+      [
+        'Cookie chocolat cacahuète salé',
+        'gluten (froment, avoine) · arachides · lait · œufs · traces possibles : soja, fruits à coque',
+      ],
       ['Gaufre', 'gluten (froment) · lait · œufs'],
       ['Bases de pizza', 'gluten (froment) · lait'],
       ['Panettone', 'gluten (froment) · lait · œufs'],
@@ -99,9 +111,9 @@ function renderAllergens(str) {
   return str
     .split(' · ')
     .map((tok) => {
-      // « traces possibles : … » = Spurenhinweis vom Lieferanten-Etikett:
+      // « traces possibles : … » / « selon la garniture : … » = vorsorgliche Angabe:
       // Einleitung gedämpft, die Allergene fett.
-      const t = tok.match(/^(traces possibles :)\s*(.*)$/)
+      const t = tok.match(/^(traces possibles :|selon la garniture :)\s*(.*)$/)
       if (t) {
         return `<span class="al"><span class="det">${escape(t[1])}</span> <b>${escape(
           t[2],
@@ -136,7 +148,7 @@ function renderGroup(g, modifier = '') {
 
 const [pains, viennois, tartes, specialites] = GROUPS
 
-const legend = `gluten · œufs · lait · fruits à coque · arachides · sésame · sulfites`
+const legend = `gluten · œufs · lait · fruits à coque · arachides · sésame · sulfites · soja · moutarde · céleri`
 
 const html = `<!doctype html>
 <html lang="fr">
@@ -253,7 +265,8 @@ const html = `<!doctype html>
 
     <div class="pad">
       <p class="intro">Vous trouverez ci-dessous les allergènes à déclaration
-        obligatoire présents dans nos produits, établis d’après nos recettes.
+        obligatoire présents dans nos produits, établis d’après nos recettes et
+        les étiquettes de nos fournisseurs, ainsi que les traces possibles.
         Seuls les 14 allergènes réglementaires (UE n° 1169/2011) sont indiqués —
         les graines, le curcuma et le miel n’en font pas partie.</p>
       <p class="legend">Allergènes concernés dans notre gamme :
@@ -281,7 +294,8 @@ const html = `<!doctype html>
         <span class="sep">·</span> <b>+32 493 21 09 25</b>
         <span class="sep">·</span> bonpainfaitmain.be</div>
       <p class="legal">Informations établies d’après nos recettes, état du
-        ${DATE_LABEL}. Une contamination croisée reste possible dans notre fournil.
+        ${DATE_LABEL}. Notre fournil travaille aussi le sésame, les fruits à coque et les
+        arachides&nbsp;: des traces sont possibles dans tous nos produits.
         <strong>En cas d’allergie, parlez-nous avant votre achat&nbsp;: nous vous
         renseignons volontiers.</strong></p>
     </footer>

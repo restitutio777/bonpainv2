@@ -7,6 +7,9 @@
  *     « NATURAL », ohne Sulfit-Angabe; Panettone mit hausgemachten
  *     kandierten Orangen → Cramique und Panettone ohne Sulfite. Rustik aux
  *     graines laut Benjamin nur Weizenmehl T80 bio + Sonnenblume/Lein.
+ *   - Im Zweifel deklarieren (Entscheidung Betreiber 27.10.2026): Schokolade
+ *     → Spuren Soja/Schalenfrüchte, Tarte/Tartelette je nach Füllung, Bun
+ *     evtl. mit Milch/Ei, Pain aux fruits Sulfite der Trockenfrüchte.
  *   - Viennoiseries/Tartes/Gaufre: gluten, lait, œufs.
  *   - Cookie: zusätzlich arachides.
  *   - Épeautre-sésame: Sesam ist drin (Name + Rezeptur).
@@ -54,7 +57,7 @@ const ALLERGENS = {
     'gluten (froment) · traces possibles : soja, sésame, moutarde',
   'product-pain-noix': 'gluten (froment, seigle) · fruits à coque (noix)',
   'product-pain-fruits-secs':
-    'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (raisins secs)',
+    'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (fruits secs)',
   'product-fagnard': 'gluten (froment, seigle)',
   'd0c43f74-48f6-4946-b19b-75f6e2fccb6f': 'gluten (petit épeautre)',
   'product-epeautre': 'gluten (épeautre, froment)',
@@ -63,17 +66,20 @@ const ALLERGENS = {
   'product-baguette': 'gluten (froment)',
   'product-cramique': 'gluten (froment) · œufs · lait',
   // Tartes
-  'product-tarte': 'gluten (froment) · lait · œufs',
-  'product-tartelette': 'gluten (froment) · lait · œufs',
+  'product-tarte':
+    'gluten (froment) · lait · œufs · selon la garniture : fruits à coque, céleri, moutarde',
+  'product-tartelette': 'gluten (froment) · lait · œufs · selon la garniture : fruits à coque',
   // Viennoiseries
   'product-croissant': 'gluten (froment) · lait · œufs',
-  'product-pain-chocolat': 'gluten (froment) · lait · œufs',
+  'product-pain-chocolat':
+    'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',
   'product-feuillete-pommes': 'gluten (froment) · lait · œufs',
   'product-torsade-creme': 'gluten (froment) · lait · œufs',
   // Spécialités / Theke
-  'product-cookie': 'gluten (froment, avoine) · arachides · lait · œufs',
+  'product-cookie':
+    'gluten (froment, avoine) · arachides · lait · œufs · traces possibles : soja, fruits à coque',
   'product-gaufre': 'gluten (froment) · lait · œufs',
-  'product-bun': 'gluten (froment) · sésame',
+  'product-bun': 'gluten (froment) · sésame · traces possibles : lait, œufs',
   'product-petit-pain-courge': 'gluten (froment)',
   'product-pizza': 'gluten (froment) · lait',
   'product-panettone': 'gluten (froment) · lait · œufs',
