@@ -48,7 +48,10 @@ const ALLERGENS = {
   'product-pain-gris': 'gluten (froment, seigle)',
   'product-pain-seigle': 'gluten (seigle, froment)',
   'product-rustik': 'gluten (froment, engrain)',
-  'product-rustik-lin-tournesol': 'gluten (froment)',
+  // Spuren laut Etikett der Leinsamen (Panemex): gluten, soja, sésame,
+  // moutarde; Gluten ist ohnehin drin.
+  'product-rustik-lin-tournesol':
+    'gluten (froment) · traces possibles : soja, sésame, moutarde',
   'product-pain-noix': 'gluten (froment, seigle) · fruits à coque (noix)',
   'product-pain-fruits-secs':
     'gluten (froment, engrain) · fruits à coque (noisettes, noix de cajou) · sulfites (raisins secs)',

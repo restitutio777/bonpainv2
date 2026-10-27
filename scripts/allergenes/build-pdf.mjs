@@ -35,7 +35,10 @@ const GROUPS = [
       ['Pain gris au levain', 'gluten (froment, seigle)'],
       ['Pain au seigle', 'gluten (seigle, froment)'],
       ['Le Rustik', 'gluten (froment, engrain)'],
-      ['Rustik aux graines', 'gluten (froment)'],
+      [
+        'Rustik aux graines',
+        'gluten (froment) · traces possibles : soja, sésame, moutarde',
+      ],
       ['Pain aux noix', 'gluten (froment, seigle) · fruits à coque (noix)'],
       [
         'Pain aux fruits',
@@ -96,6 +99,14 @@ function renderAllergens(str) {
   return str
     .split(' · ')
     .map((tok) => {
+      // « traces possibles : … » = Spurenhinweis vom Lieferanten-Etikett:
+      // Einleitung gedämpft, die Allergene fett.
+      const t = tok.match(/^(traces possibles :)\s*(.*)$/)
+      if (t) {
+        return `<span class="al"><span class="det">${escape(t[1])}</span> <b>${escape(
+          t[2],
+        )}</b></span>`
+      }
       const m = tok.match(/^(.*?)\s*(\(.*\))\s*$/)
       if (m) {
         return `<span class="al"><b>${escape(m[1])}</b> <span class="det">${escape(
