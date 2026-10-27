@@ -63,6 +63,10 @@ export default defineConfig({
         // from the Sanity CDN and are cached when they are actually shown;
         // precaching them made every first visit download all of them.
         globPatterns: ['**/*.{js,css,html,svg,woff2}', 'bonpainfaitmain-logo.webp'],
+        // The SPA fallback answers every navigation with index.html. Real
+        // files (e.g. /allergenes.pdf, opened from a link or a mail) and the
+        // API must reach the server, or a returning visitor gets the homepage.
+        navigateFallbackDenylist: [/^\/api\//, /\.[a-z0-9]+$/i],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cdn\.sanity\.io\/.*/i,
