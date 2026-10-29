@@ -135,6 +135,7 @@ Salut Benjamin,
 Le nouveau site passe sur bonpainfaitmain.be le [jour]. Quelques points pour toi :
 
 - Les commandes passées avant sur l'ancien site, tu les as déjà par mail. Elles n'apparaîtront pas dans la nouvelle liste du jour.
+- Le jour du changement, une ou deux commandes peuvent encore arriver par l'ancien site, avec le même mail qu'avant. Elles sont valables, prends-les en compte comme d'habitude.
 - Juste après la mise en ligne, je fais une commande de test au nom de « TEST » (1 baguette). Tu peux l'ignorer.
 - Chaque nuit, après la clôture des commandes d'un jour de vente, tu reçois un mail « Liste définitive » avec toutes les commandes de ce jour.
 - Nouveau : les clients peuvent cocher « commande régulière ». Ils reçoivent alors la même commande chaque semaine, le même jour, jusqu'à ce qu'ils l'arrêtent. Elles apparaissent dans ta liste comme les autres, avec un lien pour les modifier ou les arrêter si besoin.
@@ -142,3 +143,10 @@ Le nouveau site passe sur bonpainfaitmain.be le [jour]. Quelques points pour toi
 Si quelque chose te semble bizarre dans les mails, dis-le-moi.
 
 Philippe
+
+## Hinweis für Kunden (optional, z. B. Facebook-Post von Benjamin am Umstellungstag)
+
+Technisch müssen Kunden nichts tun (siehe GO-LIVE.md → „Übergang für bestehende Kunden“). Der Post ist nur Information, kein Muss. Keine Rundmail an alte Besteller (keine Einwilligung für Werbung, und nötig ist es nicht).
+
+Notre site fait peau neuve ! Même adresse : bonpainfaitmain.be. Vous y trouvez tous nos pains en photos et vous pouvez maintenant commander chaque semaine automatiquement (« commande régulière »).
+Si vous aviez installé l'application, elle se met à jour toute seule. Si elle affiche un message d'erreur, fermez-la et rouvrez-la.

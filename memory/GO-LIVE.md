@@ -24,6 +24,15 @@ Für eine lokale Session. Dienste-Einstellungen macht Claude im Browser (Betreib
 8. **Testbestellung über https://bonpainfaitmain.be** (erst wenn Schritt 6 READY): Name „TEST", Adresse des Betreibers, nächster gültiger Verkaufstag, 1 Baguette. Prüfen: Bäcker-Mail an Benjamin + Bestätigung kommen an, Links in der Mail zeigen auf die Domain, Runtime-Logs ohne Fehler. Benjamin ist vorgewarnt (Schritt 2); der Eintrag steht in seiner Tagesliste.
 9. **Erste Nacht beobachten:** `/api/daily` 23:00 UTC (Pro: pünktlich), Runtime-Logs am Morgen, Benjamin fragen, ob Liste définitive ankam.
 
+## Übergang für bestehende Kunden (geklärt und getestet 2026-10-29)
+Kein hartes Neuladen nötig, und vom Server aus auch nicht erzwingbar. Getestet in Brave: v1 live über einen lokalen Proxy geladen, v1-SW aktiv, dann „DNS umgeschaltet“ (Proxy → v2-Preview).
+- v1 hat nichts gecacht: der SW `/sw.js` reicht nur durch (kein Cache), das HTML kommt mit `no-store`. v1-Assets sind zwar 1 Jahr gecacht, haben aber gehashte Namen, die v2 nie anfordert.
+- Erstes normales Öffnen nach der Umstellung: v2-HTML aus dem Netz, v2 registriert `/sw.js` (selber Pfad) → ersetzt den v1-SW sofort (skipWaiting/clientsClaim), Precache gefüllt, keine Fehler. Manifest-`id` ist in v1 und v2 `/` → installierte Android-Apps übernehmen Name/Icon von selbst; iOS behält das alte Icon (nur Optik).
+- **Einziger echter Fall: eine v1-Seite, die schon vor der Umstellung offen war** (Tab im Hintergrund, App im Speicher). Sie zeigt alte Produkte und postet an `/send.php`. Vorher hätte v2 mit 405 geantwortet → v1 zeigt „Erreur … contactez au +32 493 21 09 25“ (Anruf bei Benjamin). Jetzt beantwortet `api/legacy-send.ts` (Rewrite in vercel.json) das mit 200-JSON, v1 zeigt: „Notre site vient d'être mis à jour … Fermez cette page (ou l’application), rouvrez-la et refaites votre commande.“ Die Bestellung wird nicht weitergeleitet. Log: `[legacy-send]` in den Runtime-Logs zeigt, wie oft das noch vorkommt.
+- Wer nach der Umstellung noch eine alte DNS-Antwort hat (TTL 300 s, also Minuten), landet auf v1 bei Infomaniak und bestellt wie früher: Mail an Benjamin, nicht in der neuen Liste. Steht in der Umstellungsnachricht an Benjamin.
+- Nach Schritt 5 prüfen: `curl -s -X POST -F a=b https://bonpainfaitmain.be/send.php` → JSON mit `success:false` und der Meldung.
+- Kundentext (optional, Facebook): MAILS-benjamin-produkte.md → „Hinweis für Kunden“.
+
 ## Rückfall
 Zone vor der Änderung (Infomaniak, Vue avancée, 2026-10-29): `@` A 185.125.27.25 / AAAA 2001:1600:0:aaaa::80:15 (TTL 300), MX 5 mta-gw.infomaniak.ch, TXT SPF infomaniak, autoconfig/autodiscover CNAME infomaniak.com, `send` MX/TXT amazonses (Resend), `www` A/AAAA wie Apex (TTL 300), `_dmarc` p=reject, `_domainkey` NS nsany1/2 (delegierte Unterzone mit resend-DKIM). Infomaniak führt Zonenversionen („Version actuelle“-Auswahl) → Rücksprung auch dort möglich. Im Editor nur die Zeilen `@`/`www` A/AAAA anfassen.
 DNS zurück: `@` A `185.125.27.25`, AAAA `2001:1600:0:aaaa::80:15`, `www` wie in der gesicherten Zone. v1 bleibt bei Infomaniak liegen (Entscheidung 2026-10-29: Backup, nicht aufräumen).
