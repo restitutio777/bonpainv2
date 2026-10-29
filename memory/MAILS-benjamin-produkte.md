@@ -105,3 +105,23 @@ Tu peux me répondre par mail ou l'écrire en commentaire sous la photo, comme p
 
 Merci !
 Philippe
+
+## Nachricht Preise (Entwurf 2026-10-29, Versand durch Betreiber)
+
+Salut Benjamin,
+
+Le nouveau site est presque prêt à passer en ligne. Il me manque encore tes prix pour ces produits (ils affichent pour l'instant 6 € provisoires) :
+
+- Cramique
+- Pain au petit épeautre (engrain)
+- Pain aux fruits
+- Pain à la coupe
+- Rustik aux graines
+- Épeautre-sésame
+- Tarte du jour
+
+Et le poids pour : Cramique, Pain aux fruits, Pain à la coupe, Rustik aux graines, Épeautre-sésame.
+
+Pour Bun, Gaufre, Petit pain aux graines de courge, Tartelette aux noix et Torsade à la crème, le site affiche « Prix en magasin ». Si tu préfères un prix, envoie-le aussi.
+
+Tu peux simplement me répondre avec la liste. Merci !
