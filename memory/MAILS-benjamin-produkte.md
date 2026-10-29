@@ -125,3 +125,20 @@ Et le poids pour : Cramique, Pain aux fruits, Pain à la coupe, Rustik aux grain
 Pour Bun, Gaufre, Petit pain aux graines de courge, Tartelette aux noix et Torsade à la crème, le site affiche « Prix en magasin ». Si tu préfères un prix, envoie-le aussi.
 
 Tu peux simplement me répondre avec la liste. Merci !
+
+## Nachricht Umstellung (Entwurf 2026-10-29, Versand durch Betreiber, kurz vor dem Go-live)
+
+Datum `[jour]` einsetzen, wenn die Preise da sind. Am besten direkt nach Bestellschluss eines Verkaufstags umstellen.
+
+Salut Benjamin,
+
+Le nouveau site passe sur bonpainfaitmain.be le [jour]. Quelques points pour toi :
+
+- Les commandes passées avant sur l'ancien site, tu les as déjà par mail. Elles n'apparaîtront pas dans la nouvelle liste du jour.
+- Juste après la mise en ligne, je fais une commande de test au nom de « TEST » (1 baguette). Tu peux l'ignorer.
+- Chaque nuit, après la clôture des commandes d'un jour de vente, tu reçois un mail « Liste définitive » avec toutes les commandes de ce jour.
+- Nouveau : les clients peuvent cocher « commande régulière ». Ils reçoivent alors la même commande chaque semaine, le même jour, jusqu'à ce qu'ils l'arrêtent. Elles apparaissent dans ta liste comme les autres, avec un lien pour les modifier ou les arrêter si besoin.
+
+Si quelque chose te semble bizarre dans les mails, dis-le-moi.
+
+Philippe
