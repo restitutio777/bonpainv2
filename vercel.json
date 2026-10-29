@@ -9,6 +9,7 @@
     { "source": "/agb.html", "destination": "/cgv", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/send.php", "destination": "/api/legacy-send" },
     {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
