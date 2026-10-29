@@ -3,6 +3,11 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "regions": ["fra1"],
+  "redirects": [
+    { "source": "/impressum.html", "destination": "/mentions-legales", "permanent": true },
+    { "source": "/datenschutz.html", "destination": "/confidentialite", "permanent": true },
+    { "source": "/agb.html", "destination": "/cgv", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/((?!api/).*)",
