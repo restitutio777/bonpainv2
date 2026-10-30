@@ -30,6 +30,25 @@ function usePath() {
   return path
 }
 
+function NotFound() {
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center bg-[#FAF6F1] px-6 text-center">
+      <h1 className="font-display text-3xl text-[#2D1F14] mb-3">Page introuvable</h1>
+      <p className="text-[#6E4D32] mb-8">
+        Cette page n’existe pas ou plus.
+        <br />
+        Nos pains, eux, sont toujours là.
+      </p>
+      <a
+        href="/"
+        className="rounded-full bg-[#A67C52] px-7 py-3.5 font-semibold tracking-wide text-white no-underline"
+      >
+        Retour à l’accueil
+      </a>
+    </main>
+  )
+}
+
 function extractText(blocks: PortableTextBlock[] | null): string[] {
   if (!blocks) return []
   return blocks
@@ -50,6 +69,9 @@ function AppContent() {
   if (path === '/confidentialite') return <Confidentialite />
   if (path === '/cgv') return <CGV />
   if (path === '/abonnement') return <Subscription />
+  // The server answers unknown paths with 404.html; this covers the installed
+  // app, whose service worker serves the app shell for every navigation.
+  if (path !== '/' && path !== '/index.html') return <NotFound />
 
   const modalProduct = products.find((p) => p._id === activeModal)
 

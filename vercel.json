@@ -2,16 +2,38 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "regions": ["fra1"],
+  "regions": [
+    "fra1"
+  ],
+  "trailingSlash": false,
   "redirects": [
-    { "source": "/impressum.html", "destination": "/mentions-legales", "permanent": true },
-    { "source": "/datenschutz.html", "destination": "/confidentialite", "permanent": true },
-    { "source": "/agb.html", "destination": "/cgv", "permanent": true }
+    {
+      "source": "/impressum.html",
+      "destination": "/mentions-legales",
+      "permanent": true
+    },
+    {
+      "source": "/datenschutz.html",
+      "destination": "/confidentialite",
+      "permanent": true
+    },
+    {
+      "source": "/agb.html",
+      "destination": "/cgv",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/send.php", "destination": "/api/legacy-send" },
     {
-      "source": "/((?!api/).*)",
+      "source": "/send.php",
+      "destination": "/api/legacy-send"
+    },
+    {
+      "source": "/site.webmanifest",
+      "destination": "/manifest.webmanifest"
+    },
+    {
+      "source": "/(mentions-legales|confidentialite|cgv|abonnement)",
       "destination": "/index.html"
     }
   ],
