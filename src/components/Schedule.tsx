@@ -24,12 +24,12 @@ const FALLBACK_DAYS = [
   {
     day: 'Mercredi',
     hours: ['8h — 12h', '13h — 15h'],
-    hasViennoiseries: false,
+    hasViennoiseries: true,
   },
   {
     day: 'Vendredi',
     hours: ['8h — 12h', '13h — 17h'],
-    hasViennoiseries: false,
+    hasViennoiseries: true,
   },
   {
     day: 'Samedi',
@@ -69,7 +69,13 @@ export default function Schedule() {
   }))
 
   const days = cmsDays.length > 0 ? cmsDays : FALLBACK_DAYS
-  const viennoiserieDay = days.find((d) => d.hasViennoiseries)?.day || 'Samedi'
+  const viennoiserieDays = days.filter((d) => d.hasViennoiseries).map((d) => d.day)
+  const viennoiserieLabel =
+    viennoiserieDays.length === 0
+      ? 'Samedi'
+      : viennoiserieDays.length === days.length
+        ? 'Tous les jours'
+        : viennoiserieDays.join(', ')
 
   return (
     <section
@@ -93,13 +99,13 @@ export default function Schedule() {
             className="font-display font-normal leading-[1.15] mb-4"
             style={{ fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', color: '#2D1F14' }}
           >
-            Vente à l'atelier,{' '}
+            Vente sur commande{' '}
             <em className="italic" style={{ color: '#A67C52' }}>
-              sur commande
+              et à l'atelier
             </em>
           </h2>
           <p className="text-lg leading-[1.7]" style={{ color: '#8B7A6B' }}>
-            Uniquement sur commande — merci de réserver minimum {orderLeadDays} jours à l'avance.
+            Pour les commandes, merci de réserver minimum {orderLeadDays} jours à l'avance.
           </p>
         </div>
 
@@ -262,7 +268,7 @@ export default function Schedule() {
                 className="text-xs font-medium px-2.5 py-1 rounded-full ml-auto"
                 style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)', color: 'white' }}
               >
-                {viennoiserieDay}
+                {viennoiserieLabel}
               </span>
             </div>
             <div className="px-6 py-5 md:px-8 md:py-6">

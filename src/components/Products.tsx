@@ -49,7 +49,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
     'Pains sur commande et assortiment du jour, préparés avec soin en petite production. Choisissez vos pains, nous les préparons pour le jour de votre retrait.'
   const saturdayNotice =
     content?.saturdayNotice ||
-    'Le samedi, nous ajoutons un petit choix de viennoiseries faites maison — croissants et pains au chocolat sur commande.'
+    'Chaque jour de vente, nous ajoutons un petit choix de viennoiseries faites maison — croissants et pains au chocolat sur commande.'
 
   return (
     <section
