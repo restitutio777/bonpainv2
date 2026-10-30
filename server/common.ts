@@ -90,12 +90,16 @@ export function redisFromEnv(): Redis | null {
 
 export type MailConfig = { resend: Resend; toEmail: string; fromEmail: string }
 
+/** A bare address shows as "orders" in the inbox; give it the bakery's name. */
+export const senderWithName = (address: string) =>
+  address.includes('<') ? address : `Bon Pain Fait Main <${address}>`
+
 export function mailFromEnv(): MailConfig | null {
   const apiKey = process.env.RESEND_API_KEY
   const toEmail = process.env.ORDER_TO_EMAIL
   const fromEmail = process.env.ORDER_FROM_EMAIL
   if (!apiKey || !toEmail || !fromEmail) return null
-  return { resend: new Resend(apiKey), toEmail, fromEmail }
+  return { resend: new Resend(apiKey), toEmail, fromEmail: senderWithName(fromEmail) }
 }
 
 /**

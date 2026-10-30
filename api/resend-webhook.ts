@@ -134,7 +134,8 @@ export default {
     // api/order.ts) report to the same production webhook. Their notices
     // must not reach the bakery either.
     const isTest = data.subject.startsWith('[TEST] ')
-    const from = process.env.ORDER_FROM_EMAIL
+    const address = process.env.ORDER_FROM_EMAIL
+    const from = address && !address.includes('<') ? `Bon Pain Fait Main <${address}>` : address
     const to = IS_PRODUCTION && !isTest ? process.env.ORDER_TO_EMAIL : process.env.ORDER_TO_EMAIL_PREVIEW
     if (!from || !to) {
       console.warn(`[resend-webhook] no notice sent (${isTest ? 'test order' : 'no sender/recipient'})`)
