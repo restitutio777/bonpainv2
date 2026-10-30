@@ -7,7 +7,7 @@ Für eine lokale Session. Dienste-Einstellungen macht Claude im Browser (Betreib
 - [x] Rechtstexte, Allergene freigegeben (2026-10-29).
 - [x] Preise/Gewichte von Benjamin: eingespielt 2026-10-30, Rest „Prix en magasin“.
 - [x] Benjamins Durchsicht der Produktseite (2026-10-30): „vraiment bien“, Korrekturen umgesetzt.
-- [ ] Benjamins Testbestellung + Freigabe: Nachricht (deutsch) am 2026-10-30 raus, Antwort abwarten. **Blockiert Schritt 4 ff.**
+- [x] Benjamins Freigabe: 2026-10-30 per Sprachnachricht („kann online gehen“, evtl. Wochenende). Testbestellung nicht erwähnt → Bestell-Mails in Schritt 8 prüfen.
 - [x] Studio-Login + Deploy durch Betreiber (2026-10-30).
 - [x] Testbestellungs-Mails: Betreiber hat sie nicht geprüft → in Schritt 8 mit der echten Testbestellung prüfen.
 - [x] Weiterleitungen alte v1-URLs (`/impressum.html`, `/datenschutz.html`, `/agb.html`) in `vercel.json` (`fa1b21b`).
@@ -44,7 +44,7 @@ DNS zurück: `@` A `185.125.27.25`, AAAA `2001:1600:0:aaaa::80:15`, `www` wie in
 - `src/lib/orderApi.ts` auf relatives `/api/order` vereinfachen.
 - Google Search Console: Property prüfen, Sitemap `https://bonpainfaitmain.be/sitemap.xml` einreichen (nur wenn Zugang besteht).
 - Benjamins Studio-Zugang prüfen (Members in Sanity-Projekt `5f1udd5l`), damit er Preise/Urlaub selbst pflegen kann.
-- Offene Inhalte: Benennung Gaufre, Torsade, Petit pain courge von Benjamin bestätigen; Tarte du jour (übliche Füllungen).
+- Offene Inhalte: neue Fotos Panettone und Pizza von Benjamin; Benennung Gaufre bestätigen; Tarte du jour (übliche Füllungen).
 
 ## Bekannt und unkritisch
 - v1-Service-Worker ist reines Netzwerk-Passthrough (kein Cache), v2 liefert eigenes `/sw.js` am selben Pfad → ersetzt ihn beim nächsten Besuch.

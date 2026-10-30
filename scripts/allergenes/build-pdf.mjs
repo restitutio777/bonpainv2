@@ -52,7 +52,6 @@ const GROUPS = [
       ['Baguette', 'gluten (froment)'],
       ['Cramique', 'gluten (froment) · œufs · lait'],
       ['Bun', 'gluten (froment) · lait · sésame'],
-      ['Petit pain aux graines de courge', 'gluten (froment)'],
     ],
   },
   {
