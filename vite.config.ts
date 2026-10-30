@@ -62,6 +62,11 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // A new version takes over at once instead of waiting until every
+        // tab and the installed app are closed (which on a phone can be days).
+        // src/lib/swUpdate.ts then reloads onto it if nothing was touched.
+        skipWaiting: true,
+        clientsClaim: true,
         // App shell only. Photos come from /assets/ (hashed, immutable) or
         // from the Sanity CDN and are cached when they are actually shown;
         // precaching them made every first visit download all of them.
