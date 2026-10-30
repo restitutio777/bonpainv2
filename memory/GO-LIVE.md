@@ -6,14 +6,15 @@ Für eine lokale Session. Dienste-Einstellungen macht Claude im Browser (Betreib
 - [x] Vercel-Team `bolteds-projects` auf Pro (aktiv seit 2026-10-29, Billing-Seite; `get_team` zeigt den Plan nicht).
 - [x] Rechtstexte, Allergene freigegeben (2026-10-29).
 - [x] Preise/Gewichte von Benjamin: eingespielt 2026-10-30, Rest „Prix en magasin“.
-- [ ] Benjamins Durchsicht der Produktseite: Nachricht ging am 2026-10-30 raus, Antwort abwarten. **Blockiert Schritt 4 ff.**
+- [x] Benjamins Durchsicht der Produktseite (2026-10-30): „vraiment bien“, Korrekturen umgesetzt.
+- [ ] Benjamins Testbestellung + Freigabe: Nachricht (deutsch) am 2026-10-30 raus, Antwort abwarten. **Blockiert Schritt 4 ff.**
 - [x] Studio-Login + Deploy durch Betreiber (2026-10-30).
 - [x] Testbestellungs-Mails: Betreiber hat sie nicht geprüft → in Schritt 8 mit der echten Testbestellung prüfen.
 - [x] Weiterleitungen alte v1-URLs (`/impressum.html`, `/datenschutz.html`, `/agb.html`) in `vercel.json` (`fa1b21b`).
 
 ## Ablauf
 1. **[erledigt 2026-10-29] Vercel prüfen:** Pro aktiv, Prod `e1d737b` READY, Node 24, Budget 25 $ / Pause aus gesetzt. Original: Plan Pro, letztes Production-Deployment READY. Spend Management: Benachrichtigung auf ca. 25 $ (Standard 200 $), keine automatische Pause.
-2. **[Entwurf fertig: MAILS-benjamin-produkte.md → „Nachricht Umstellung“, `[jour]` einsetzen] Benjamin vorab informieren** (Nachricht entwerfen, Betreiber schickt): Umstellungstag; Bestellungen, die vorher über die alte Seite kamen, stehen nicht in der neuen Tagesliste (er hat sie als Einzelmails); eine Testbestellung „TEST" kommt, bitte ignorieren; kurze Vorstellung der Abo-Funktion (kennt er noch nicht) und der nächtlichen „Liste définitive". Zeitpunkt: möglichst direkt nach Bestellschluss eines Verkaufstags.
+2. **[erledigt 2026-10-30 mit „Nachricht Freigabe + Testbestellung“ in MAILS-benjamin-produkte.md; Umstelltag selbst noch kurz ansagen] Benjamin vorab informieren** (Nachricht entwerfen, Betreiber schickt): Umstellungstag; Bestellungen, die vorher über die alte Seite kamen, stehen nicht in der neuen Tagesliste (er hat sie als Einzelmails); eine Testbestellung „TEST" kommt, bitte ignorieren; kurze Vorstellung der Abo-Funktion (kennt er noch nicht) und der nächtlichen „Liste définitive". Zeitpunkt: möglichst direkt nach Bestellschluss eines Verkaufstags.
 3. **[erledigt 2026-10-29, beide `verified: true`, noch `misconfigured` bis DNS] Domain im Vercel-Projekt anlegen** (`prj_9E1lvKIQQWGIzz5MszUSOhdJbWD4`): `bonpainfaitmain.be` und `www.bonpainfaitmain.be` (www → 308 auf Apex). DNS-Sollwerte aus Vercel lesen (`get_domain_config`), nicht die Doku-Beispielwerte nehmen. **Stand 2026-10-29:** Apex A `216.150.1.1` und `216.150.16.1` (rank 1; rank 2 wäre `76.76.21.21`), kein AAAA; www CNAME `d472c357a95bd165.vercel-dns-017.com.` (rank 2 `cname.vercel-dns.com.`). Vor Schritt 4 nochmal lesen.
 4. **Infomaniak DNS (Browser, Manager → Domain bonpainfaitmain.be → DNS-Zone):** vorher die ganze Zone als Screenshot/Text in den Scratchpad sichern. Dann:
    - `@` A `185.125.27.25` → Vercel-Wert
