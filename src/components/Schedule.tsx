@@ -1,23 +1,7 @@
-import { Clock, CakeSlice, Wheat, ChevronRight } from 'lucide-react'
+import { Clock, CakeSlice, Wheat } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { dayLabelFr, formatTimeFr, isViennoiserieDay, openDays } from '../lib/schedule'
-import { getProductStatus } from '../lib/productStatus'
-
-// Shown until the products load — the real lists come from the studio, so the
-// baker never has to touch code to add or drop a bread.
-const FALLBACK_BREADS = [
-  'Pain gris au levain',
-  'Pain fagnard',
-  'Pain aux noix',
-  'Pain d’épeautre',
-  'Le Rustik',
-  'Pain au seigle',
-  'Baguette',
-  'Tarte du jour',
-]
-
-const FALLBACK_VIENNOISERIES = ['Croissant', 'Pain au chocolat']
 
 // Shown until the CMS schedule loads (or if it is empty).
 const FALLBACK_DAYS = [
@@ -40,25 +24,9 @@ const FALLBACK_DAYS = [
 
 export default function Schedule() {
   useScrollAnimation()
-  const { schedule, products, settings } = useSanity()
+  const { schedule, settings } = useSanity()
   const orderLeadDays = settings?.orderLeadDays || 2
   const facebookUrl = settings?.facebookUrl
-
-  // Only products the baker currently sells: hidden ones are already filtered
-  // out by the query, out-of-season ones by getProductStatus.
-  // Counter-only items (cookies, waffles, …) are not part of the order lists.
-  const available = products.filter(
-    (p) => p.orderInForm !== false && getProductStatus(p).available
-  )
-  const cmsBreads = available
-    .filter((p) => p.category !== 'viennoiserie')
-    .map((p) => p.name)
-  const cmsViennoiseries = available
-    .filter((p) => p.category === 'viennoiserie')
-    .map((p) => p.name)
-  const breads = cmsBreads.length > 0 ? cmsBreads : FALLBACK_BREADS
-  const viennoiseries =
-    cmsViennoiseries.length > 0 ? cmsViennoiseries : FALLBACK_VIENNOISERIES
 
   const cmsDays = openDays(schedule).map((s) => ({
     day: dayLabelFr(s.day),
@@ -69,13 +37,6 @@ export default function Schedule() {
   }))
 
   const days = cmsDays.length > 0 ? cmsDays : FALLBACK_DAYS
-  const viennoiserieDays = days.filter((d) => d.hasViennoiseries).map((d) => d.day)
-  const viennoiserieLabel =
-    viennoiserieDays.length === 0
-      ? 'Samedi'
-      : viennoiserieDays.length === days.length
-        ? 'Tous les jours'
-        : viennoiserieDays.join(', ')
 
   return (
     <section
@@ -176,7 +137,7 @@ export default function Schedule() {
             href={facebookUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="animate-on-scroll flex items-center justify-center gap-3 mb-12 px-6 py-4 rounded-xl text-base no-underline transition-colors duration-200"
+            className="animate-on-scroll flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-base no-underline transition-colors duration-200"
             style={{ background: 'white', border: '1px dashed #D4BFA5', color: '#6E4D32' }}
           >
             <svg
@@ -203,94 +164,6 @@ export default function Schedule() {
             </span>
           </a>
         )}
-
-        <div className="animate-on-scroll">
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{
-              background: 'white',
-              boxShadow: '0 1px 3px rgba(45,31,20,0.05)',
-            }}
-          >
-            <div
-              className="px-6 py-4 md:px-8 md:py-5 flex items-center gap-3"
-              style={{ borderBottom: '1px solid #F5EDE3' }}
-            >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: '#FDF3E7' }}
-              >
-                <Wheat size={16} style={{ color: '#A67C52' }} />
-              </div>
-              <h3
-                className="font-display text-lg font-semibold"
-                style={{ color: '#2D1F14' }}
-              >
-                Nos pains
-              </h3>
-            </div>
-            <div className="px-6 py-5 md:px-8 md:py-6">
-              <div className="flex flex-wrap gap-2">
-                {breads.map((bread) => (
-                  <span
-                    key={bread}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm"
-                    style={{
-                      background: '#FDF8F3',
-                      color: '#6E4D32',
-                      border: '1px solid #F0E4D5',
-                    }}
-                  >
-                    <ChevronRight size={12} style={{ color: '#C4A882' }} />
-                    {bread}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div
-              className="px-6 py-4 md:px-8 md:py-5 flex items-center gap-3"
-              style={{ borderTop: '1px solid #F5EDE3', borderBottom: '1px solid #F5EDE3' }}
-            >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: '#FDF3E7' }}
-              >
-                <CakeSlice size={16} style={{ color: '#A67C52' }} />
-              </div>
-              <h3
-                className="font-display text-lg font-semibold"
-                style={{ color: '#2D1F14' }}
-              >
-                Viennoiseries
-              </h3>
-              <span
-                className="text-xs font-medium px-2.5 py-1 rounded-full ml-auto"
-                style={{ background: 'linear-gradient(135deg, #A67C52, #8B6340)', color: 'white' }}
-              >
-                {viennoiserieLabel}
-              </span>
-            </div>
-            <div className="px-6 py-5 md:px-8 md:py-6">
-              <div className="flex flex-wrap gap-2">
-                {viennoiseries.map((v) => (
-                  <span
-                    key={v}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm"
-                    style={{
-                      background: '#FDF8F3',
-                      color: '#6E4D32',
-                      border: '1px solid #F0E4D5',
-                    }}
-                  >
-                    <ChevronRight size={12} style={{ color: '#C4A882' }} />
-                    {v}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
