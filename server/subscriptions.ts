@@ -129,7 +129,7 @@ export function isDue(sub: Subscription, date: string, catalog: Catalog | null):
   return dateState(sub, date, catalog) === 'planned'
 }
 
-export type PricedItem = { qty: number; name: string; amount: number | null }
+export type PricedItem = { qty: number; name: string; amount: number | null; byWeight?: boolean }
 
 /** The subscription's lines for `date` at today's prices, and what is not made that day. */
 export function itemsOn(
@@ -146,7 +146,8 @@ export function itemsOn(
   for (const i of sub.items) {
     const p = byId.get(i.id)
     if (p && availableOn(p, date)) {
-      items.push({ qty: i.qty, name: p.name, amount: Math.round(p.price * i.qty * 100) / 100 })
+      if (p.priceUnit === 'kg') items.push({ qty: i.qty, name: p.name, amount: 0, byWeight: true })
+      else items.push({ qty: i.qty, name: p.name, amount: Math.round(p.price * i.qty * 100) / 100 })
     } else {
       unavailable.push(p?.name ?? i.name)
     }

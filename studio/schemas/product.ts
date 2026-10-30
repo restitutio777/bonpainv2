@@ -65,6 +65,23 @@ export default defineType({
       validation: (R) => R.required().min(0),
     }),
     defineField({
+      name: 'priceUnit',
+      title: 'Prix par',
+      description:
+        'Au kilo : le site affiche « € / kg », le client commande à la pièce et le prix est fixé à la pesée (hors total de la commande).',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Pièce', value: 'piece' },
+          { title: 'Kilo', value: 'kg' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'piece',
+      group: 'basics',
+    }),
+    defineField({
       name: 'image',
       title: 'Photo du produit',
       description: 'Format carré recommandé. Cliquez pour cadrer la photo.',
@@ -250,8 +267,9 @@ export default defineType({
       media: 'image',
       isActive: 'isActive',
       price: 'price',
+      priceUnit: 'priceUnit',
     },
-    prepare({ title, subtitle, media, isActive, price }) {
+    prepare({ title, subtitle, media, isActive, price, priceUnit }) {
       const cat: Record<string, string> = {
         bread: 'Pain',
         viennoiserie: 'Viennoiserie',
@@ -259,7 +277,7 @@ export default defineType({
         tart: 'Tarte',
       }
       const parts = [cat[subtitle] || subtitle]
-      if (typeof price === 'number') parts.push(`${price.toFixed(2)} €`)
+      if (typeof price === 'number') parts.push(`${price.toFixed(2)} €${priceUnit === 'kg' ? ' / kg' : ''}`)
       if (isActive === false) parts.push('• caché')
       return {
         title,

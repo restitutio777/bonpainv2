@@ -83,3 +83,10 @@ function formatDay(d: Date): string {
 export function isOrderable(product: SanityProduct, now: Date = new Date()): boolean {
   return product.orderInForm !== false && getProductStatus(product, now).available
 }
+
+/** Sold by weight: ordered per piece, priced at the scale, never in a total. */
+export const isByWeight = (product: Pick<SanityProduct, 'priceUnit'>) => product.priceUnit === 'kg'
+
+/** "€15,90" or "€15,90/kg". */
+export const priceLabel = (product: Pick<SanityProduct, 'price' | 'priceUnit'>) =>
+  `€${product.price.toFixed(2).replace('.', ',')}${isByWeight(product) ? '/kg' : ''}`

@@ -11,7 +11,8 @@ import {
   escapeHtml,
   formatDayShort,
   formatPickupDate,
-  formatPrice,
+  formatTotal,
+  hasByWeightLine,
   siteUrl,
 } from './common.js'
 import type { OrderPayload } from './day.js'
@@ -65,7 +66,7 @@ export function buildCustomerConfirmation(order: OrderPayload, regular?: Regular
     `Votre commande :`,
     items,
     ``,
-    `Total : ${formatPrice(total)}`,
+    `Total : ${formatTotal(total, hasByWeightLine(items))}`,
     ...regularText,
     ``,
     `Pour modifier ou annuler, répondez simplement à cet email ou appelez le ${BAKERY_PHONE}.`,
@@ -97,7 +98,7 @@ export function buildCustomerConfirmation(order: OrderPayload, regular?: Regular
         .split('\n')
         .map((l) => `<li style="margin: 4px 0;">${escapeHtml(l)}</li>`)
         .join('')}</ul>
-      <p><strong>Total : ${escapeHtml(formatPrice(total))}</strong></p>
+      <p><strong>Total : ${escapeHtml(formatTotal(total, hasByWeightLine(items)))}</strong></p>
       ${regularHtml}
       ${MUTED(`Pour modifier ou annuler, répondez simplement à cet email ou appelez le ${PHONE_HTML}.`)}
       ${SIGNATURE_HTML(pickup.jour)}

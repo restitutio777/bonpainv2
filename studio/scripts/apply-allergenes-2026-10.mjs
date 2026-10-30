@@ -80,7 +80,7 @@ const ALLERGENS = {
   'product-pain-chocolat':
     'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',
   'product-feuillete-pommes': 'gluten (froment) · lait · œufs',
-  'product-torsade-creme': 'gluten (froment) · lait · œufs',
+  'product-torsade-creme': 'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',
   // Spécialités / Theke
   'product-cookie':
     'gluten (froment, avoine) · arachides · lait · œufs · traces possibles : soja, fruits à coque',

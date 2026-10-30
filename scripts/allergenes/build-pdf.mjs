@@ -23,7 +23,7 @@ const root = resolve(here, '../..')
 
 // Versionsstand (sichtbar auf dem Dokument). Rezeptbasis: Matrix 19.10.2026;
 // bestätigte Annahmen des Betreibers 26.10.2026; Korrekturen Benjamin 27.10.2026.
-const DATE_LABEL = '27 octobre 2026'
+const DATE_LABEL = '30 octobre 2026'
 
 // --- Produktdaten (Reihenfolge wie auf der Website, nach sortOrder) ----------
 // allergens: wortgleich zu Sanity. « · » trennt Allergene, Klammer = Getreide/
@@ -64,7 +64,7 @@ const GROUPS = [
         'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',
       ],
       ['Feuilleté aux pommes', 'gluten (froment) · lait · œufs'],
-      ['Torsade à la crème', 'gluten (froment) · lait · œufs'],
+      ['Rose au chocolat crème', 'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque'],
     ],
   },
   {

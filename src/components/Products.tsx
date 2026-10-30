@@ -2,7 +2,7 @@ import { Plus, Calendar } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
-import { getProductStatus } from '../lib/productStatus'
+import { getProductStatus, isByWeight } from '../lib/productStatus'
 import { urlFor } from '../lib/sanity'
 import fallbackImg from '../assets/mood/baguettes-800.webp'
 import type { SanityImageSource } from '@sanity/image-url'
@@ -195,7 +195,7 @@ export default function Products({ onOpenModal }: ProductsProps) {
                   <span className="text-sm" style={{ color: '#8B7A6B' }}>
                     {/* Counter-only items without a known price are stored as 0. */}
                     {product.price > 0
-                      ? `€ ${product.price.toFixed(2).replace('.', ',')}`
+                      ? `€ ${product.price.toFixed(2).replace('.', ',')}${isByWeight(product) ? ' / kg' : ''}`
                       : 'Prix en magasin'}
                   </span>
                   {product.orderInForm !== false && (

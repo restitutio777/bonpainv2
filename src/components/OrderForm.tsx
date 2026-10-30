@@ -3,7 +3,7 @@ import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
-import { isOrderable } from '../lib/productStatus'
+import { isByWeight, isOrderable, priceLabel } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 import { orderEndpoint } from '../lib/orderApi'
 import { openInstall } from '../lib/pwaInstall'
@@ -153,6 +153,7 @@ export default function OrderForm() {
 
   // Only orderable products count — same predicate as the submitted payload.
   const total = totalPrice(orderItems)
+  const hasByWeight = orderItems.some((p) => isByWeight(p) && (cart[p._id] || 0) > 0)
   const itemCount = orderItems.reduce((n, p) => n + (cart[p._id] || 0), 0)
 
   const handleSubmit = async (e: FormEvent) => {
@@ -187,10 +188,14 @@ export default function OrderForm() {
     const ordered = orderItems.filter((p) => (cart[p._id] || 0) > 0)
 
     const orderLines = ordered
-      .map((p) => `${cart[p._id]}x ${p.name} — €${(p.price * cart[p._id]).toFixed(2).replace('.', ',')}`)
+      .map((p) =>
+        isByWeight(p)
+          ? `${cart[p._id]}x ${p.name} — au poids (${priceLabel(p)})`
+          : `${cart[p._id]}x ${p.name} — €${(p.price * cart[p._id]).toFixed(2).replace('.', ',')}`
+      )
       .join('\n')
 
-    const totalVal = ordered.reduce((sum, p) => sum + p.price * (cart[p._id] || 0), 0)
+    const totalVal = totalPrice(ordered)
 
     try {
       const res = await fetch(orderEndpoint(), {
@@ -456,7 +461,7 @@ export default function OrderForm() {
                               </button>
                             )}
                             <span className="text-xs ml-2" style={{ color: '#8B7A6B' }}>
-                              — €{item.price.toFixed(2).replace('.', ',')}
+                              — {priceLabel(item)}
                               {item.availability === 'saturday' && (
                                 <em className="not-italic ml-1 text-xs" style={{ color: '#8B7A6B' }}>
                                   (sam.)
@@ -730,6 +735,11 @@ export default function OrderForm() {
                     <strong style={{ color: '#A67C52' }}>
                       € {total.toFixed(2).replace('.', ',')}
                     </strong>
+                    {hasByWeight && (
+                      <span className="font-body block text-xs mt-1" style={{ color: '#8B7A6B' }}>
+                        + pain au poids, pesé au retrait. Poids souhaité ? Indiquez-le dans les remarques.
+                      </span>
+                    )}
                   </div>
                   <button
                     type="submit"

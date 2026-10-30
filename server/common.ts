@@ -27,6 +27,12 @@ export const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slic
 
 export const formatPrice = (n: number) => `€${n.toFixed(2).replace('.', ',')}`
 
+/** A total that leaves out bread sold by weight says so. */
+export const formatTotal = (n: number, byWeight: boolean) =>
+  `${formatPrice(n)}${byWeight ? ' + pain au poids' : ''}`
+
+export const hasByWeightLine = (items: string) => items.includes(' — au poids (')
+
 /** YYYY-MM-DD → DD/MM/YYYY (French convention, subjects and bodies). */
 export const formatPickupDate = (iso: string): string => {
   const [y, m, d] = iso.split('-')
