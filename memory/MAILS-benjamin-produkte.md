@@ -150,3 +150,50 @@ Technisch müssen Kunden nichts tun (siehe GO-LIVE.md → „Übergang für best
 
 Notre site fait peau neuve ! Même adresse : bonpainfaitmain.be. Vous y trouvez tous nos pains en photos et vous pouvez maintenant commander chaque semaine automatiquement (« commande régulière »).
 Si vous aviez installé l'application, elle se met à jour toute seule. Si elle affiche un message d'erreur, fermez-la et rouvrez-la.
+
+## Nachricht Freigabe + Testbestellung (Entwurf 2026-10-30, Deutsch, Versand durch Betreiber)
+
+Ersetzt für Benjamin die französische „Nachricht Umstellung“ oben (Inhalt dort eingearbeitet). Testbestellung auf bonpainv2.vercel.app ist Produktion: Bäcker-Mail geht an ORDER_TO_EMAIL (sein Postfach) und steht in der echten Tagesliste.
+
+Betreff: Neue Website: alles umgesetzt, kurzer Test vor dem Start?
+
+Hallo Benjamin,
+
+danke für deine Rückmeldung! Alles ist umgesetzt und online:
+- Pain gris au levain: 4,90 €
+- Viennoiseries an allen Verkaufstagen (Mittwoch, Freitag, Samstag)
+- Text „Vente sur commande et à l'atelier“, auch in den AGB angepasst
+
+Außerdem habe ich die Bestellung vereinfacht: Der Kunde wählt jetzt zuerst seinen Abholtag. Angezeigt werden nur Tage, die mit 2 Tagen Vorlauf noch möglich sind. Danach sieht er nur die Produkte, die du an diesem Tag backst. Er muss nichts mehr suchen, und falsche Tage oder unmögliche Daten kommen gar nicht mehr rein.
+
+Kannst du dir 5 Minuten nehmen?
+1. Geh auf https://bonpainv2.vercel.app und klick auf „Commander“.
+2. Mach eine Testbestellung: als Name „TEST“, deine eigene Mailadresse, irgendein Tag, ein, zwei Produkte.
+3. Du bekommst zwei Mails: die Bestätigung, wie sie der Kunde sieht, und deine Bestellliste für diesen Tag. Die Testbestellung steht in deiner echten Liste, einfach ignorieren.
+Dann sag mir: „passt, wir gehen live“ oder was du noch anders haben willst.
+
+Was „live gehen“ für dich heißt:
+- bonpainfaitmain.be zeigt dann die neue Seite. Die Umstellung mache ich, am besten direkt nach Bestellschluss eines Verkaufstags. Du musst technisch nichts tun, deine Mailadressen bleiben, wie sie sind.
+- Bestellungen kommen nicht mehr einzeln, sondern als eine Liste pro Abholtag, die bei jeder neuen Bestellung aktualisiert wird (gleicher Betreff, in Gmail also ein Verlauf): was zu backen ist, wer was abholt, Betrag für die Kasse. In der Nacht nach Bestellschluss kommt die „Liste définitive“ mit allem für diesen Tag.
+- Was vorher über die alte Seite bestellt wurde, hast du schon per Mail. Das steht nicht in der neuen Liste. Am Umstelltag kann noch die eine oder andere Bestellung über die alte Seite kommen, wie bisher per Mail. Die gilt ganz normal.
+- Neu: Kunden können „commande régulière“ ankreuzen und bekommen dann jede Woche am selben Tag dieselbe Bestellung, bis sie sie stoppen. Die stehen in deiner Liste wie alle anderen.
+- Urlaub, geschlossene Tage, neue Preise oder Produkte: schick mir kurz Bescheid, dann ist es schnell drin. Bei Urlaub verschwinden die Tage automatisch aus dem Bestellformular, regelmäßige Bestellungen pausieren.
+- Kurze Frage dazu: Hast du am 11. November (Mittwoch, Feiertag) offen? Sonst nehme ich den Tag raus.
+
+Woran wir gedacht haben:
+- Die alte Seite bleibt als Sicherung liegen. Zurückschalten geht in wenigen Minuten.
+- Wer die alte Seite noch offen hat, bekommt beim Bestellen den Hinweis, sie neu zu öffnen. Keine Bestellung geht still verloren.
+- Tippfehler in Mailadressen werden erkannt. Kommt eine Bestätigung beim Kunden nicht an, steht das in deiner Liste.
+- Zu kurzfristige Termine und geschlossene Tage kann man gar nicht wählen. Gegen Spam-Bestellungen ist die Seite geschützt.
+- Wer die App installiert hat, bekommt das Update automatisch.
+
+Für Facebook am Tag der Umstellung, wenn du magst:
+
+Notre site fait peau neuve ! Même adresse : bonpainfaitmain.be
+Commander est maintenant plus simple : choisissez d'abord votre jour de retrait (mercredi, vendredi ou samedi), puis vos pains. Vous ne voyez que ce que nous préparons ce jour-là.
+Nouveau : la commande régulière. Cochez-la et recevez la même commande chaque semaine, sans engagement.
+Viennoiseries tous les jours de vente. Vente sur commande et à l'atelier.
+Vous aviez installé l'application ? Elle se met à jour toute seule. Si elle affiche un message, fermez-la et rouvrez-la.
+
+Viele Grüße
+Philippe
