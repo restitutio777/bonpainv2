@@ -1,18 +1,28 @@
-import { createClient } from '@sanity/client'
 import { createImageUrlBuilder } from '@sanity/image-url'
 import type { SanityImageSource } from '@sanity/image-url'
 
 // Public read only, deliberately without a token: Vite inlines every VITE_*
 // variable into the public bundle, so a token here would be readable by
 // anyone. Write access belongs in studio/scripts (SANITY_WRITE_TOKEN).
-export const sanityClient = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || '5f1udd5l',
-  dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
-  apiVersion: '2024-01-01',
-  useCdn: true,
-})
+const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || '5f1udd5l'
+const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 
-const builder = createImageUrlBuilder(sanityClient)
+/**
+ * GROQ query against the public CDN (published documents, cached ~60 s).
+ * A plain fetch like server/catalog.ts: @sanity/client was a third of the
+ * bundle for this one call. The host is preconnected in index.html.
+ */
+export async function sanityFetch<T>(query: string): Promise<T> {
+  const url =
+    `https://${projectId}.apicdn.sanity.io/v2024-01-01/data/query/${dataset}` +
+    `?query=${encodeURIComponent(query)}`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Sanity ${res.status}`)
+  const body = (await res.json()) as { result: T }
+  return body.result
+}
+
+const builder = createImageUrlBuilder({ projectId, dataset })
 
 /**
  * Build an image URL that respects the document's crop + hotspot.

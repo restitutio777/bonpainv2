@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode } from 'react'
-import { useSanityQuery } from '../hooks/useSanity'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { sanityFetch } from '../lib/sanity'
 import {
   PRODUCTS_QUERY,
   SCHEDULE_QUERY,
@@ -24,29 +24,67 @@ interface SanityData {
   loading: boolean
 }
 
-const SanityContext = createContext<SanityData>({
-  products: [],
-  schedule: [],
-  vacation: null,
-  settings: null,
-  content: null,
-  loading: true,
-})
+type Snapshot = Omit<SanityData, 'loading'>
+
+const EMPTY: Snapshot = { products: [], schedule: [], vacation: null, settings: null, content: null }
+
+// One request instead of five: on a phone every extra round trip to the
+// Sanity CDN showed up as seconds of "Chargement...".
+const ALL_QUERY = `{
+  "products": ${PRODUCTS_QUERY},
+  "schedule": ${SCHEDULE_QUERY},
+  "vacation": ${VACATION_QUERY},
+  "settings": ${SITE_SETTINGS_QUERY},
+  "content": ${SITE_CONTENT_QUERY}
+}`
+
+// The last answer is kept on the device and shown at once on the next visit
+// (installed app above all), then replaced by the fresh one. The key carries
+// the query length so a changed query never reads an old shape.
+const CACHE_KEY = `bonpain:sanity:${ALL_QUERY.length}`
+
+function readCache(): Snapshot | null {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY)
+    return raw ? (JSON.parse(raw) as Snapshot) : null
+  } catch {
+    return null
+  }
+}
+
+function writeCache(data: Snapshot) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(data))
+  } catch {
+    // Private mode or full storage: the site works without the cache.
+  }
+}
+
+const SanityContext = createContext<SanityData>({ ...EMPTY, loading: true })
 
 export function SanityProvider({ children }: { children: ReactNode }) {
-  const { data: products, loading: l1 } = useSanityQuery<SanityProduct[]>(PRODUCTS_QUERY, [])
-  const { data: schedule, loading: l2 } = useSanityQuery<ScheduleDay[]>(SCHEDULE_QUERY, [])
-  const { data: vacation, loading: l3 } = useSanityQuery<VacationBanner | null>(VACATION_QUERY, null)
-  const { data: settings, loading: l4 } = useSanityQuery<SiteSettings | null>(SITE_SETTINGS_QUERY, null)
-  const { data: content, loading: l5 } = useSanityQuery<SiteContent | null>(SITE_CONTENT_QUERY, null)
+  const [cached] = useState(readCache)
+  const [data, setData] = useState<Snapshot>(cached ?? EMPTY)
+  const [loading, setLoading] = useState(!cached)
 
-  const loading = l1 || l2 || l3 || l4 || l5
+  useEffect(() => {
+    sanityFetch<Snapshot>(ALL_QUERY)
+      .then((result) => {
+        const fresh: Snapshot = {
+          products: result?.products ?? [],
+          schedule: result?.schedule ?? [],
+          vacation: result?.vacation ?? null,
+          settings: result?.settings ?? null,
+          content: result?.content ?? null,
+        }
+        setData(fresh)
+        writeCache(fresh)
+      })
+      .catch((err) => console.error('Sanity fetch error:', err))
+      .finally(() => setLoading(false))
+  }, [])
 
-  return (
-    <SanityContext.Provider value={{ products, schedule, vacation, settings, content, loading }}>
-      {children}
-    </SanityContext.Provider>
-  )
+  return <SanityContext.Provider value={{ ...data, loading }}>{children}</SanityContext.Provider>
 }
 
 export function useSanity() {
