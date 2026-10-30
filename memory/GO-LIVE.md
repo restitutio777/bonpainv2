@@ -1,6 +1,6 @@
 # Go-live bonpainfaitmain.be → v2 (Ablaufplan, Stand 2026-10-29)
 
-> **LIVE seit 2026-10-30, ca. 20:11–20:20 Uhr (Brüssel).** Schritte 3–6 und 8 erledigt, Schritt 7 offen (Resend-Login fehlte im Browser; Webhook auf bonpainv2.vercel.app funktioniert weiter, gleiche Production), Schritt 9 = erste Nacht 30./31.10. Details unten bei den Schritten.
+> **LIVE seit 2026-10-30, ca. 20:11–20:20 Uhr (Brüssel).** Schritte 3–8 erledigt, Schritt 9 = erste Nacht 30./31.10. Details unten bei den Schritten.
 
 Für eine lokale Session. Dienste-Einstellungen macht Claude im Browser (Betreiber ist dort eingeloggt), der Betreiber kümmert sich nicht darum. Claude gibt keine Passwörter oder Kartendaten ein; ist ein Login abgelaufen, meldet sich der Betreiber neu an. Jede Änderung an DNS/Diensten kurz ansagen, bevor sie geklickt wird.
 
@@ -25,7 +25,7 @@ Für eine lokale Session. Dienste-Einstellungen macht Claude im Browser (Betreib
    - Alles Mail-Bezogene bleibt (Liste in PROJECT.md „Domain-Umzug"). TTL 300 s.
 5. **[erledigt 2026-10-30: Vercel `misconfigured: false`, Zertifikate Apex + www ausgestellt, www → 308 Apex, alte URLs 308, `/send.php` JSON, `/allergenes.pdf` 200, `/api/keepalive` 401, Konsole ohne Fehler] Warten und prüfen:** `dig +short bonpainfaitmain.be A/AAAA`, `dig www…`, Vercel „Valid Configuration", Zertifikat ausgestellt, `curl -sI https://bonpainfaitmain.be` und `https://www…` (308), Weiterleitungen der drei alten URLs. Mail an info@ geht weiter (MX unverändert).
 6. **[erledigt 2026-10-30: `SITE_URL` plain, nur Production, vor Deploy `64d7000` gesetzt; derselbe Commit schickt Bestellungen auf der Domain same-origin an `/api/*` statt an bonpainv2.vercel.app] Env:** `SITE_URL=https://bonpainfaitmain.be` (Production) setzen und neu deployen, damit Abo-Links und Mail-Links sicher auf die Domain zeigen. Danach READY abwarten (MCP `list_deployments`).
-7. **[OFFEN, Login nötig] Resend (Browser, Team intuitivmedia → Webhooks, `3d90ed39-9e8e-44ed-9c8f-af370b456d2c`):** URL auf `https://bonpainfaitmain.be/api/resend-webhook`, Events unverändert, Secret unverändert.
+7. **[erledigt 2026-10-30 ~20:40 in Brave, Konto intuitivmedia@gmail.com: URL jetzt https://bonpainfaitmain.be/api/resend-webhook, Events/Secret unverändert, unsignierter POST → 401] Resend (Browser, Team intuitivmedia → Webhooks, `3d90ed39-9e8e-44ed-9c8f-af370b456d2c`):** URL auf `https://bonpainfaitmain.be/api/resend-webhook`, Events unverändert, Secret unverändert.
 8. **[erledigt 2026-10-30 20:27: „TEST Go-live“, intuitivmedia+golive@gmail.com, Mi 4.11., 1 Baguette, Bemerkung „merci d'ignorer“ → `POST bonpainfaitmain.be/api/order` 200, Log `[order] received`, keine Fehler. Mail-Inhalt (Bäcker + Bestätigung, Links auf Domain) vom Betreiber im Postfach zu prüfen] Testbestellung über https://bonpainfaitmain.be** (erst wenn Schritt 6 READY): Name „TEST", Adresse des Betreibers, nächster gültiger Verkaufstag, 1 Baguette. Prüfen: Bäcker-Mail an Benjamin + Bestätigung kommen an, Links in der Mail zeigen auf die Domain, Runtime-Logs ohne Fehler. Benjamin ist vorgewarnt (Schritt 2); der Eintrag steht in seiner Tagesliste.
 9. **Erste Nacht beobachten:** `/api/daily` 23:00 UTC (Pro: pünktlich), Runtime-Logs am Morgen, Benjamin fragen, ob Liste définitive ankam.
 
