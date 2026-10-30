@@ -1,10 +1,11 @@
-import { useState, useEffect, FormEvent } from 'react'
-import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
+import { useState, useEffect, useMemo, FormEvent } from 'react'
+import { Info, ArrowRight, CheckCircle, Loader2, ChevronDown } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
 import { isByWeight, isOrderable, isPricedInStore, portionOf, priceLabel, unitPrice } from '../lib/productStatus'
-import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
+import { addDays, formatDateFr, todayBrussels, unavailableReason, upcomingPickupDates } from '../lib/pickup'
+import type { SanityProduct } from '../types'
 import { orderEndpoint } from '../lib/orderApi'
 import { openInstall } from '../lib/pwaInstall'
 import { suggestEmail } from '../lib/emailTypos'
@@ -62,10 +63,33 @@ function orderErrorMessage(status: number, data: OrderError | null, phone: strin
   return `Votre commande n'a pas pu être transmise. ${call}`
 }
 
-/** "vendredi 23 octobre" for a YYYY-MM-DD date. */
-function formatDateFr(iso: string): string {
-  return new Intl.DateTimeFormat('fr-BE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
-    new Date(`${iso}T00:00:00Z`)
+// Order-form groups, in this order; products keep the studio order inside.
+const GROUPS: { category: SanityProduct['category']; label: string }[] = [
+  { category: 'bread', label: 'Pains' },
+  { category: 'viennoiserie', label: 'Viennoiseries' },
+  { category: 'tart', label: 'Tartes' },
+  { category: 'specialty', label: 'Spécialités' },
+]
+
+// Calendar days of pickup dates shown at first, per "plus de dates", and at most.
+const DATE_WINDOW = 14
+const DATE_WINDOW_MAX = 56
+
+function StepTitle({ n, children }: { n: number; children: React.ReactNode }) {
+  return (
+    <div
+      className="flex items-center gap-3 font-display text-xl font-semibold mb-6 pb-3"
+      style={{ color: '#2D1F14', borderBottom: '1px solid #F5EDE3' }}
+    >
+      <span
+        className="font-body w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
+        style={{ background: '#A67C52', color: 'white' }}
+        aria-hidden="true"
+      >
+        {n}
+      </span>
+      {children}
+    </div>
   )
 }
 
@@ -74,42 +98,34 @@ export default function OrderForm() {
   const { products, content, settings, vacation, schedule } = useSanity()
   const { cart, setQuantity, clearCart, totalPrice } = useCart()
 
-  // Hide products that are explicitly out of season — Benjamin can re-enable
-  // them by updating seasonStart/seasonEnd in the studio.
-  const orderItems = products.filter((p) => isOrderable(p))
   const orderLeadDays = settings?.orderLeadDays || 2
   const isDisabled = vacation?.isActive && vacation?.disableOrdering
 
-  // Pickup days come from the CMS schedule (days marked open in the studio);
-  // the hardcoded trio is only a fallback while loading.
-  const pickupDays = (() => {
-    const fromCms = openDays(schedule)
-      .map((s) => ({
-        value: dayLabelFr(s.day).toLowerCase(),
-        label: dayLabelFr(s.day),
-        weekday: dayIndex(s.day),
-      }))
-      .filter((d): d is { value: string; label: string; weekday: number } => d.weekday !== undefined)
-    return fromCms.length > 0
-      ? fromCms
-      : [
-          { value: 'mercredi', label: 'Mercredi', weekday: 3 },
-          { value: 'vendredi', label: 'Vendredi', weekday: 5 },
-          { value: 'samedi', label: 'Samedi', weekday: 6 },
-        ]
-  })()
+  // Step 1: the customer picks a pickup date first; step 2 then lists only
+  // what is made for that day (season, Saturday-only), as the server does.
+  const [date, setDate] = useState('')
+  const [dateWindow, setDateWindow] = useState(DATE_WINDOW)
+  const pickupDates = useMemo(
+    () => upcomingPickupDates(schedule, orderLeadDays, vacation, dateWindow),
+    [schedule, orderLeadDays, vacation, dateWindow]
+  )
+  const selected = pickupDates.find((d) => d.date === date) || null
+  const jour = selected?.jour || ''
 
-  // Earliest allowed pickup date (local time), respecting the lead time.
-  // Recomputed on demand: a tab left open past midnight would otherwise keep
-  // validating against yesterday's limit.
-  const earliestPickupDate = () => {
-    const d = new Date()
-    d.setDate(d.getDate() + orderLeadDays)
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-      d.getDate()
-    ).padStart(2, '0')}`
-  }
-  const minPickupDate = earliestPickupDate()
+  // Without a date, the season is judged on today (cart from the product cards).
+  const offered = products.filter((p) => p.orderInForm !== false)
+  const orderItems = selected
+    ? offered.filter((p) => !unavailableReason(p, selected.date))
+    : offered.filter((p) => isOrderable(p))
+  // Already in the cart but not made that day: shown, never sent.
+  const notThatDay = selected
+    ? offered
+        .filter((p) => (cart[p._id] || 0) > 0 && unavailableReason(p, selected.date))
+        .map((p) => ({ p, reason: unavailableReason(p, selected.date) as string }))
+    : []
+  const groups = GROUPS.map((g) => ({ ...g, items: orderItems.filter((p) => p.category === g.category) }))
+    .concat({ category: 'bread', label: 'Autres', items: orderItems.filter((p) => !GROUPS.some((g) => g.category === p.category)) })
+    .filter((g) => g.items.length > 0)
 
   const label = content?.orderLabel || 'Commander'
   const title = content?.orderTitle || 'Passez votre'
@@ -125,8 +141,6 @@ export default function OrderForm() {
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
   const [tel, setTel] = useState('')
-  const [jour, setJour] = useState('')
-  const [date, setDate] = useState('')
   const [remarques, setRemarques] = useState('')
   const [subscribe, setSubscribe] = useState(false)
   const [regular, setRegular] = useState<{ manageUrl: string; firstDate: string } | null>(null)
@@ -166,20 +180,16 @@ export default function OrderForm() {
       return
     }
 
-    const selectedDay = pickupDays.find((p) => p.value === jour)
-    if (selectedDay && date) {
-      // `T00:00:00` forces local-time parsing so getDay() matches the picker.
-      const weekday = new Date(`${date}T00:00:00`).getDay()
-      if (weekday !== selectedDay.weekday) {
-        setSubmitError(
-          `La date choisie ne tombe pas un ${selectedDay.label.toLowerCase()}. Merci de vérifier le jour et la date de retrait.`
-        )
-        return
-      }
+    if (!selected) {
+      setSubmitError('Choisissez d\u2019abord le jour de retrait, tout en haut du formulaire.')
+      document.getElementById('pickup-dates')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
     }
-    if (date && date < earliestPickupDate()) {
+    // A tab left open past midnight: the date may have become too close.
+    if (selected.date < addDays(todayBrussels(), orderLeadDays)) {
+      setDate('')
       setSubmitError(
-        `Merci de prévoir au moins ${orderLeadDays} jours entre la commande et le retrait.`
+        `Ce jour est désormais trop proche (${orderLeadDays} jours minimum). Choisissez une autre date de retrait.`
       )
       return
     }
@@ -243,8 +253,8 @@ export default function OrderForm() {
     setPrenom('')
     setEmail('')
     setTel('')
-    setJour('')
     setDate('')
+    setDateWindow(DATE_WINDOW)
     setRemarques('')
     setSubscribe(false)
     setRegular(null)
@@ -416,112 +426,213 @@ export default function OrderForm() {
               <form
                 id="orderForm"
                 onSubmit={handleSubmit}
-                className="rounded-[20px] p-8 md:p-12 animate-on-scroll"
+                className="rounded-[20px] p-5 sm:p-8 md:p-12 animate-on-scroll"
                 style={{ background: 'white', boxShadow: '0 4px 16px rgba(45,31,20,0.08)' }}
               >
-                <div
-                  className="font-display text-xl font-semibold mb-6 pb-3"
-                  style={{ color: '#2D1F14', borderBottom: '1px solid #F5EDE3' }}
-                >
-                  Vos pains
+                <StepTitle n={1}>Quand passez-vous ?</StepTitle>
+
+                <div id="pickup-dates" className="mb-10">
+                  <div role="group" aria-label="Jour de retrait" className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {pickupDates.map((d) => {
+                      const on = d.date === date
+                      return (
+                        <button
+                          key={d.date}
+                          type="button"
+                          aria-pressed={on}
+                          aria-label={formatDateFr(d.date)}
+                          disabled={!!isDisabled}
+                          onClick={() => {
+                            setDate(d.date)
+                            setSubmitError(null)
+                          }}
+                          className="flex flex-col items-center justify-center py-3 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          style={
+                            on
+                              ? { background: '#A67C52', color: 'white', border: '1px solid #A67C52', boxShadow: '0 4px 14px rgba(166,124,82,0.3)' }
+                              : { background: '#FDF8F3', color: '#2D1F14', border: '1px solid #E8D9C8' }
+                          }
+                        >
+                          <span className="text-xs uppercase tracking-wider" style={{ opacity: on ? 0.9 : 0.7 }}>
+                            {d.weekdayShort}
+                          </span>
+                          <span className="font-display text-2xl leading-tight font-semibold" style={{ fontVariantNumeric: 'lining-nums' }}>
+                            {d.dayNumber}
+                          </span>
+                          <span className="text-xs" style={{ opacity: on ? 0.9 : 0.7 }}>
+                            {d.monthShort}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {pickupDates.length === 0 && (
+                    <p className="text-sm" style={{ color: '#6E4D32' }}>
+                      Aucun jour de retrait disponible pour le moment. Appelez-nous au {phone}.
+                    </p>
+                  )}
+                  <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mt-4">
+                    <p className="text-sm leading-[1.6]" style={{ color: '#6E4D32' }} aria-live="polite">
+                      {selected ? (
+                        <>
+                          Retrait le <strong style={{ color: '#2D1F14' }}>{formatDateFr(selected.date)}</strong>
+                          {selected.hours && `, ${selected.hours}`}.
+                        </>
+                      ) : (
+                        `Les dates tiennent compte du délai de ${orderLeadDays} jours pour préparer votre commande.`
+                      )}
+                    </p>
+                    {dateWindow < DATE_WINDOW_MAX && pickupDates.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setDateWindow((w) => w + DATE_WINDOW)}
+                        className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest"
+                        style={{ color: '#A67C52' }}
+                      >
+                        Plus de dates <ChevronDown size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex flex-col gap-3 mb-10">
-                  {orderItems.map((item) => {
-                    const hasInfo = !!item.description?.trim()
-                    const isExpanded = expandedInfoId === item._id
-                    return (
+                <StepTitle n={2}>Vos pains</StepTitle>
+
+                {!selected ? (
+                  <div
+                    className="mb-10 px-5 py-6 rounded-xl text-sm leading-[1.6] text-center"
+                    style={{ background: '#FDF8F3', border: '1px dashed #D4BFA5', color: '#6E4D32' }}
+                  >
+                    {itemCount > 0
+                      ? `Votre panier (${itemCount} article${itemCount > 1 ? 's' : ''}) vous attend : choisissez d’abord le jour de retrait.`
+                      : 'Choisissez d’abord le jour de retrait : vous verrez ici ce que nous préparons ce jour-là.'}
+                  </div>
+                ) : (
+                  <>
+                    {notThatDay.length > 0 && (
                       <div
-                        key={item._id}
-                        className="flex flex-col p-4 rounded-lg transition-colors duration-200"
-                        style={{ background: '#FDF8F3' }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.background = '#F5EDE3'
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.background = '#FDF8F3'
-                        }}
+                        role="status"
+                        className="flex flex-col sm:flex-row sm:items-center gap-3 px-5 py-4 rounded-xl mb-6 text-sm leading-[1.6]"
+                        style={{ background: '#FBF3EC', border: '1px solid #E8D9C8', color: '#6E4D32' }}
                       >
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                          <div>
-                            <span className="font-medium text-sm" style={{ color: '#2D1F14' }}>
-                              {item.name}
-                            </span>
-                            {hasInfo && (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setExpandedInfoId(isExpanded ? null : item._id)
-                                }
-                                aria-expanded={isExpanded}
-                                aria-controls={`info-${item._id}`}
-                                className="ml-1.5 text-xs italic underline-offset-2 hover:underline transition-colors"
-                                style={{ color: '#A67C52' }}
-                              >
-                                ({isExpanded ? 'fermer' : 'infos'})
-                              </button>
-                            )}
-                            <span className="text-xs ml-2" style={{ color: '#8B7A6B' }}>
-                              — {priceLabel(item)}
-                              {item.availability === 'saturday' && (
-                                <em className="not-italic ml-1 text-xs" style={{ color: '#8B7A6B' }}>
-                                  (sam.)
-                                </em>
-                              )}
-                            </span>
-                          </div>
-                          <div className="qty-control self-end sm:self-auto">
-                            <button
-                              type="button"
-                              className="qty-btn"
-                              onClick={() => changeQty(item._id, -1)}
-                              disabled={!!isDisabled}
-                              aria-label={`Retirer un ${item.name}`}
-                            >
-                              −
-                            </button>
-                            <input
-                              type="text"
-                              className="qty-value"
-                              value={cart[item._id] || 0}
-                              readOnly
-                              aria-label={`Quantité — ${item.name}`}
-                            />
-                            <button
-                              type="button"
-                              className="qty-btn"
-                              onClick={() => changeQty(item._id, 1)}
-                              disabled={!!isDisabled}
-                              aria-label={`Ajouter un ${item.name}`}
-                            >
-                              +
-                            </button>
+                        <Info size={16} className="flex-shrink-0" style={{ color: '#A67C52' }} />
+                        <span className="flex-1">
+                          Pas préparé le {formatDateFr(selected.date)} :{' '}
+                          {notThatDay.map(({ p, reason }) => `${p.name} (${reason})`).join(', ')}. Ne sera pas commandé.
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => notThatDay.forEach(({ p }) => setQuantity(p._id, 0))}
+                          className="self-start sm:self-auto text-xs font-semibold uppercase tracking-widest"
+                          style={{ color: '#A67C52' }}
+                        >
+                          Retirer
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="flex flex-col gap-8 mb-10">
+                      {groups.map((g) => (
+                        <div key={g.label}>
+                          {groups.length > 1 && (
+                            <div className="text-xs font-semibold uppercase tracking-[0.15em] mb-3" style={{ color: '#A67C52' }}>
+                              {g.label}
+                            </div>
+                          )}
+                          <div className="flex flex-col gap-3">
+                            {g.items.map((item) => {
+                              const hasInfo = !!item.description?.trim()
+                              const isExpanded = expandedInfoId === item._id
+                              return (
+                                <div
+                                  key={item._id}
+                                  className="flex flex-col p-4 rounded-lg transition-colors duration-200"
+                                  style={{ background: '#FDF8F3' }}
+                                  onMouseEnter={(e) => {
+                                    (e.currentTarget as HTMLElement).style.background = '#F5EDE3'
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    (e.currentTarget as HTMLElement).style.background = '#FDF8F3'
+                                  }}
+                                >
+                                  <div className="flex items-center justify-between gap-3">
+                                    <div className="min-w-0">
+                                      <span className="block font-medium text-sm" style={{ color: '#2D1F14' }}>
+                                        {item.name}
+                                      </span>
+                                      <span className="block text-xs mt-0.5" style={{ color: '#8B7A6B' }}>
+                                        {priceLabel(item)}
+                                        {item.availability === 'saturday' && ' · samedi'}
+                                        {hasInfo && (
+                                          <>
+                                            {' · '}
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                setExpandedInfoId(isExpanded ? null : item._id)
+                                              }
+                                              aria-expanded={isExpanded}
+                                              aria-controls={`info-${item._id}`}
+                                              className="italic underline-offset-2 hover:underline transition-colors"
+                                              style={{ color: '#A67C52' }}
+                                            >
+                                              {isExpanded ? 'fermer' : 'infos'}
+                                            </button>
+                                          </>
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="qty-control flex-shrink-0">
+                                      <button
+                                        type="button"
+                                        className="qty-btn"
+                                        onClick={() => changeQty(item._id, -1)}
+                                        disabled={!!isDisabled}
+                                        aria-label={`Retirer un ${item.name}`}
+                                      >
+                                        −
+                                      </button>
+                                      <input
+                                        type="text"
+                                        className="qty-value"
+                                        value={cart[item._id] || 0}
+                                        readOnly
+                                        aria-label={`Quantité — ${item.name}`}
+                                      />
+                                      <button
+                                        type="button"
+                                        className="qty-btn"
+                                        onClick={() => changeQty(item._id, 1)}
+                                        disabled={!!isDisabled}
+                                        aria-label={`Ajouter un ${item.name}`}
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </div>
+                                  {hasInfo && isExpanded && (
+                                    <div
+                                      id={`info-${item._id}`}
+                                      className="mt-3 pt-3 text-sm leading-[1.6]"
+                                      style={{
+                                        color: '#6E4D32',
+                                        borderTop: '1px solid #E8D9C8',
+                                        textWrap: 'pretty',
+                                      }}
+                                    >
+                                      {item.description}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            })}
                           </div>
                         </div>
-                        {hasInfo && isExpanded && (
-                          <div
-                            id={`info-${item._id}`}
-                            className="mt-3 pt-3 text-sm leading-[1.6]"
-                            style={{
-                              color: '#6E4D32',
-                              borderTop: '1px solid #E8D9C8',
-                              textWrap: 'pretty',
-                            }}
-                          >
-                            {item.description}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
+                      ))}
+                    </div>
+                  </>
+                )}
 
-                <div
-                  className="font-display text-xl font-semibold mb-6 pb-3"
-                  style={{ color: '#2D1F14', borderBottom: '1px solid #F5EDE3' }}
-                >
-                  Vos coordonnées
-                </div>
+                <StepTitle n={3}>Vos coordonnées</StepTitle>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                   <div className="flex flex-col gap-1.5">
@@ -616,49 +727,6 @@ export default function OrderForm() {
                       placeholder="+32 ..."
                       value={tel}
                       onChange={(e) => setTel(e.target.value)}
-                      className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
-                      style={inputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="jour" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
-                      Jour de retrait *
-                    </label>
-                    <select
-                      id="jour"
-                      name="jour"
-                      required
-                      value={jour}
-                      onChange={(e) => setJour(e.target.value)}
-                      className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
-                      style={inputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    >
-                      <option value="">Choisir un jour...</option>
-                      {pickupDays.map((d) => (
-                        <option key={d.value} value={d.value}>
-                          {d.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="date" className="text-xs font-semibold tracking-wide" style={{ color: '#6E4D32' }}>
-                      Date souhaitée *
-                    </label>
-                    <input
-                      type="date"
-                      id="date"
-                      name="date"
-                      required
-                      min={minPickupDate}
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
                       className="px-4 py-3 rounded-lg text-sm outline-none transition-all duration-200"
                       style={inputStyle}
                       onFocus={handleFocus}
