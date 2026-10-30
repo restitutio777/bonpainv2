@@ -3,7 +3,7 @@
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
 ## Nächste Session: hier starten (Stand 2026-10-30)
-**Preise sind drin, Nachricht an Benjamin zur Durchsicht ist am 2026-10-30 raus. Studio ist deployt. Als Nächstes: Benjamins Antwort abwarten, dann Go-live ab Schritt 2 in [GO-LIVE.md](GO-LIVE.md). DNS nicht vorher umstellen.**
+**Benjamin hat am 2026-10-30 geantwortet: Seite „vraiment bien“, einzige Korrektur Pain gris au levain 4,90 € (vorher 3,90). Per Sanity-MCP gesetzt und publiziert, live auf bonpainv2.vercel.app geprüft (Karte und Formular € 4,90). Damit ist seine Durchsicht abgeschlossen. Als Nächstes: Go-live ab Schritt 2 in [GO-LIVE.md](GO-LIVE.md), Entscheidung Betreiber.**
 
 Älterer Stand (2026-10-13):
 **Benjamin hat die Seite gesehen und ist sehr zufrieden. Sein Feedback ist umgesetzt und live auf bonpainv2.vercel.app. Neu seit 2026-10-12 abends: Abo („commandes régulières“) und PWA-Installation, beides live. Seit 2026-10-13: Benjamins Beschreibungstexte für die elf Sauerteigbrote sind eingespielt und live. Benjamin kennt die Abo-Funktion noch nicht.** Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (kurz, kein Roboterton; Sprache nach Wunsch des Betreibers: bisher Französisch, die Antwort auf das Feedback am 2026-10-12 auf Deutsch, Benjamin versteht beides).
