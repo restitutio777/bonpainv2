@@ -183,7 +183,7 @@ Was „live gehen“ für dich heißt:
 Woran wir gedacht haben:
 - Die alte Seite bleibt als Sicherung liegen. Zurückschalten geht in wenigen Minuten.
 - Wer die alte Seite noch offen hat, bekommt beim Bestellen den Hinweis, sie neu zu öffnen. Keine Bestellung geht still verloren.
-- Tippfehler in Mailadressen werden erkannt. Kommt eine Bestätigung beim Kunden nicht an, steht das in deiner Liste.
+- Tippfehler in Mailadressen werden erkannt. Kommt eine Bestätigung beim Kunden nicht an, bekommst du eine kurze Mail und kannst ihn anrufen.
 - Zu kurzfristige Termine und geschlossene Tage kann man gar nicht wählen. Gegen Spam-Bestellungen ist die Seite geschützt.
 - Wer die App installiert hat, bekommt das Update automatisch.
 
