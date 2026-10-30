@@ -64,7 +64,7 @@ const GROUPS = [
         'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',
       ],
       ['Feuilleté aux pommes', 'gluten (froment) · lait · œufs'],
-      ['Rose au chocolat crème', 'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque'],
+      ['Rose aux chocolat crème', 'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque'],
     ],
   },
   {

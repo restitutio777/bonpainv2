@@ -68,7 +68,7 @@ export default defineType({
       name: 'priceUnit',
       title: 'Prix par',
       description:
-        'Au kilo : le site affiche « € / kg », le client commande à la pièce et le prix est fixé à la pesée (hors total de la commande).',
+        'Au kilo : le site affiche « € / kg » et le client commande par portion (voir ci-dessous). Le montant exact est fixé à la pesée.',
       type: 'string',
       options: {
         list: [
@@ -80,6 +80,16 @@ export default defineType({
       },
       initialValue: 'piece',
       group: 'basics',
+    }),
+    defineField({
+      name: 'portionGrams',
+      title: 'Portion commandée en ligne (g)',
+      description: 'Pour un prix au kilo : le client commande par multiples de cette portion (ex. 500).',
+      type: 'number',
+      initialValue: 500,
+      hidden: ({ document }) => document?.priceUnit !== 'kg',
+      group: 'basics',
+      validation: (R) => R.min(50).integer(),
     }),
     defineField({
       name: 'image',

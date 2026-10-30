@@ -7,6 +7,7 @@ export const PRODUCTS_QUERY = `*[_type == "product" && isActive == true] | order
   allergens,
   price,
   priceUnit,
+  portionGrams,
   image,
   "imageAlt": image.alt,
   availability,

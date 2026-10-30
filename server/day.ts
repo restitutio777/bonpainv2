@@ -66,11 +66,14 @@ export function parseOrderItems(items: string): PricedItem[] {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line): PricedItem | null => {
-      const weighed = line.match(/^(\d+)x\s+(.+?)\s+—\s+au poids\b/)
-      if (weighed) return { qty: parseInt(weighed[1], 10), name: weighed[2].trim(), amount: 0, byWeight: true }
       const m = line.match(/^(\d+)x\s+(.+?)\s+—\s+€(\d+,\d{2})$/)
       if (!m) return null
-      return { qty: parseInt(m[1], 10), name: m[2].trim(), amount: parseFloat(m[3].replace(',', '.')) }
+      return {
+        qty: parseInt(m[1], 10),
+        name: m[2].trim(),
+        amount: parseFloat(m[3].replace(',', '.')),
+        byWeight: /\(\d+ g\)$/.test(m[2].trim()),
+      }
     })
     .filter((x): x is PricedItem => x !== null)
 }

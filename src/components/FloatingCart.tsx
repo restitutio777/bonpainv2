@@ -1,7 +1,7 @@
 import { ShoppingBag } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useSanity } from '../context/SanityContext'
-import { isByWeight, isOrderable } from '../lib/productStatus'
+import { isOrderable } from '../lib/productStatus'
 
 export default function FloatingCart() {
   const { totalItems, totalPrice, cart } = useCart()
@@ -9,9 +9,7 @@ export default function FloatingCart() {
 
   const hasItems = totalItems > 0
   // Same subset the order form submits, so the badge total never lies.
-  const orderable = products.filter((p) => isOrderable(p))
-  const price = totalPrice(orderable)
-  const hasByWeight = orderable.some((p) => isByWeight(p) && (cart[p._id] || 0) > 0)
+  const price = totalPrice(products.filter((p) => isOrderable(p)))
 
   const handleClick = () => {
     const el = document.getElementById('order')
@@ -61,7 +59,6 @@ export default function FloatingCart() {
         </div>
         <span className="font-semibold text-sm" style={{ letterSpacing: '0.02em' }}>
           € {price.toFixed(2).replace('.', ',')}
-          {hasByWeight && ' + au poids'}
         </span>
       </button>
     </div>

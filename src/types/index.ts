@@ -25,8 +25,9 @@ export interface SanityProduct {
   description: string
   allergens: string | null
   price: number
-  /** 'kg': price per kilo, the amount is set when weighed at pickup. */
+  /** 'kg': price per kilo; ordered in portions, the exact amount is set at the scale. */
   priceUnit: 'piece' | 'kg' | null
+  portionGrams: number | null
   /** Full Sanity image object (asset + crop + hotspot). Use urlFor() to build URLs. */
   image: SanityImageSource | null
   imageAlt: string | null

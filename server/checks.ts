@@ -22,8 +22,8 @@ const NAME = /^[\p{L}\p{M}][\p{L}\p{M}'’ .-]*$/u
 const DOMAIN_LIKE = /[\p{L}\d-]\.\p{L}{2,}/u
 export const LINK = /https?:\/\/|www\./i
 const TEL = /^[0-9+()./\s-]*$/
-// "1x Pain aux fruits — au poids (€15,90/kg)": amount unknown until weighed.
-const ITEM_LINE = /^(\d{1,2})x (.{1,80}?) — (?:€(\d{1,4},\d{2})|au poids \(€\d{1,4},\d{2}\/kg\))$/
+// "2x Pain aux fruits (500 g) — €15,90": bread sold by the kilo, in portions.
+const ITEM_LINE = /^(\d{1,2})x (.{1,80}?)(?: \(\d{2,4} g\))? — €(\d{1,4},\d{2})$/
 // Used only while Sanity is unreachable: product names have no dots,
 // slashes, colons or @, so nothing in a line can become a link.
 export const ITEM_NAME_FALLBACK = /^[\p{L}\p{M}0-9'’ (),-]+$/u
@@ -100,7 +100,7 @@ export function checkPayload(
     if (!m) return invalid('items')
     const qty = parseInt(m[1], 10)
     if (qty < 1 || qty > MAX.qty) return invalid('items')
-    lines.push({ qty, name: m[2], amount: m[3] ? parseFloat(m[3].replace(',', '.')) : 0 })
+    lines.push({ qty, name: m[2], amount: parseFloat(m[3].replace(',', '.')) })
   }
 
   const total = Math.round(lines.reduce((sum, l) => sum + l.amount, 0) * 100) / 100

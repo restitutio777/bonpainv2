@@ -1,7 +1,8 @@
 /**
  * Mail Benjamin 30.10.2026: Preise, Gewichte, neuer Name.
- *   - Pain aux fruits und Pain à la coupe werden pro Kilo verkauft (`priceUnit`).
- *   - Torsade à la crème heißt « Rose au chocolat crème »; `_id` und Slug bleiben,
+ *   - Pain aux fruits und Pain à la coupe werden pro Kilo verkauft (`priceUnit`),
+ *     online bestellt in Portionen von 500 g (`portionGrams`).
+ *   - Torsade à la crème heißt wortgetreu « Rose aux chocolat crème »; `_id` und Slug bleiben,
  *     Allergene wie Pain au chocolat (Spuren aus der Schokolade).
  * Nicht in seiner Liste und deshalb unverändert: Pain fagnard, Pain d’épeautre.
  *
@@ -35,14 +36,14 @@ const PATCHES = {
   'product-epeautre-sesame': { price: 6.3 },
   'd0c43f74-48f6-4946-b19b-75f6e2fccb6f': { price: 7.6 },
   'product-pain-seigle': { price: 5.6 },
-  'product-pain-fruits-secs': { price: 15.9, priceUnit: 'kg' },
-  'product-pain-blanc-coupe': { price: 7.3, priceUnit: 'kg' },
+  'product-pain-fruits-secs': { price: 15.9, priceUnit: 'kg', portionGrams: 500 },
+  'product-pain-blanc-coupe': { price: 7.3, priceUnit: 'kg', portionGrams: 500 },
   'product-pain-noix': { price: 7.3 },
   'product-cramique': { price: 7.6 },
   'product-rustik-lin-tournesol': { price: 6.25 },
   'product-baguette': { price: 2.5 },
   'product-torsade-creme': {
-    name: 'Rose au chocolat crème',
+    name: 'Rose aux chocolat crème',
     description:
       'Viennoiserie moelleuse roulée en rose, garnie de chocolat et d’une crème douce. Parfaite avec un café.',
     allergens: 'gluten (froment) · lait · œufs · traces possibles : soja, fruits à coque',

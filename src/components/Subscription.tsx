@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, CheckCircle, Info, Loader2 } from 'lucide-react'
 import LegalLayout from './legal/LegalLayout'
 import { useSanity } from '../context/SanityContext'
-import { getProductStatus, isByWeight, priceLabel } from '../lib/productStatus'
+import { getProductStatus, isByWeight, priceLabel, unitPrice } from '../lib/productStatus'
 import { subscriptionEndpoint } from '../lib/orderApi'
 
 // Management page for a regular order, opened from the personal link in the
@@ -139,15 +139,12 @@ export default function Subscription() {
     )
     const extra = view.items.filter((i) => !offered.some((p) => p._id === i.id))
     return [
-      ...offered.map((p) => ({ id: p._id, name: p.name, price: p.price, byWeight: isByWeight(p), label: priceLabel(p), note: getProductStatus(p).badge, offered: true })),
+      ...offered.map((p) => ({ id: p._id, name: p.name, price: unitPrice(p), byWeight: isByWeight(p), label: priceLabel(p), note: getProductStatus(p).badge, offered: true })),
       ...extra.map((i) => ({ id: i.id, name: i.name, price: 0, byWeight: false, label: '', note: "N'est plus proposé", offered: false })),
     ]
   }, [products, view])
 
-  const priceOf = (id: string) => {
-    const c = choices.find((x) => x.id === id)
-    return c && !c.byWeight ? c.price : 0
-  }
+  const priceOf = (id: string) => choices.find((c) => c.id === id)?.price ?? 0
   const hasByWeight = choices.some((c) => c.byWeight && (qty[c.id] || 0) > 0)
   const weekTotal = Object.entries(qty).reduce((s, [id, n]) => s + priceOf(id) * n, 0)
   const itemCount = Object.values(qty).reduce((s, n) => s + n, 0)
@@ -344,7 +341,7 @@ export default function Subscription() {
                 </ul>
                 <p className="text-sm mt-4" style={{ color: '#6E4D32' }}>
                   Total par semaine : <strong>€{weekTotal.toFixed(2).replace('.', ',')}</strong>
-                  {hasByWeight && ' + pain au poids'}{' '}
+                  {hasByWeight && ' environ'}{' '}
                   <span style={{ color: MUTED }}>(prix du jour, payé au retrait)</span>
                 </p>
                 {unofferedLeft && (

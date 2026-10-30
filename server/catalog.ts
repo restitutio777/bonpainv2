@@ -8,6 +8,7 @@ export type CatalogProduct = {
   name: string
   price: number
   priceUnit: string | null
+  portionGrams: number | null
   isActive: boolean | null
   orderInForm: boolean | null
   availability: string | null
@@ -36,7 +37,7 @@ const SANITY_PROJECT = process.env.VITE_SANITY_PROJECT_ID || '5f1udd5l'
 const SANITY_DATASET = process.env.VITE_SANITY_DATASET || 'production'
 
 const QUERY = `{
-  "products": *[_type == "product"]{_id, name, price, priceUnit, isActive, orderInForm, availability, isSeasonal, seasonStart, seasonEnd},
+  "products": *[_type == "product"]{_id, name, price, priceUnit, portionGrams, isActive, orderInForm, availability, isSeasonal, seasonStart, seasonEnd},
   "leadDays": *[_type == "siteSettings"][0].orderLeadDays,
   "schedule": *[_type == "schedule"]{day, isOpen, "slots": count(slots)},
   "vacation": *[_type == "vacationBanner"][0]{isActive, startDate, endDate, messageFr}

@@ -1,4 +1,4 @@
-import { isByWeight } from '../lib/productStatus'
+import { unitPrice } from '../lib/productStatus'
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react'
 import type { SanityProduct } from '../types'
 
@@ -62,7 +62,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   )
 
   const totalPrice = (products: SanityProduct[]) =>
-    products.reduce((acc, p) => acc + (isByWeight(p) ? 0 : (cart[p._id] || 0) * p.price), 0)
+    products.reduce((acc, p) => acc + (cart[p._id] || 0) * unitPrice(p), 0)
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, setQuantity, clearCart, totalItems, totalPrice }}>

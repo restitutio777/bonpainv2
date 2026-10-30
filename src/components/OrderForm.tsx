@@ -3,7 +3,7 @@ import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
-import { isByWeight, isOrderable, priceLabel } from '../lib/productStatus'
+import { isByWeight, isOrderable, portionOf, priceLabel, unitPrice } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 import { orderEndpoint } from '../lib/orderApi'
 import { openInstall } from '../lib/pwaInstall'
@@ -188,11 +188,10 @@ export default function OrderForm() {
     const ordered = orderItems.filter((p) => (cart[p._id] || 0) > 0)
 
     const orderLines = ordered
-      .map((p) =>
-        isByWeight(p)
-          ? `${cart[p._id]}x ${p.name} — au poids (${priceLabel(p)})`
-          : `${cart[p._id]}x ${p.name} — €${(p.price * cart[p._id]).toFixed(2).replace('.', ',')}`
-      )
+      .map((p) => {
+        const label = isByWeight(p) ? `${p.name} (${portionOf(p)} g)` : p.name
+        return `${cart[p._id]}x ${label} — €${(unitPrice(p) * cart[p._id]).toFixed(2).replace('.', ',')}`
+      })
       .join('\n')
 
     const totalVal = totalPrice(ordered)
@@ -737,7 +736,7 @@ export default function OrderForm() {
                     </strong>
                     {hasByWeight && (
                       <span className="font-body block text-xs mt-1" style={{ color: '#8B7A6B' }}>
-                        + pain au poids, pesé au retrait. Poids souhaité ? Indiquez-le dans les remarques.
+                        Pains au kilo : coupés et pesés au retrait, le montant peut varier un peu.
                       </span>
                     )}
                   </div>

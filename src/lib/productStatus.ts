@@ -84,9 +84,21 @@ export function isOrderable(product: SanityProduct, now: Date = new Date()): boo
   return product.orderInForm !== false && getProductStatus(product, now).available
 }
 
-/** Sold by weight: ordered per piece, priced at the scale, never in a total. */
+type Priced = Pick<SanityProduct, 'price' | 'priceUnit' | 'portionGrams'>
+
+const euro = (n: number) => `€${n.toFixed(2).replace('.', ',')}`
+
+/** Big breads sold by the kilo: ordered in portions, weighed at pickup. */
 export const isByWeight = (product: Pick<SanityProduct, 'priceUnit'>) => product.priceUnit === 'kg'
 
-/** "€15,90" or "€15,90/kg". */
-export const priceLabel = (product: Pick<SanityProduct, 'price' | 'priceUnit'>) =>
-  `€${product.price.toFixed(2).replace('.', ',')}${isByWeight(product) ? '/kg' : ''}`
+export const portionOf = (product: Pick<SanityProduct, 'portionGrams'>) => product.portionGrams || 500
+
+/** What one unit in the cart costs: the piece, or the portion of a bread sold by the kilo. */
+export const unitPrice = (product: Priced) =>
+  isByWeight(product) ? Math.round((product.price * portionOf(product)) / 10) / 100 : product.price
+
+/** "€3,90" or "€7,95 les 500 g (€15,90/kg)". */
+export const priceLabel = (product: Priced) =>
+  isByWeight(product)
+    ? `${euro(unitPrice(product))} les ${portionOf(product)} g (${euro(product.price)}/kg)`
+    : euro(product.price)
