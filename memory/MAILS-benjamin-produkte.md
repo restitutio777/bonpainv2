@@ -197,3 +197,24 @@ Vous aviez installé l'application ? Elle se met à jour toute seule. Si elle af
 
 Viele Grüße
 Philippe
+
+## Nachricht Go-live (Entwurf 2026-10-30 abends, Deutsch, Versand durch Betreiber)
+
+Workflow stand schon in „Nachricht Freigabe + Testbestellung“ (raus 2026-10-30). Das hier ist nur die Bestätigung, dass es live ist, plus Erinnerung.
+
+Hallo Benjamin,
+
+seit heute Abend (Freitag, ca. 20:15 Uhr) läuft die neue Seite unter bonpainfaitmain.be. Danke für deine Testbestellungen, die sind alle sauber durchgelaufen.
+
+Ab jetzt für dich:
+- Pro Abholtag kommt eine Liste „[Tag] — Commandes“. Bei jeder neuen Bestellung kommt sie neu, mit gleichem Betreff, in Gmail also ein Verlauf. Die neueste Mail ist immer die aktuelle.
+- In der Nacht nach Bestellschluss kommt die „Liste définitive“ für diesen Tag. Danach kommt für den Tag nichts mehr dazu.
+- Was bis heute Vormittag über die alte Seite bestellt wurde, hast du wie bisher als Einzelmail. Das steht nicht in den neuen Listen. Seit der Umstellung kam über die alte Seite nichts mehr.
+- In deinen Listen für Mittwoch, Freitag und Samstag stehen deine eigenen Testbestellungen und zwei von mir mit „TEST“. Einfach ignorieren.
+
+Wenn du oder Clara kurz auf bonpainfaitmain.be eine Bestellung macht, sehen wir, dass auch über die echte Adresse alles bei euch ankommt.
+
+Offen ist noch der 11. November: Habt ihr offen? Sonst nehme ich den Tag aus dem Formular.
+
+Viele Grüße
+Philippe
