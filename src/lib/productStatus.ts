@@ -97,8 +97,13 @@ export const portionOf = (product: Pick<SanityProduct, 'portionGrams'>) => produ
 export const unitPrice = (product: Priced) =>
   isByWeight(product) ? Math.round((product.price * portionOf(product)) / 10) / 100 : product.price
 
-/** "€3,90" or "€7,95 les 500 g (€15,90/kg)". */
+/** Price 0 means unknown: orderable, priced and paid in the shop. */
+export const isPricedInStore = (product: Pick<SanityProduct, 'price'>) => !(product.price > 0)
+
+/** "€3,90", "€7,95 les 500 g (€15,90/kg)" or "prix en magasin". */
 export const priceLabel = (product: Priced) =>
-  isByWeight(product)
-    ? `${euro(unitPrice(product))} les ${portionOf(product)} g (${euro(product.price)}/kg)`
-    : euro(product.price)
+  isPricedInStore(product)
+    ? 'prix en magasin'
+    : isByWeight(product)
+      ? `${euro(unitPrice(product))} les ${portionOf(product)} g (${euro(product.price)}/kg)`
+      : euro(product.price)

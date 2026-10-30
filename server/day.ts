@@ -15,6 +15,7 @@ import {
   formatPickupDate,
   formatTotal,
   hasByWeightLine,
+  hasInStoreLine,
   linkSecretConfigured,
   manageUrl,
 } from './common.js'
@@ -66,6 +67,8 @@ export function parseOrderItems(items: string): PricedItem[] {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line): PricedItem | null => {
+      const inStore = line.match(/^(\d+)x\s+(.+?)\s+—\s+prix en magasin$/)
+      if (inStore) return { qty: parseInt(inStore[1], 10), name: inStore[2].trim(), amount: 0, inStore: true }
       const m = line.match(/^(\d+)x\s+(.+?)\s+—\s+€(\d+,\d{2})$/)
       if (!m) return null
       return {
@@ -172,6 +175,7 @@ export function buildBakerDigest(
   let grandTotal = 0
   let pricesMissing = false
   const byWeight = (e: DayEntry) => e.items.some((i) => i.byWeight)
+  const inStore = (e: DayEntry) => e.items.some((i) => i.inStore)
   for (const e of entries) {
     if (e.total === null) pricesMissing = true
     grandTotal += e.total ?? 0
@@ -180,9 +184,9 @@ export function buildBakerDigest(
   const sortedTotals = [...totals.entries()].sort((a, b) => b[1] - a[1])
   const regular = entries.filter((e) => e.kind === 'subscription').length
   const countLine = `${plural(entries.length, 'commande')}${regular ? ` (dont ${regular} régulière${regular > 1 ? 's' : ''})` : ''}`
-  const amount = (e: DayEntry) => (e.total === null ? 'prix ?' : formatTotal(e.total, byWeight(e)))
+  const amount = (e: DayEntry) => (e.total === null ? 'prix ?' : formatTotal(e.total, byWeight(e), inStore(e)))
   const itemsText = (e: DayEntry) => e.items.map((i) => `${i.qty}× ${i.name}`).join(', ') || '—'
-  const caisse = `${formatTotal(grandTotal, entries.some(byWeight))}${pricesMissing ? ' (sans les commandes régulières : prix momentanément indisponibles)' : ''}`
+  const caisse = `${formatTotal(grandTotal, entries.some(byWeight), entries.some(inStore))}${pricesMissing ? ' (sans les commandes régulières : prix momentanément indisponibles)' : ''}`
 
   const banner = opts.final
     ? {
@@ -333,7 +337,7 @@ export function buildBakerSingleOrder(order: OrderPayload) {
     `Commande :`,
     items,
     ``,
-    `Total : ${formatTotal(total, hasByWeightLine(items))}`,
+    `Total : ${formatTotal(total, hasByWeightLine(items), hasInStoreLine(items))}`,
     remarques ? `\nRemarques : ${remarques}` : null,
     ``,
     `⚠ Cette commande a été envoyée individuellement (le récapitulatif du jour était momentanément indisponible).`,
@@ -356,7 +360,7 @@ export function buildBakerSingleOrder(order: OrderPayload) {
         .split('\n')
         .map((l) => `<li style="margin: 4px 0;">${escapeHtml(l)}</li>`)
         .join('')}</ul>
-      <p><strong>Total : ${escapeHtml(formatTotal(total, hasByWeightLine(items)))}</strong></p>
+      <p><strong>Total : ${escapeHtml(formatTotal(total, hasByWeightLine(items), hasInStoreLine(items)))}</strong></p>
       ${remarques ? `<p><strong>Remarques</strong><br>${escapeHtml(remarques)}</p>` : ''}
       <p style="color: #8B6340; font-size: 12px; margin-top: 24px;">
         ⚠ Cette commande a été envoyée individuellement (le récapitulatif du jour était momentanément indisponible).

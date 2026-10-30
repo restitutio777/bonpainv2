@@ -3,7 +3,7 @@ import { Info, ArrowRight, CheckCircle, Loader2 } from 'lucide-react'
 import { useScrollAnimation } from '../hooks/useScrollAnimation'
 import { useSanity } from '../context/SanityContext'
 import { useCart } from '../context/CartContext'
-import { isByWeight, isOrderable, portionOf, priceLabel, unitPrice } from '../lib/productStatus'
+import { isByWeight, isOrderable, isPricedInStore, portionOf, priceLabel, unitPrice } from '../lib/productStatus'
 import { dayIndex, dayLabelFr, openDays } from '../lib/schedule'
 import { orderEndpoint } from '../lib/orderApi'
 import { openInstall } from '../lib/pwaInstall'
@@ -154,6 +154,7 @@ export default function OrderForm() {
   // Only orderable products count — same predicate as the submitted payload.
   const total = totalPrice(orderItems)
   const hasByWeight = orderItems.some((p) => isByWeight(p) && (cart[p._id] || 0) > 0)
+  const hasInStore = orderItems.some((p) => isPricedInStore(p) && (cart[p._id] || 0) > 0)
   const itemCount = orderItems.reduce((n, p) => n + (cart[p._id] || 0), 0)
 
   const handleSubmit = async (e: FormEvent) => {
@@ -189,6 +190,7 @@ export default function OrderForm() {
 
     const orderLines = ordered
       .map((p) => {
+        if (isPricedInStore(p)) return `${cart[p._id]}x ${p.name} — prix en magasin`
         const label = isByWeight(p) ? `${p.name} (${portionOf(p)} g)` : p.name
         return `${cart[p._id]}x ${label} — €${(unitPrice(p) * cart[p._id]).toFixed(2).replace('.', ',')}`
       })
@@ -732,8 +734,13 @@ export default function OrderForm() {
                   <div className="font-display text-xl" style={{ color: '#2D1F14' }}>
                     Total :{' '}
                     <strong style={{ color: '#A67C52' }}>
-                      € {total.toFixed(2).replace('.', ',')}
+                      {hasInStore && total === 0 ? 'prix en magasin' : `€ ${total.toFixed(2).replace('.', ',')}`}
                     </strong>
+                    {hasInStore && total > 0 && (
+                      <span className="font-body block text-xs mt-1" style={{ color: '#8B7A6B' }}>
+                        + articles au prix du magasin, à régler sur place.
+                      </span>
+                    )}
                     {hasByWeight && (
                       <span className="font-body block text-xs mt-1" style={{ color: '#8B7A6B' }}>
                         Pains au kilo : coupés et pesés au retrait, le montant peut varier un peu.

@@ -58,7 +58,7 @@ export default function FloatingCart() {
           )}
         </div>
         <span className="font-semibold text-sm" style={{ letterSpacing: '0.02em' }}>
-          € {price.toFixed(2).replace('.', ',')}
+          {price > 0 ? `€ ${price.toFixed(2).replace('.', ',')}` : 'Prix en magasin'}
         </span>
       </button>
     </div>

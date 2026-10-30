@@ -28,10 +28,15 @@ export const capitalize = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slic
 export const formatPrice = (n: number) => `€${n.toFixed(2).replace('.', ',')}`
 
 /** Bread sold by the kilo is weighed at pickup, so such a total is approximate. */
-export const formatTotal = (n: number, byWeight: boolean) =>
-  `${formatPrice(n)}${byWeight ? ' environ (pains au kilo pesés au retrait)' : ''}`
+export const formatTotal = (n: number, byWeight: boolean, inStore = false) => {
+  if (inStore && n === 0) return 'prix en magasin'
+  const base = `${formatPrice(n)}${byWeight ? ' environ (pains au kilo pesés au retrait)' : ''}`
+  return inStore ? `${base} + articles au prix du magasin` : base
+}
 
 export const hasByWeightLine = (items: string) => /\(\d+ g\) — €/.test(items)
+
+export const hasInStoreLine = (items: string) => items.includes(' — prix en magasin')
 
 /** YYYY-MM-DD → DD/MM/YYYY (French convention, subjects and bodies). */
 export const formatPickupDate = (iso: string): string => {
