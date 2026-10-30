@@ -26,3 +26,6 @@ dist-ssr
 
 # Generiertes Allergen-HTML (Build-Artefakt, siehe scripts/allergenes/README.md)
 scripts/allergenes/allergenes.html
+
+# Etikettenfotos von Benjamin, nur lokal
+attachments/

@@ -5,7 +5,9 @@ Für eine lokale Session. Dienste-Einstellungen macht Claude im Browser (Betreib
 ## Vorbedingungen
 - [x] Vercel-Team `bolteds-projects` auf Pro (aktiv seit 2026-10-29, Billing-Seite; `get_team` zeigt den Plan nicht).
 - [x] Rechtstexte, Allergene freigegeben (2026-10-29).
-- [ ] Preise/Gewichte von Benjamin (Nachricht am 2026-10-29 entworfen). **Betreiber 2026-10-29: abwarten, nicht mit 6 € live.** Stand Sanity 29.10.: unverändert seit 27.10. **Blockiert Schritt 4 ff.**
+- [x] Preise/Gewichte von Benjamin: eingespielt 2026-10-30, Rest „Prix en magasin“.
+- [ ] Benjamins Durchsicht der Produktseite: Nachricht ging am 2026-10-30 raus, Antwort abwarten. **Blockiert Schritt 4 ff.**
+- [ ] Studio-Login + Deploy durch Betreiber (siehe MEMORY.md), danach im Studio prüfen.
 - [x] Testbestellungs-Mails: Betreiber hat sie nicht geprüft → in Schritt 8 mit der echten Testbestellung prüfen.
 - [x] Weiterleitungen alte v1-URLs (`/impressum.html`, `/datenschutz.html`, `/agb.html`) in `vercel.json` (`fa1b21b`).
 

@@ -2,7 +2,10 @@
 
 Details und Links stehen in [PROJECT.md](../PROJECT.md). Hier nur Stand, Entscheidungen, Offenes, Stolpersteine.
 
-## Nächste Session: hier starten (Stand 2026-10-13)
+## Nächste Session: hier starten (Stand 2026-10-30)
+**Preise sind drin, Nachricht an Benjamin zur Durchsicht ist am 2026-10-30 raus. Als Nächstes: Studio-Login + Deploy (Betreiber am Mac), Benjamins Antwort abwarten, dann Go-live ab Schritt 2 in [GO-LIVE.md](GO-LIVE.md). DNS nicht vorher umstellen.**
+
+Älterer Stand (2026-10-13):
 **Benjamin hat die Seite gesehen und ist sehr zufrieden. Sein Feedback ist umgesetzt und live auf bonpainv2.vercel.app. Neu seit 2026-10-12 abends: Abo („commandes régulières“) und PWA-Installation, beides live. Seit 2026-10-13: Benjamins Beschreibungstexte für die elf Sauerteigbrote sind eingespielt und live. Benjamin kennt die Abo-Funktion noch nicht.** Mails/Nachrichten an Benjamin entwirft Claude, verschickt werden sie vom Betreiber (kurz, kein Roboterton; Sprache nach Wunsch des Betreibers: bisher Französisch, die Antwort auf das Feedback am 2026-10-12 auf Deutsch, Benjamin versteht beides).
 
 **Benjamins Feedback 2026-10-12 und was daraus wurde**
