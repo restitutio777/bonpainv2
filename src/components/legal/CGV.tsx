@@ -56,7 +56,7 @@ export default function CGV() {
 
       <Section title="2. Produits">
         <p>
-          Les produits proposés sont des pains et viennoiseries artisanaux fabriqués à la main avec des ingrédients naturels. Les produits sont fabriqués uniquement sur commande. Toute commande doit être passée <strong style={{ color: '#2D1F14' }}>au minimum {orderLeadDays} jours à l'avance</strong> (4 jours pour le Panettone).
+          Les produits proposés sont des pains et viennoiseries artisanaux fabriqués à la main avec des ingrédients naturels. Ils sont vendus sur commande et à l'atelier, dans la limite des quantités disponibles. Toute commande doit être passée <strong style={{ color: '#2D1F14' }}>au minimum {orderLeadDays} jours à l'avance</strong> (4 jours pour le Panettone).
         </p>
       </Section>
 
