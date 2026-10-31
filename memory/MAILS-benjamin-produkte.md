@@ -218,3 +218,20 @@ Offen ist noch der 11. November: Habt ihr offen? Sonst nehme ich den Tag aus dem
 
 Viele Grüße
 Philippe
+
+## Antwort auf „11. November ist offen" (Entwurf 2026-10-31, Deutsch, Versand durch Betreiber)
+
+Antwort auf seine Mail vom 31.10.: „Ja Freitag Der 11 November ist offen. Danke". Wochentag stimmt bei ihm nicht (11.11.2026 ist ein Mittwoch), Datum war gefragt und ist eindeutig. Nichts geändert, der Tag ist im Formular bestellbar.
+
+Hallo Benjamin,
+
+danke, dann bleibt der 11. November bestellbar, ich muss nichts ändern. Nur zur Sicherheit: der 11.11. fällt dieses Jahr auf einen Mittwoch, ist für euch also ein ganz normaler Verkaufstag.
+
+Und eine schöne Nachricht: heute früh kam die erste echte Bestellung über die neue Seite, für Samstag den 7. November. Die Liste dazu hast du bekommen.
+
+Zwei Dinge liegen noch bei dir:
+- die neuen Fotos für Panettone und Pizza
+- im Google-Unternehmensprofil: schau kurz, ob dort bonpainfaitmain.be als Website steht
+
+Viele Grüße
+Philippe
