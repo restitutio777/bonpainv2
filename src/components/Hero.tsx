@@ -12,6 +12,8 @@ export default function Hero() {
   const { content } = useSanity()
 
   const badge = content?.heroBadge || 'Boulangerie Artisanale \u2014 Sourbrodt'
+  // "Boulangerie Artisanale - Sourbrodt": the wheat icon replaces the dash.
+  const badgeParts = badge.split(/\s+[-\u2013\u2014\u00b7|]\s+/)
   const title = content?.heroTitle || 'Pain au levain,'
   const titleAccent = content?.heroTitleAccent || 'fait \u00e0 la main'
   const subtitle =
@@ -54,17 +56,31 @@ export default function Hero() {
 
       <div className="relative z-10 text-center text-white max-w-[800px] px-6">
         <div
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-[0.15em] mb-8"
+          className="inline-flex items-center justify-center gap-[0.7em] whitespace-nowrap px-[1.4em] py-[0.6em] rounded-full font-semibold uppercase tracking-[0.14em] leading-none mb-6 sm:mb-8"
           style={{
-            background: 'rgba(255,255,255,0.1)',
+            // One line on every phone: the size follows the viewport down to
+            // 320 px instead of wrapping and pushing the CTAs down.
+            fontSize: 'clamp(0.625rem, 2.85vw, 0.75rem)',
+            background: 'rgba(166,124,82,0.28)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: '#E8D9C8',
+            border: '1px solid rgba(212,163,115,0.45)',
+            color: '#F0DCC4',
             animation: 'fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.3s both',
           }}
         >
-          <WheatIcon size={14} />
-          {badge}
+          {badgeParts.length > 1 ? (
+            <>
+              <span>{badgeParts[0]}</span>
+              <WheatIcon size={13} className="shrink-0" style={{ color: '#D4A373' }} />
+              <span className="sr-only"> – </span>
+              <span>{badgeParts.slice(1).join(' ')}</span>
+            </>
+          ) : (
+            <>
+              <WheatIcon size={13} className="shrink-0" style={{ color: '#D4A373' }} />
+              <span>{badge}</span>
+            </>
+          )}
         </div>
 
         <h1
