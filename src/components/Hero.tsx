@@ -39,7 +39,9 @@ export default function Hero() {
           decoding="async"
           // React 18 does not know the camelCase prop yet.
           {...{ fetchpriority: 'high' }}
-          className="absolute inset-0 w-full h-full object-cover"
+          // Portrait phones show only a narrow strip of the landscape photo; the
+          // loaf sits right of centre, so shift the crop towards it there.
+          className="absolute inset-0 w-full h-full object-cover object-[65%_50%] md:object-center"
         />
         <div
           className="absolute inset-0"
