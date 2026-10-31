@@ -183,6 +183,28 @@ export default function Footer() {
             ))}
           </div>
         </div>
+
+        {/* Our own credit, the only outbound link we place on a client site:
+            a baker's visitors include other trades who may need one too. */}
+        <p className="mt-5 text-xs text-center sm:text-left" style={{ color: '#A67C52' }}>
+          Site réalisé par{' '}
+          <a
+            href="https://site-web-intuitif.fr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 transition-colors duration-200"
+            style={{ color: '#BFA07E', textDecorationColor: 'rgba(255,255,255,0.25)' }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = '#F5EDE3';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = '#BFA07E';
+            }}
+          >
+            Site Web Intuitif
+          </a>{' '}
+          — création de sites pour artisans et indépendants
+        </p>
       </div>
     </footer>
   )
