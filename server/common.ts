@@ -63,6 +63,28 @@ export function todayBrussels(now: Date = new Date()): string {
   return `${parts.year}-${parts.month}-${parts.day}`
 }
 
+/**
+ * ISO timestamp → "12/11 à 09h14" in Belgian local time. The bakery list is
+ * sorted by these, so each line can show the time that puts it where it is.
+ */
+export function formatArrival(iso: string): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return iso
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Brussels',
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    })
+      .formatToParts(d)
+      .map((x) => [x.type, x.value])
+  )
+  return `${parts.day}/${parts.month} à ${parts.hour}h${parts.minute}`
+}
+
 export function addDays(iso: string, days: number): string {
   const d = new Date(`${iso}T00:00:00Z`)
   d.setUTCDate(d.getUTCDate() + days)

@@ -12,6 +12,7 @@ import {
   addDays,
   capitalize,
   escapeHtml,
+  formatArrival,
   formatPickupDate,
   formatTotal,
   hasByWeightLine,
@@ -188,6 +189,13 @@ export function buildBakerDigest(
   const countLine = `${plural(entries.length, 'commande')}${regular ? ` (dont ${regular} régulière${regular > 1 ? 's' : ''})` : ''}`
   const amount = (e: DayEntry) => (e.total === null ? 'prix ?' : formatTotal(e.total, byWeight(e), inStore(e)))
   const itemsText = (e: DayEntry) => e.items.map((i) => `${i.qty}× ${i.name}`).join(', ') || '—'
+  // The list is sorted by these timestamps, so every line carries the one that
+  // puts it where it is — the baker can check the order instead of trusting it.
+  const arrival = (e: DayEntry) => (e.receivedAt ? `Reçue le ${formatArrival(e.receivedAt)}` : null)
+  const orderRule = [
+    "Dans l'ordre d'arrivée, la plus récente en bas.",
+    "Pour une commande régulière, c'est la date de sa mise en place.",
+  ]
   const caisse = `${formatTotal(grandTotal, entries.some(byWeight), entries.some(inStore))}${pricesMissing ? ' (sans les commandes régulières : prix momentanément indisponibles)' : ''}`
 
   const banner = opts.final
@@ -224,15 +232,19 @@ export function buildBakerDigest(
     ...sortedTotals.map(([name, qty]) => `  ${String(qty).padStart(3)}×  ${name}`),
     ``,
     `RETRAITS :`,
-    ...entries.map((e) => {
+    ...orderRule.map((l) => `  ${l}`),
+    ``,
+    ...entries.map((e, i) => {
       const contact = e.customer.tel ? `${e.customer.email} · ${e.customer.tel}` : e.customer.email
       const note = entryNote(e, jour, date)
+      const no = `${String(i + 1).padStart(3)}. `
+      const pad = ' '.repeat(no.length)
       return [
-        `  • ${e.customer.nom}, ${e.customer.prenom}  —  ${itemsText(e)}  —  ${amount(e)}`,
-        `    ${contact}`,
-        note ? `    ${note}${e.bakeryUrl ? ` · gérer / arrêter : ${e.bakeryUrl}` : ''}` : null,
-        e.unavailable.length ? `    Pas préparé ce jour (indisponible) : ${e.unavailable.join(', ')}` : null,
-        e.remarques ? `    Remarque: ${e.remarques}` : null,
+        `${no}${e.customer.nom}, ${e.customer.prenom}  —  ${itemsText(e)}  —  ${amount(e)}`,
+        `${pad}${[arrival(e), contact].filter(Boolean).join('  ·  ')}`,
+        note ? `${pad}${note}${e.bakeryUrl ? ` · gérer / arrêter : ${e.bakeryUrl}` : ''}` : null,
+        e.unavailable.length ? `${pad}Pas préparé ce jour (indisponible) : ${e.unavailable.join(', ')}` : null,
+        e.remarques ? `${pad}Remarque: ${e.remarques}` : null,
       ]
         .filter(Boolean)
         .join('\n')
@@ -270,19 +282,27 @@ export function buildBakerDigest(
       <h3 style="margin: 24px 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #A67C52;">
         Retraits
       </h3>
+      <p style="margin: 0 0 12px; color: #8B7A6B; font-size: 13px;">
+        ${escapeHtml(orderRule.join(' '))}
+      </p>
       <table style="border-collapse: collapse; width: 100%;">
         ${entries
-          .map((e) => {
+          .map((e, i) => {
             const items = e.items.map((i) => `${i.qty}× ${escapeHtml(i.name)}`).join(', ') || '—'
             const mail = `<a href="mailto:${encodeURIComponent(e.customer.email)}" style="color: #6E4D32;">${escapeHtml(e.customer.email)}</a>`
             const contactLine = e.customer.tel
               ? `${mail} · <a href="tel:${escapeHtml(e.customer.tel.replace(/\s/g, ''))}" style="color: #6E4D32;">${escapeHtml(e.customer.tel)}</a>`
               : mail
             const note = entryNote(e, jour, date)
+            const arrivalLine = arrival(e)
             return `
               <tr style="border-top: 1px solid #F5EDE3;">
+                <td style="padding: 12px 8px 12px 0; vertical-align: top; color: #A67C52; font-variant-numeric: tabular-nums; white-space: nowrap;">
+                  ${i + 1}.
+                </td>
                 <td style="padding: 12px 0; vertical-align: top;">
                   <div style="font-weight: 600;">${escapeHtml(e.customer.nom)}, ${escapeHtml(e.customer.prenom)}</div>
+                  ${arrivalLine ? `<div style="color: #8B7A6B; font-size: 13px; margin-top: 2px;">${escapeHtml(arrivalLine)}</div>` : ''}
                   <div style="color: #8B7A6B; font-size: 13px; margin-top: 2px;">${contactLine}</div>
                   ${
                     note
