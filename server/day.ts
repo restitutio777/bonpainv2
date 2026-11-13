@@ -110,7 +110,11 @@ export async function storeOrder(redis: Redis, order: StoredOrder): Promise<() =
   }
 }
 
-/** Every order for `date`: one-off orders, then the regular orders due that day. */
+/**
+ * Every order for `date` — one-off orders and the regular orders due that day —
+ * in the order they came in, the latest at the bottom (Benjamin's wish).
+ * A regular order counts from when it was set up.
+ */
 export async function dayEntries(redis: Redis, date: string, catalog: Catalog | null): Promise<DayEntry[]> {
   const raw = await redis.lrange(ordersKey(date), 0, -1)
   const links = linkSecretConfigured()
@@ -128,11 +132,8 @@ export async function dayEntries(redis: Redis, date: string, catalog: Catalog | 
       subscriptionId: o.subscriptionId,
       bakeryUrl: o.subscriptionId && links ? manageUrl('bakery', o.subscriptionId) : undefined,
     }))
-    .sort((a, b) => (a.receivedAt || '').localeCompare(b.receivedAt || ''))
 
-  const subs = (await activeSubs(redis))
-    .filter((s) => isDue(s, date, catalog))
-    .sort((a, b) => `${a.customer.nom} ${a.customer.prenom}`.localeCompare(`${b.customer.nom} ${b.customer.prenom}`))
+  const subs = (await activeSubs(redis)).filter((s) => isDue(s, date, catalog))
   for (const s of subs) {
     const { items, unavailable, total } = itemsOn(s, date, catalog)
     entries.push({
@@ -147,7 +148,8 @@ export async function dayEntries(redis: Redis, date: string, catalog: Catalog | 
       bakeryUrl: links ? manageUrl('bakery', s.id) : undefined,
     })
   }
-  return entries
+  // ISO timestamps sort as text; Array.prototype.sort is stable for ties.
+  return entries.sort((a, b) => (a.receivedAt || '').localeCompare(b.receivedAt || ''))
 }
 
 // ── Bakery email ────────────────────────────────────────────────────────
