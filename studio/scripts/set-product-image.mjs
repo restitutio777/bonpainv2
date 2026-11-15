@@ -8,6 +8,7 @@
  * Verlauf:
  *   2026-10-12  product-epeautre-sesame, Bild vom Betreiber (Sesamlaib), ersetzt 066
  *   2026-10-12  product-croissant → 182, product-pain-chocolat → 197 (mehrere Stück im Bild, Wunsch Betreiber)
+ *   2026-11-15  product-panettone, Bild vom Betreiber (1794x1201), ersetzt panettone.jpg vom 2026-10-11
  */
 import { createReadStream } from 'node:fs'
 import { basename } from 'node:path'
