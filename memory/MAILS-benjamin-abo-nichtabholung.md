@@ -12,17 +12,21 @@ nicht unterwürfig: der Kunde trägt die Verantwortung für sein Abo.
 
 Salut Benjamin,
 
-Côté technique, rien n'a raté : le client coche lui-même « répéter cette
-commande chaque semaine », il reçoit la confirmation avec son lien personnel,
-et il peut depuis le début sauter une semaine ou arrêter quand il veut. Pour
-tes deux commandes non retirées, l'abonnement a fait exactement ce qu'il
-devait faire. Il y aura toujours quelques personnes qui oublient.
+Tu m'as parlé des deux commandes qui n'ont pas été retirées. J'ai regardé ce
+qui s'est passé, et j'ai amélioré une chose. En court :
 
-J'ai quand même ajouté quelque chose : deux jours avant chaque retrait, le
-client reçoit un rappel avec ce qui est prévu, le montant et un bouton pour
-sauter la semaine. C'est son dernier jour pour le faire. Et la règle est
-maintenant écrite à l'endroit où il coche la case, dans le rappel et dans les
-conditions : une commande pas annulée à temps et pas retirée reste due.
+Comment ça marche : pour avoir une commande régulière, le client coche
+lui-même la case « répéter cette commande chaque semaine ». Il reçoit sa
+confirmation avec un lien personnel, et depuis le début il peut sauter une
+semaine, changer les quantités ou arrêter quand il veut. Dans tes deux cas,
+tout a donc fonctionné comme prévu : ces deux-là ne sont simplement pas venus.
+Il y aura toujours quelques personnes qui oublient.
+
+Ce que j'ai ajouté : deux jours avant chaque retrait, le client reçoit
+maintenant un rappel avec ce qui est prévu, le montant et un bouton pour
+sauter la semaine. C'est son dernier jour pour le faire lui-même. Et la règle
+est écrite à trois endroits — là où il coche la case, dans le rappel et dans
+les conditions : une commande pas annulée à temps et pas retirée reste due.
 
 Si ça se reproduit, voilà un e-mail prêt à envoyer (remplace ce qui est entre
 crochets) :
