@@ -99,9 +99,18 @@ export default async function handler(req: Req, res: Res) {
 
   // Metadata only. The full order goes to the log solely when it would
   // otherwise be lost (below); everything else is in Redis and the mails.
+  // VERCEL_REGION is where this function really runs — the `region` field of
+  // the log line is the edge location that took the request, which is not the
+  // same thing. The order data must stay in the EU (vercel.json: fra1).
   console.log(
     '[order] received',
-    JSON.stringify({ pickup: order.pickup.date, lines: lines.length, total: order.total, subscribe })
+    JSON.stringify({
+      pickup: order.pickup.date,
+      lines: lines.length,
+      total: order.total,
+      subscribe,
+      region: process.env.VERCEL_REGION,
+    })
   )
 
   const mail = mailFromEnv()

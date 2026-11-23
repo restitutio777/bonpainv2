@@ -24,6 +24,6 @@ export default async function handler(req: Req, res: Res) {
   }
 
   const report = await runDaily({ onlyDate })
-  console.log('[daily]', JSON.stringify(report))
+  console.log('[daily]', JSON.stringify({ ...report, region: process.env.VERCEL_REGION }))
   return res.status(report.error ? 500 : 200).json(report)
 }
