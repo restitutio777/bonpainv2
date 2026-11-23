@@ -11,13 +11,14 @@ import {
   escapeHtml,
   formatDayShort,
   formatPickupDate,
+  formatPrice,
   formatTotal,
   hasByWeightLine,
   hasInStoreLine,
   siteUrl,
 } from './common.js'
 import type { OrderPayload } from './day.js'
-import type { Subscription } from './subscriptions.js'
+import type { PricedItem, Subscription } from './subscriptions.js'
 import type { Vacation } from './catalog.js'
 
 type Mail = { subject: string; text: string; html: string }
@@ -50,6 +51,9 @@ export function buildCustomerConfirmation(order: OrderPayload, regular?: Regular
         `Vous pouvez à tout moment changer les quantités, sauter une semaine ou arrêter,`,
         `au plus tard ${regular.leadDays} jours avant le retrait, avec votre lien personnel :`,
         regular.url,
+        `Avant chaque retrait, un rappel par e-mail vous dit ce qui est prévu et jusqu'à quand`,
+        `vous pouvez encore sauter la semaine. Une commande qui n'est pas annulée dans ce délai`,
+        `et qui n'est pas retirée reste due, et se paie à votre passage suivant.`,
         `Gardez cet e-mail : ce lien est votre accès. Pendant les congés de la boulangerie,`,
         `votre commande est suspendue automatiquement et nous vous prévenons par e-mail.`,
         `Conditions : ${cgv} (article 8).`,
@@ -81,6 +85,7 @@ export function buildCustomerConfirmation(order: OrderPayload, regular?: Regular
         <p style="margin: 0 0 8px;"><strong>Commande régulière</strong></p>
         <p style="margin: 0 0 8px;">Cette commande sera préparée <strong>chaque ${escapeHtml(pickup.jour)}</strong>, jusqu'à ce que vous l'arrêtiez. Prochain retrait : ${escapeHtml(formatDayShort(regular.firstDate))}.</p>
         <p style="margin: 0 0 8px;">Vous pouvez à tout moment changer les quantités, sauter une semaine ou arrêter, au plus tard ${regular.leadDays} jours avant le retrait.</p>
+        <p style="margin: 0 0 8px;">Avant chaque retrait, un rappel par e-mail vous dit ce qui est prévu et jusqu'à quand vous pouvez encore sauter la semaine. Une commande qui n'est pas annulée dans ce délai et qui n'est pas retirée reste due, et se paie à votre passage suivant.</p>
         ${BUTTON(regular.url, 'Gérer ma commande régulière')}
         <p style="margin: 0; color: #6E4D32; font-size: 13px;">Gardez cet e-mail : ce lien est votre accès. Pendant les congés de la boulangerie, votre commande est suspendue automatiquement et nous vous prévenons par e-mail. <a href="${escapeHtml(cgv)}" style="color: #6E4D32;">Conditions (article 8)</a></p>
       </div>`
@@ -182,6 +187,73 @@ export function buildSubEnded(sub: Subscription, by: 'customer' | 'bakery', stil
       ${plannedLine ? `<p><strong>${escapeHtml(plannedLine)}</strong></p>` : ''}
       ${MUTED(`Vous pouvez à tout moment passer une nouvelle commande sur <a href="${escapeHtml(siteUrl())}" style="color: #6E4D32;">notre site</a>. Une question ? Répondez à cet e-mail ou appelez le ${PHONE_HTML}.`)}
       <p>Benjamin &amp; Nadia</p>
+  `)
+  return { subject, text, html }
+}
+
+/**
+ * Reminder before a regular pickup, sent by the nightly cron `leadDays` days
+ * ahead — the last day the customer can still skip the week with the personal
+ * link, because a change only counts for pickups that far away (CGV art. 8).
+ * Later than that only a phone call helps, so the mail says both.
+ */
+export function buildSubReminder(
+  sub: Subscription,
+  date: string,
+  priced: { items: PricedItem[]; unavailable: string[]; total: number | null },
+  url: string
+): Mail {
+  const day = formatDayShort(date)
+  const subject = `${SUBJECT_PREFIX}Rappel : votre commande régulière — retrait ${day}`
+  const lines = priced.items.map(
+    (i) => `${i.qty}× ${i.name} — ${i.inStore ? 'prix en magasin' : formatPrice(i.amount ?? 0)}`
+  )
+  const byWeight = priced.items.some((i) => i.byWeight)
+  const inStore = priced.items.some((i) => i.inStore)
+  const totalLine = priced.total === null ? null : `Total : ${formatTotal(priced.total, byWeight, inStore)}`
+  const unavailableLine = priced.unavailable.length
+    ? `Pas préparé ce jour-là : ${priced.unavailable.join(', ')}. Le reste de la commande est maintenu.`
+    : null
+  const deadline = `Vous ne pouvez pas venir ? Sautez cette semaine avec votre lien personnel, aujourd'hui encore : demain votre commande part au fournil. Ensuite, appelez-nous au ${BAKERY_PHONE}, au plus tard 24 heures avant le jour du retrait (CGV art. 7). Une commande qui n'est pas annulée dans ces délais et qui n'est pas retirée reste due, et se paie à votre passage suivant.`
+
+  const text = [
+    `Bonjour ${sub.customer.prenom},`,
+    ``,
+    `Petit rappel : votre commande régulière est prévue ${day}.`,
+    ``,
+    ...lines.map((l) => `  ${l}`),
+    totalLine,
+    sub.remarques ? `Remarque : ${sub.remarques}` : null,
+    unavailableLine,
+    ``,
+    `Retrait : ${capitalize(day)}, ${BAKERY_ADDRESS}`,
+    `Paiement sur place.`,
+    ``,
+    deadline,
+    url,
+    ``,
+    ...SIGNATURE_TEXT(sub.weekday),
+  ]
+    .filter((l) => l !== null)
+    .join('\n')
+
+  const html = WRAP(`
+      <p>Bonjour ${escapeHtml(sub.customer.prenom)},</p>
+      <p>Petit rappel : votre commande régulière est prévue <strong>${escapeHtml(day)}</strong>.</p>
+      <ul style="padding-left: 1.2em;">${lines
+        .map((l) => `<li style="margin: 4px 0;">${escapeHtml(l)}</li>`)
+        .join('')}</ul>
+      ${totalLine ? `<p><strong>${escapeHtml(totalLine)}</strong></p>` : ''}
+      ${sub.remarques ? `<p>Remarque : ${escapeHtml(sub.remarques)}</p>` : ''}
+      ${unavailableLine ? MUTED(escapeHtml(unavailableLine)) : ''}
+      <p>
+        <strong>Retrait</strong><br>
+        ${escapeHtml(capitalize(day))}<br>
+        <span style="color: #6E4D32;">${escapeHtml(BAKERY_ADDRESS)} — paiement sur place</span>
+      </p>
+      <p>${escapeHtml(deadline)}</p>
+      ${BUTTON(url, 'Sauter cette semaine')}
+      ${SIGNATURE_HTML(sub.weekday)}
   `)
   return { subject, text, html }
 }

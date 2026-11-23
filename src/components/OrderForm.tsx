@@ -776,7 +776,8 @@ export default function OrderForm() {
                     , jusqu&rsquo;à ce que je l&rsquo;arrête.
                     <span className="block text-xs mt-1" style={{ color: '#8B7A6B' }}>
                       Sans engagement, payé à chaque retrait. Vous recevez un lien pour changer les quantités, sauter
-                      une semaine ou arrêter. Suspendu automatiquement pendant nos congés.{' '}
+                      une semaine ou arrêter, et un rappel par e-mail avant chaque retrait. Une commande non annulée
+                      dans les délais et non retirée reste due. Suspendu automatiquement pendant nos congés.{' '}
                       <a href="/cgv" target="_blank" rel="noopener" style={{ color: '#A67C52' }}>
                         Conditions (CGV, art. 8)
                       </a>

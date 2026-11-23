@@ -1,11 +1,12 @@
 // Daily cron (vercel.json, 23:00 UTC = just after midnight in Belgium):
-// final lists for the pickup days that just closed, and vacation notices for
-// regular orders. The work itself is in server/daily.ts; api/keepalive.ts
-// repeats it at 05:00 UTC to catch up.
+// final lists for the pickup days that just closed, reminders for the regular
+// orders whose pickup is `leadDays` away, and vacation notices. The work
+// itself is in server/daily.ts; api/keepalive.ts repeats it at 05:00 UTC to
+// catch up.
 //
 // Preview deployments have no cron and no CRON_SECRET. There, `?date=` sends
-// the final list for that day straight away (to the test addresses), for
-// testing.
+// the final list for that day and the reminders for it straight away (to the
+// test addresses), for testing.
 
 import { IS_PRODUCTION, KEY_PREFIX, clientIp, cronAuthorized, hashed, overLimit, redisFromEnv, type Req, type Res } from '../server/common.js'
 import { runDaily } from '../server/daily.js'

@@ -4,7 +4,10 @@
 //   1. Final list for each pickup day that has just closed for orders. Until
 //      now the bakery only got a list when a new order came in, so a day with
 //      only regular orders would never be announced.
-//   2. Vacation notices: when the vacation banner is active, every regular
+//   2. Reminders: every regular order due in `leadDays` days gets one email.
+//      That day is the last one on which the customer can still skip the week
+//      with the personal link, so the reminder is also the last call.
+//   3. Vacation notices: when the vacation banner is active, every regular
 //      order it suspends gets one email, once per closure.
 //
 // Both steps are idempotent (Redis markers), so api/keepalive.ts runs them
@@ -27,18 +30,23 @@ import {
 } from './common.js'
 import { closedForVacation, fetchCatalog, isSalesDay, type Catalog } from './catalog.js'
 import { buildBakerDigest, dayEntries, finalListKey } from './day.js'
-import { buildVacationNotice } from './mails.js'
-import { activeSubs, nextDates, type Subscription } from './subscriptions.js'
+import { buildSubReminder, buildVacationNotice } from './mails.js'
+import { activeSubs, isDue, itemsOn, nextDates, type Subscription } from './subscriptions.js'
 
 // Resend Free sends 100 mails a day; orders can use up to 80 of them.
 const MAX_NOTICES_PER_RUN = 30
+// Reminders are capped too; what is left over goes out at the 05:00 catch-up,
+// still a full day before the pickup.
+const MAX_REMINDERS_PER_RUN = 30
 const MARKER_TTL = 30 * 24 * 3600
 
 export type FinalListStatus = 'sent' | 'empty' | 'already-sent' | 'no-sales-day' | 'failed'
+export type MailCount = { sent: number; failed: number; pending: number }
 export type DailyReport = {
   today?: string
   finalLists: { date: string; status: FinalListStatus; orders?: number }[]
-  notices: { sent: number; failed: number; pending: number }
+  reminders: MailCount & { date?: string }
+  notices: MailCount
   error?: string
 }
 
@@ -83,6 +91,57 @@ async function finalList(
   }
   await redis.set(marker, 'sent', { ex: MARKER_TTL })
   return { status: 'sent', orders: entries.length }
+}
+
+/**
+ * The pickup day a reminder goes out for: the last day the customer can still
+ * skip the week himself (a change counts for pickups at least `leadDays` away).
+ */
+export function reminderDate(today: string, leadDays: number): string {
+  return addDays(today, Math.max(leadDays, 1))
+}
+
+/** One reminder per regular order due on `date`, once (Redis marker per date). Exported for the local harness. */
+export async function reminders(
+  redis: Redis,
+  mail: MailConfig,
+  catalog: Catalog,
+  date: string,
+  force: boolean
+): Promise<MailCount> {
+  const result = { sent: 0, failed: 0, pending: 0 }
+  if (!linkSecretConfigured()) {
+    console.error('[daily] SUBSCRIPTION_SECRET missing, reminders not sent')
+    return result
+  }
+  const key = `${KEY_PREFIX}remind:${date}`
+  for (const sub of await activeSubs(redis)) {
+    if (!isDue(sub, date, catalog)) continue
+    if (!force && (await redis.sismember(key, sub.id))) continue
+    if (result.sent + result.failed >= MAX_REMINDERS_PER_RUN) {
+      result.pending++
+      continue
+    }
+    const reminder = buildSubReminder(sub, date, itemsOn(sub, date, catalog), manageUrl('customer', sub.id))
+    const failure = await send(mail.resend, {
+      from: mail.fromEmail,
+      to: [sub.customer.email],
+      replyTo: bakeryInbox(mail, sub.customer.email),
+      subject: reminder.subject,
+      text: reminder.text,
+      html: reminder.html,
+      tags: [{ name: 'kind', value: 'subscription' }],
+    })
+    if (failure) {
+      console.error('[daily] reminder failed', sub.id, date, failure)
+      result.failed++
+      continue
+    }
+    await redis.sadd(key, sub.id)
+    await redis.expire(key, MARKER_TTL)
+    result.sent++
+  }
+  return result
 }
 
 /** Dates the closure takes from this regular order (from today on), and when it resumes. */
@@ -154,7 +213,11 @@ async function vacationNotices(
 }
 
 export async function runDaily(opts: { onlyDate?: string } = {}): Promise<DailyReport> {
-  const report: DailyReport = { finalLists: [], notices: { sent: 0, failed: 0, pending: 0 } }
+  const report: DailyReport = {
+    finalLists: [],
+    reminders: { sent: 0, failed: 0, pending: 0 },
+    notices: { sent: 0, failed: 0, pending: 0 },
+  }
   const redis = redisFromEnv()
   const mail = mailFromEnv()
   if (!redis || !mail) return { ...report, error: 'not_configured' }
@@ -174,6 +237,14 @@ export async function runDaily(opts: { onlyDate?: string } = {}): Promise<DailyR
       console.error('[daily] final list error', date, e)
       report.finalLists.push({ date, status: 'failed' })
     }
+  }
+  const remindFor = opts.onlyDate ?? reminderDate(today, catalog.leadDays)
+  try {
+    report.reminders = { ...(await reminders(redis, mail, catalog, remindFor, !!opts.onlyDate)), date: remindFor }
+  } catch (e) {
+    console.error('[daily] reminders error', remindFor, e)
+    report.reminders = { ...report.reminders, date: remindFor }
+    report.error = 'reminders_failed'
   }
   try {
     report.notices = await vacationNotices(redis, mail, catalog, today)

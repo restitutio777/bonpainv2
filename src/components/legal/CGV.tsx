@@ -110,6 +110,12 @@ export default function CGV() {
             <strong style={{ color: '#2D1F14' }}>Délai.</strong> Une modification ou un arrêt vaut pour les retraits situés au moins {orderLeadDays} jours plus tard, comme pour une commande. Une commande déjà transmise à la boulangerie reste prévue ; elle peut être annulée par téléphone dans les conditions de l'article 7.
           </li>
           <li>
+            <strong style={{ color: '#2D1F14' }}>Rappel avant chaque retrait.</strong> {orderLeadDays} jours avant chaque retrait, vous recevez un e-mail de rappel : ce qui est prévu, le jour du retrait et le lien pour sauter la semaine. C'est le dernier jour où vous pouvez sauter la semaine vous-même ; ensuite la commande est transmise au fournil.
+          </li>
+          <li>
+            <strong style={{ color: '#2D1F14' }}>Commande non retirée.</strong> Une commande régulière qui n'a pas été annulée dans les délais ci-dessus et qui n'est pas retirée <strong style={{ color: '#2D1F14' }}>reste due</strong> : le pain a été fabriqué pour vous et ne peut pas être revendu. Le montant est payé lors de votre passage suivant. En cas de force majeure (maladie, accident), parlez-nous en : nous trouverons une solution.
+          </li>
+          <li>
             <strong style={{ color: '#2D1F14' }}>Prix et paiement.</strong> Chaque retrait est payé sur place, au prix affiché sur le site le jour du retrait. Si un prix change, vous pouvez modifier ou arrêter votre commande régulière à tout moment.
           </li>
           <li>

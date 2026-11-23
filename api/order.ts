@@ -78,7 +78,7 @@ const LIMITS = {
 // What the customer ticks in the form (src/components/OrderForm.tsx). Stored
 // with the regular order as the record of what was agreed.
 const CONSENT_TEXT =
-  "Répéter cette commande chaque semaine, le même jour, jusqu'à ce que je l'arrête (CGV, article 8)."
+  "Répéter cette commande chaque semaine, le même jour, jusqu'à ce que je l'arrête. Rappel par e-mail avant chaque retrait ; une commande non annulée dans les délais et non retirée reste due (CGV, article 8)."
 
 export default async function handler(req: Req, res: Res) {
   applyCors(req, res)
